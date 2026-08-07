@@ -33,6 +33,8 @@ Pipeline, in order:
    prose, not layout -- markdown repeats blockquote and list markers on
    every wrapped line and a correct quote drops them, so a raw substring
    test rejects real findings on exactly the documents this probe targets.
+   Every call's row lands in ``trials.jsonl`` as it completes, not after the
+   run, so an interrupted battery keeps the spend it already made.
 5. ``write_probe_report`` extends tune.py's report machinery
    (``tune.write_report``) with the probe verdict: confirmed findings with
    their evidence quotes, refuted findings with the mode that killed each
@@ -73,6 +75,18 @@ class _BudgetExhausted(Exception):
     """Internal signal: the run has spent its cap. Raised by the budget
     wrapper before a call is made, never surfaced to callers -- run_probe
     catches it, stops cleanly, and reports the partial result as halted."""
+
+
+def _record(
+    rows: list[dict[str, Any]], row: dict[str, Any], trials_path: Path | None
+) -> None:
+    """Append a trial row to the in-memory list and, when a path is given,
+    to the durable log in the same breath. Persisting at the call site rather
+    than after the run is what makes an interrupted run resumable instead of
+    a total loss -- a six-target battery has a lot of spend to lose."""
+    rows.append(row)
+    if trials_path is not None:
+        tune.append_jsonl(trials_path, row)
 
 
 def _budget_guarded(
@@ -298,6 +312,7 @@ def run_probe_call(
     retries: int,
     rows: list[dict[str, Any]],
     case_id: str = "probe",
+    trials_path: Path | None = None,
 ) -> list[dict[str, Any]]:
     """One adapter call carrying the doctrine + target document inline.
     Malformed JSON is retried through the same adapter path -- never
@@ -308,14 +323,16 @@ def run_probe_call(
 
     for attempt in range(retries + 1):
         result = adapter(prompt, model)
-        rows.append(
+        _record(
+            rows,
             {
                 "case_id": case_id,
                 "trial": attempt + 1,
                 "condition": "probe",
                 "response": result.text,
                 "cost_usd": result.cost_usd,
-            }
+            },
+            trials_path,
         )
         payload = extract_json_array(result.text)
         if payload is not None:
@@ -403,6 +420,7 @@ def verify_finding(
     case_id: str,
     rows: list[dict[str, Any]],
     verify_trials: int = DEFAULT_VERIFY_TRIALS,
+    trials_path: Path | None = None,
 ) -> VerifiedFinding:
     """Judge one finding with ``verify_trials`` independent skeptics, each a
     fresh self-contained adapter call carrying this finding alone. A finding
@@ -418,14 +436,16 @@ def verify_finding(
 
     for trial in range(1, verify_trials + 1):
         result = adapter(prompt, model)
-        rows.append(
+        _record(
+            rows,
             {
                 "case_id": case_id,
                 "trial": trial,
                 "condition": "verify",
                 "response": result.text,
                 "cost_usd": result.cost_usd,
-            }
+            },
+            trials_path,
         )
         votes.append(parse_verify_answer(result.text))
         reasons.append(result.text.strip())
@@ -608,6 +628,10 @@ def run_probe(
     spend_state = {"spent": 0.0}
     guarded_adapter = _budget_guarded(adapter, budget_usd, spend_state)
 
+    # Created up front so every trial row is durable the moment it completes.
+    run_dir.mkdir(parents=True, exist_ok=True)
+    trials_path = run_dir / "trials.jsonl"
+
     for target_index, target_path in enumerate(probe_config.target_paths, start=1):
         if halted_on_budget:
             break
@@ -629,6 +653,7 @@ def run_probe(
                 retries=retries,
                 rows=rows,
                 case_id=f"{prefix}probe",
+                trials_path=trials_path,
             )
 
             capped, target_overflow = cap_findings(raw_findings, probe_config.max_findings)
@@ -642,6 +667,7 @@ def run_probe(
                     case_id=f"{prefix}finding-{index}",
                     rows=rows,
                     verify_trials=probe_config.verify_trials,
+                    trials_path=trials_path,
                 )
                 if multi_target:
                     entry = replace(entry, target_file=str(target_path))
@@ -676,10 +702,6 @@ def run_probe(
     confirmed = [entry for entry in verified if entry.verdict == "confirmed"]
     refuted = [entry for entry in verified if entry.verdict == "refuted"]
     refuted_count = len(refuted)
-
-    run_dir.mkdir(parents=True, exist_ok=True)
-    for row in rows:
-        tune.append_jsonl(run_dir / "trials.jsonl", row)
 
     probe_calls = sum(1 for row in rows if row["condition"] == "probe")
     verify_calls = sum(1 for row in rows if row["condition"] == "verify")
