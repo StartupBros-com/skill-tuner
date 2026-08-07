@@ -69,6 +69,33 @@ class ProbeParseError(ValueError):
     exhausting the bounded retry budget."""
 
 
+class _BudgetExhausted(Exception):
+    """Internal signal: the run has spent its cap. Raised by the budget
+    wrapper before a call is made, never surfaced to callers -- run_probe
+    catches it, stops cleanly, and reports the partial result as halted."""
+
+
+def _budget_guarded(
+    adapter: AdapterFn, budget_usd: float | None, state: dict[str, float]
+) -> AdapterFn:
+    """Wrap ``adapter`` so the run stops before exceeding ``budget_usd``.
+
+    tune.execute_battery owns this for fixed-size batteries, but the probe's
+    call count is discovered mid-run (findings are only known after the probe
+    call), so it runs outside that battery and needs its own cap. The check
+    is before the call, so the cap is never breached by the call that trips
+    it."""
+
+    def wrapped(prompt: str, model: str) -> tune.AdapterResult:
+        if budget_usd is not None and state["spent"] >= budget_usd:
+            raise _BudgetExhausted()
+        result = adapter(prompt, model)
+        state["spent"] += result.cost_usd or 0.0
+        return result
+
+    return wrapped
+
+
 # --------------------------------------------------------------------------
 # Config loading
 # --------------------------------------------------------------------------
@@ -454,6 +481,7 @@ def write_probe_report(
     target_paths: Sequence[Path] | None = None,
     per_target: Sequence[Mapping[str, Any]] = (),
     verify_trials: int = DEFAULT_VERIFY_TRIALS,
+    halted_on_budget: bool = False,
 ) -> tuple[Path, Path]:
     json_path, md_path = tune.write_report(run_dir, rows, ("probe", "verify"))
 
@@ -475,6 +503,7 @@ def write_probe_report(
         "confirmed_findings": confirmed_findings,
         "refuted_findings": refuted_findings,
         "per_target": [dict(entry) for entry in per_target],
+        "halted_on_budget": halted_on_budget,
     }
     json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
@@ -499,6 +528,11 @@ def write_probe_report(
     )
     if overflow:
         lines.append(f"- overflow (beyond max_findings cap, not verified): {overflow}")
+    if halted_on_budget:
+        lines.append(
+            "- **PARTIAL RUN: budget cap reached; not every target was probed. "
+            "These counts are not a verdict on the full target set.**"
+        )
     lines.append("")
 
     if len(resolved_targets) > 1 and per_target:
@@ -555,6 +589,7 @@ def run_probe(
     base_dir: Path | None = None,
     *,
     retries: int = DEFAULT_RETRIES,
+    budget_usd: float | None = None,
 ) -> dict[str, Any]:
     """Run the full marginal-value probe pipeline: one probe call (doctrine
     + target inline), cap findings, one fresh self-contained verify call per
@@ -569,58 +604,74 @@ def run_probe(
     verified: list[VerifiedFinding] = []
     per_target: list[dict[str, Any]] = []
     overflow = 0
+    halted_on_budget = False
+    spend_state = {"spent": 0.0}
+    guarded_adapter = _budget_guarded(adapter, budget_usd, spend_state)
 
     for target_index, target_path in enumerate(probe_config.target_paths, start=1):
+        if halted_on_budget:
+            break
         target_text = target_path.read_text(encoding="utf-8")
         # Single-target runs keep the original flat case ids so their trial
         # logs stay byte-comparable with pre-multi-target runs.
         prefix = f"t{target_index}-" if multi_target else ""
         before = len(rows)
-
-        raw_findings = run_probe_call(
-            doctrine_text,
-            target_text,
-            adapter=adapter,
-            model=probe_config.model,
-            retries=retries,
-            rows=rows,
-            case_id=f"{prefix}probe",
-        )
-
-        capped, target_overflow = cap_findings(raw_findings, probe_config.max_findings)
-        overflow += target_overflow
-
+        target_overflow = 0
         target_verified: list[VerifiedFinding] = []
-        for index, finding in enumerate(capped, start=1):
-            entry = verify_finding(
-                finding,
-                target_text=target_text,
-                adapter=adapter,
-                model=probe_config.model,
-                case_id=f"{prefix}finding-{index}",
-                rows=rows,
-                verify_trials=probe_config.verify_trials,
-            )
-            if multi_target:
-                entry = replace(entry, target_file=str(target_path))
-            target_verified.append(entry)
+        target_halted = False
 
+        try:
+            raw_findings = run_probe_call(
+                doctrine_text,
+                target_text,
+                adapter=guarded_adapter,
+                model=probe_config.model,
+                retries=retries,
+                rows=rows,
+                case_id=f"{prefix}probe",
+            )
+
+            capped, target_overflow = cap_findings(raw_findings, probe_config.max_findings)
+
+            for index, finding in enumerate(capped, start=1):
+                entry = verify_finding(
+                    finding,
+                    target_text=target_text,
+                    adapter=guarded_adapter,
+                    model=probe_config.model,
+                    case_id=f"{prefix}finding-{index}",
+                    rows=rows,
+                    verify_trials=probe_config.verify_trials,
+                )
+                if multi_target:
+                    entry = replace(entry, target_file=str(target_path))
+                target_verified.append(entry)
+        except _BudgetExhausted:
+            # Stop cleanly: whatever completed stays durable and the report
+            # is flagged partial, so a truncated run can never be read as a
+            # verdict on the full target set.
+            halted_on_budget = True
+            target_halted = True
+
+        overflow += target_overflow
         verified.extend(target_verified)
         target_rows = rows[before:]
-        per_target.append(
-            {
-                "target_file": str(target_path),
-                "findings_confirmed": sum(
-                    1 for item in target_verified if item.verdict == "confirmed"
-                ),
-                "refuted_count": sum(
-                    1 for item in target_verified if item.verdict == "refuted"
-                ),
-                "overflow": target_overflow,
-                "probe_calls": sum(1 for row in target_rows if row["condition"] == "probe"),
-                "verify_calls": sum(1 for row in target_rows if row["condition"] == "verify"),
-            }
-        )
+        if target_rows:
+            per_target.append(
+                {
+                    "target_file": str(target_path),
+                    "findings_confirmed": sum(
+                        1 for item in target_verified if item.verdict == "confirmed"
+                    ),
+                    "refuted_count": sum(
+                        1 for item in target_verified if item.verdict == "refuted"
+                    ),
+                    "overflow": target_overflow,
+                    "probe_calls": sum(1 for row in target_rows if row["condition"] == "probe"),
+                    "verify_calls": sum(1 for row in target_rows if row["condition"] == "verify"),
+                    "complete": not target_halted,
+                }
+            )
 
     confirmed = [entry for entry in verified if entry.verdict == "confirmed"]
     refuted = [entry for entry in verified if entry.verdict == "refuted"]
@@ -647,10 +698,13 @@ def run_probe(
         target_paths=probe_config.target_paths,
         per_target=per_target,
         verify_trials=probe_config.verify_trials,
+        halted_on_budget=halted_on_budget,
     )
 
     return {
         "run_dir": str(run_dir),
+        "halted_on_budget": halted_on_budget,
+        "spent_usd": round(spend_state["spent"], 6),
         "findings_confirmed": len(confirmed),
         "refuted_count": refuted_count,
         "overflow": overflow,

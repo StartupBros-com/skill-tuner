@@ -724,5 +724,80 @@ class MultiTargetTest(unittest.TestCase):
                 probe.load_config({"model": "m", "target_files": []}, base_dir=base)
 
 
+# --------------------------------------------------------------------------
+# Scenario 11: the budget cap halts the probe mid-run.
+#
+# run_probe does not go through tune.execute_battery (its verify-call count
+# is discovered mid-run), so it never inherited that battery's mid-run cap --
+# only the pre-flight unmetered check. One target hid the gap; a multi-target
+# run with a skeptic panel multiplies the calls behind it.
+# --------------------------------------------------------------------------
+
+
+class ProbeBudgetHaltTest(unittest.TestCase):
+    def _targets(self, base: Path) -> list[Path]:
+        return [
+            _write(base, f"t{i}.md", f"Target {i} line one.\nTarget {i} line two.\n")
+            for i in range(1, 4)
+        ]
+
+    def test_budget_cap_halts_mid_run_and_flags_the_partial_result(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            targets = self._targets(base)
+            run_dir = base / "run"
+            config = {
+                "doctrine_file": str(doctrine_path),
+                "target_files": [str(path) for path in targets],
+                "model": "test-model",
+            }
+
+            calls: list[str] = []
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                calls.append(prompt)
+                if VERIFY_MARKER in prompt:
+                    return tune.AdapterResult(text="CONFIRMED: ok.", cost_usd=1.0, raw={})
+                quote = "Target 1 line one." if "Target 1" in prompt else "Target 2 line one."
+                payload = [{"rule": "R", "target_quote": quote, "issue": "i", "proposed_fix": "f"}]
+                return tune.AdapterResult(text=json.dumps(payload), cost_usd=1.0, raw={})
+
+            result = probe.run_probe(
+                config, fake_adapter, run_dir, base_dir=base, budget_usd=3.0
+            )
+
+            self.assertTrue(result["halted_on_budget"])
+            # Stopped well short of all three targets' worth of calls.
+            self.assertLess(len(calls), 6)
+            self.assertLess(len(result["per_target"]), 3)
+
+            # Completed work is still durable and reported.
+            self.assertTrue((run_dir / "trials.jsonl").exists())
+            report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+            self.assertTrue(report["probe"]["halted_on_budget"])
+
+    def test_no_budget_runs_every_target_and_flags_nothing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            targets = self._targets(base)
+            run_dir = base / "run"
+            config = {
+                "doctrine_file": str(doctrine_path),
+                "target_files": [str(path) for path in targets],
+                "model": "test-model",
+            }
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                return tune.AdapterResult(text="[]", cost_usd=1.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            self.assertFalse(result["halted_on_budget"])
+            self.assertEqual(3, len(result["per_target"]))
+            self.assertEqual(3, result["probe_calls"])
+
+
 if __name__ == "__main__":
     unittest.main()

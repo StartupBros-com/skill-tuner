@@ -593,8 +593,23 @@ def _run_probe_config(args: argparse.Namespace) -> int:
     def adapter(prompt: str, model: str) -> AdapterResult:
         return call_adapter(prompt, model, retries=args.retries)
 
-    result = probe.run_probe(config, adapter, run_dir, base_dir=base_dir, retries=args.retries)
-    print(f"Run {run_id}: findings_confirmed={result['findings_confirmed']} refuted_count={result['refuted_count']}")
+    result = probe.run_probe(
+        config,
+        adapter,
+        run_dir,
+        base_dir=base_dir,
+        retries=args.retries,
+        budget_usd=args.budget_usd,
+    )
+    print(
+        f"Run {run_id}: findings_confirmed={result['findings_confirmed']} "
+        f"refuted_count={result['refuted_count']} spent=${result['spent_usd']:.4f}"
+    )
+    if result["halted_on_budget"]:
+        print(
+            f"Budget cap ${args.budget_usd:.2f} reached; halted with a PARTIAL result "
+            f"({len(result['per_target'])} of {len(result['target_files'])} target(s) probed)."
+        )
     return 0
 
 
