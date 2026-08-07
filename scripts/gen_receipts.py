@@ -51,19 +51,65 @@ def render_routing_section(report: dict[str, Any], run_id: str) -> list[str]:
     return lines
 
 
+# A receipts block leads with numbers; the findings themselves are evidence
+# for the number, not the README's payload. Six targets can confirm a dozen
+# findings whose issue text runs to several screens, which buries the result
+# it is supposed to support -- so preview a few and point at the full report.
+FINDING_PREVIEW_LIMIT = 3
+ISSUE_PREVIEW_CHARS = 180
+
+
+def _shorten(text: str, limit: int = ISSUE_PREVIEW_CHARS) -> str:
+    collapsed = " ".join(text.split())
+    if len(collapsed) <= limit:
+        return collapsed
+    return collapsed[: limit - 1].rstrip() + "…"
+
+
 def render_probe_section(report: dict[str, Any], run_id: str) -> list[str]:
     probe = report["probe"]
-    lines = [
-        f"### Marginal-value probe — `{run_id}`",
-        "",
+    targets = probe.get("target_files") or [probe["target_file"]]
+    verify_trials = probe.get("verify_trials", 1)
+
+    headline = (
         f"**findings_confirmed: {probe['findings_confirmed']}** "
-        f"(refuted: {probe['refuted_count']}, probe calls: {probe['probe_calls']}, "
-        f"verify calls: {probe['verify_calls']})",
-        "",
-    ]
-    if probe["confirmed_findings"]:
-        for finding in probe["confirmed_findings"]:
-            lines.append(f"- **{finding['rule']}**: {finding['issue']}")
+        f"(refuted: {probe['refuted_count']}, targets: {len(targets)}, "
+        f"probe calls: {probe['probe_calls']}, verify calls: {probe['verify_calls']}"
+    )
+    if verify_trials > 1:
+        headline += f" at {verify_trials} skeptics per finding"
+    headline += ")"
+
+    lines = [f"### Marginal-value probe — `{run_id}`", "", headline, ""]
+
+    if probe.get("halted_on_budget"):
+        lines.append(
+            "> Partial run: the budget cap halted this battery before every "
+            "target was probed. Not a verdict on the full target set."
+        )
+        lines.append("")
+
+    per_target = probe.get("per_target") or []
+    if len(targets) > 1 and per_target:
+        lines.append("| Target | confirmed | refuted |")
+        lines.append("| --- | --- | --- |")
+        for entry in per_target:
+            name = Path(entry["target_file"]).parent.name or entry["target_file"]
+            lines.append(
+                f"| {name} | {entry['findings_confirmed']} | {entry['refuted_count']} |"
+            )
+        lines.append("")
+
+    findings = probe["confirmed_findings"]
+    if findings:
+        for finding in findings[:FINDING_PREVIEW_LIMIT]:
+            lines.append(f"- **{_shorten(finding['rule'], 90)}**: {_shorten(finding['issue'])}")
+        remaining = len(findings) - FINDING_PREVIEW_LIMIT
+        if remaining > 0:
+            lines.append(
+                f"- …and {remaining} more, with quotes and proposed fixes, in "
+                f"`reports/{run_id}/report.md`"
+            )
     else:
         lines.append("No confirmed findings on this pass.")
     lines.append("")
