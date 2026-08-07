@@ -783,6 +783,35 @@ def _cmd_verify(args: argparse.Namespace) -> int:
     return 1 if result["drifted"] else 0
 
 
+def _cmd_compare(args: argparse.Namespace) -> int:
+    """Judge one probe run against another, paired by document.
+
+    Exit 0 when the candidate is `better` or `not_worse`; 1 otherwise, so a
+    gate can be a shell condition instead of a human reading a table.
+    """
+    import compare as compare_mod
+
+    baseline = compare_mod.load_report(_resolve_run_path(args, args.baseline))
+    candidate = compare_mod.load_report(_resolve_run_path(args, args.candidate))
+
+    try:
+        result = compare_mod.compare_probe_reports(baseline, candidate, delta=args.delta)
+    except compare_mod.ComparisonError as exc:
+        print(f"cannot compare: {exc}")
+        return 2
+
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        print(compare_mod.render(result))
+    return 0 if result["verdict"] in ("better", "not_worse") else 1
+
+
+def _resolve_run_path(args: argparse.Namespace, value: str) -> Path:
+    candidate = Path(value)
+    return candidate if candidate.exists() else args.reports_dir / value
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="tune.py", description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -812,6 +841,26 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
     verify.add_argument("--json", action="store_true", help="Machine-readable output")
     verify.set_defaults(handler=_cmd_verify)
+
+    compare_cmd = subparsers.add_parser(
+        "compare",
+        help="Pair two probe runs by document and judge the difference (no model calls)",
+    )
+    compare_cmd.add_argument("--baseline", required=True, metavar="RUN")
+    compare_cmd.add_argument("--candidate", required=True, metavar="RUN")
+    compare_cmd.add_argument(
+        "--delta",
+        type=float,
+        default=1.0,
+        metavar="FINDINGS",
+        help=(
+            "Non-inferiority margin in confirmed findings per document: the "
+            "largest regression you would still call acceptable (default 1.0)"
+        ),
+    )
+    compare_cmd.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
+    compare_cmd.add_argument("--json", action="store_true")
+    compare_cmd.set_defaults(handler=_cmd_compare)
 
     return parser
 
