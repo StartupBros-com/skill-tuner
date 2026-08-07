@@ -91,6 +91,18 @@ def _repo_root(path: Path) -> Path | None:
     return Path(out.strip()) if code == 0 and out.strip() else None
 
 
+_MODULE_DIR = Path(__file__).resolve().parent
+
+
+def tool_version() -> str | None:
+    """skill-tuner's own version from the repo VERSION file. A receipt should
+    say which build of the tool produced it, not only which model answered."""
+    try:
+        return (_MODULE_DIR.parents[2] / "VERSION").read_text(encoding="utf-8").strip() or None
+    except OSError:
+        return None
+
+
 def cli_version() -> str | None:
     """The `claude` build this machine would run right now, or None if the
     CLI is absent. Captured once per run, not per call."""

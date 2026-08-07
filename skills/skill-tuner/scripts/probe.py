@@ -62,17 +62,6 @@ AdapterFn = Callable[[str, str], tune.AdapterResult]
 _MODULE_DIR = Path(__file__).resolve().parent
 DEFAULT_DOCTRINE_PATH = _MODULE_DIR.parent / "SKILL.md"
 
-def _tool_version() -> str | None:
-    """skill-tuner's own version, read from the repo's VERSION file. A
-    receipt should say which build of the tool produced it, not just which
-    build of the model answered."""
-    candidate = _MODULE_DIR.parents[2] / "VERSION"
-    try:
-        return candidate.read_text(encoding="utf-8").strip() or None
-    except OSError:
-        return None
-
-
 DEFAULT_MAX_FINDINGS = 8
 DEFAULT_RETRIES = 2
 DEFAULT_VERIFY_TRIALS = 1
@@ -753,7 +742,7 @@ def run_probe(
         started_at=started_at,
         finished_at=provenance.utc_now(),
         cli_version=provenance.cli_version(),
-        tool_version=_tool_version(),
+        tool_version=provenance.tool_version(),
         extra={"eval": "probe", "pin": pin},
     )
 

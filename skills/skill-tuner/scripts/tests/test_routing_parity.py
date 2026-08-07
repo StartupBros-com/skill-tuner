@@ -254,7 +254,7 @@ class DescriptionExtractionTest(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            description = routing_parity.extract_description(skill_md)
+            description = routing_parity.extract_description(skill_md.read_text(encoding='utf-8'))
 
             self.assertEqual(
                 'Handles alpha reporting end to end. Use when a project needs '
@@ -267,7 +267,10 @@ class DescriptionExtractionTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
             path = _write_skill(base, "alpha", "Handles alpha things.", "Alpha body.")
-            self.assertEqual("Handles alpha things.", routing_parity.extract_description(path))
+            self.assertEqual(
+                "Handles alpha things.",
+                routing_parity.extract_description(path.read_text(encoding="utf-8")),
+            )
 
 
 class BlindingGuardTest(unittest.TestCase):
@@ -277,7 +280,7 @@ class BlindingGuardTest(unittest.TestCase):
             description = "Alpha handles distinctive-alpha-description-text end to end."
             path = _write_skill(base, "alpha", description, "This body talks about alpha work only.")
 
-            body = routing_parity.extract_body(path)
+            body = routing_parity.extract_body(path.read_text(encoding='utf-8'))
 
             self.assertNotIn(description, body)
             self.assertNotIn("distinctive-alpha-description-text", body)
@@ -460,7 +463,10 @@ class DistractorDescriptionTest(unittest.TestCase):
             sample_prompt = specs[0].prompt
             for distractor in distractors:
                 self.assertEqual(
-                    routing_parity.extract_description(distractor.path), distractor.description
+                    routing_parity.extract_description(
+                        distractor.path.read_text(encoding='utf-8')
+                    ),
+                    distractor.description,
                 )
                 self.assertIn(distractor.description, sample_prompt)
                 self.assertIn(distractor.id, sample_prompt)

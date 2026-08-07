@@ -617,6 +617,8 @@ def _run_routing_parity_config(args: argparse.Namespace) -> int:
     import routing_parity  # local: routing_parity imports tune at module load time
 
     config = _load_json_config(args.config)
+    if getattr(args, "pin", None):
+        config = {**config, "pin": args.pin}
     base_dir = args.config.resolve().parent
     content_parts = ["routing-parity", str(args.config.resolve()), json.dumps(config, sort_keys=True)]
     run_dir, run_id = resolve_run_dir(
@@ -635,6 +637,7 @@ def _run_routing_parity_config(args: argparse.Namespace) -> int:
         allow_unmetered=args.allow_unmetered,
         auth_mode=detect_auth_mode(),
         yes=args.yes,
+        run_id=run_id,
     )
     print(f"Run {run_id}: verdict={result['verdict']} failing_case_ids={result['failing_case_ids']}")
     return 0

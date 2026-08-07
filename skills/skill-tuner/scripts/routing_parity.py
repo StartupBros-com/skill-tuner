@@ -43,6 +43,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+import provenance
 import tune
 
 AdapterFn = Callable[[str, str], tune.AdapterResult]
@@ -63,12 +64,15 @@ class BlindingViolation(Exception):
 _FRONTMATTER_RE = re.compile(r"\A---[ \t]*\n.*?\n---[ \t]*\n?", re.DOTALL)
 
 
-def extract_body(skill_md_path: Path) -> str:
+def extract_body(text: str) -> str:
     """Strip YAML frontmatter entirely, so no description text can reach
     the battery builder. This is a structural parse of the file layout
     (the block between the first two '---' delimiter lines), not a
-    text-based heuristic -- the frontmatter is removed outright."""
-    text = skill_md_path.read_text(encoding="utf-8")
+    text-based heuristic -- the frontmatter is removed outright.
+
+    Takes text rather than a path on purpose: every byte an eval reads comes
+    through provenance.resolve_input, and a helper that opens files itself
+    would be a way around that."""
     match = _FRONTMATTER_RE.match(text)
     if match:
         return text[match.end():]
@@ -78,7 +82,7 @@ def extract_body(skill_md_path: Path) -> str:
 _BLOCK_SCALAR_INDICATORS = {">-", ">", ">+", "|-", "|", "|+"}
 
 
-def extract_description(skill_md_path: Path) -> str:
+def extract_description(text: str, *, source: str = "<input>") -> str:
     """Read the ``description:`` field out of a SKILL.md's YAML frontmatter.
 
     Handles both a plain single-line value (``description: "..."``) and a
@@ -89,10 +93,9 @@ def extract_description(skill_md_path: Path) -> str:
     instead of the actual text. This is a minimal, field-scoped parser
     (KTD1: stdlib only, no YAML dependency), not a general YAML engine.
     """
-    text = skill_md_path.read_text(encoding="utf-8")
     match = _FRONTMATTER_RE.match(text)
     if not match:
-        raise ValueError(f"{skill_md_path}: no YAML frontmatter found")
+        raise ValueError(f"{source}: no YAML frontmatter found")
     lines = match.group(0).splitlines()
     for index, line in enumerate(lines):
         stripped = line.strip()
@@ -115,7 +118,7 @@ def extract_description(skill_md_path: Path) -> str:
         if value and value[0] == value[-1] and value[0] in "\"'":
             value = value[1:-1]
         return value
-    raise ValueError(f"{skill_md_path}: no description field in frontmatter")
+    raise ValueError(f"{source}: no description field in frontmatter")
 
 
 def assert_no_blinding_violation(prompt: str, forbidden: Sequence[str], *, case_id: str) -> None:
@@ -177,10 +180,27 @@ def _resolve_pruned_description(entry: Mapping[str, Any], base_dir: Path) -> str
     )
 
 
+def _plain_reader(path: Path, role: str) -> str:
+    """Fallback reader for callers that want no provenance (tests, ad-hoc
+    inspection). The eval path always injects the provenance-backed one."""
+    return path.read_text(encoding="utf-8")
+
+
+ReaderFn = Callable[[Path, str], str]
+
+
 def load_config(
-    config: Mapping[str, Any], *, base_dir: Path
+    config: Mapping[str, Any],
+    *,
+    base_dir: Path,
+    read: ReaderFn | None = None,
 ) -> tuple[list[TargetSkill], list[DistractorSkill], int, str]:
-    """Parse the eval config into (targets, distractors, trials_n, model)."""
+    """Parse the eval config into (targets, distractors, trials_n, model).
+
+    ``read`` is how every skill file is fetched. Injecting it is what lets
+    the orchestrator route all input through provenance.resolve_input while
+    keeping this function testable with plain files."""
+    read = read or _plain_reader
     raw_targets = config.get("targets") or []
     if not raw_targets:
         raise ValueError("config must name at least one target skill")
@@ -193,7 +213,9 @@ def load_config(
             TargetSkill(
                 id=skill_id,
                 path=path,
-                original_description=extract_description(path),
+                original_description=extract_description(
+                    read(path, "target"), source=str(path)
+                ),
                 pruned_description=_resolve_pruned_description(entry, base_dir),
             )
         )
@@ -207,7 +229,13 @@ def load_config(
         entry = {"path": raw_entry} if isinstance(raw_entry, str) else raw_entry
         path = _resolve_path(entry["path"], base_dir)
         skill_id = entry.get("id") or _skill_id_from_path(path)
-        distractors.append(DistractorSkill(id=skill_id, path=path, description=extract_description(path)))
+        distractors.append(
+            DistractorSkill(
+                id=skill_id,
+                path=path,
+                description=extract_description(read(path, "distractor"), source=str(path)),
+            )
+        )
 
     trials_n = int(config.get("trials", 2))
     if trials_n < 2:
@@ -278,8 +306,8 @@ def _parse_authoring_response(text: str, target_id: str) -> list[dict[str, str]]
     return obvious + paraphrase
 
 
-def _battery_cases_from_file(path: Path) -> list[BatteryCase]:
-    raw_cases = json.loads(path.read_text(encoding="utf-8"))
+def _battery_cases_from_json(text: str) -> list[BatteryCase]:
+    raw_cases = json.loads(text)
     return [
         BatteryCase(
             case_id=entry["case_id"],
@@ -298,22 +326,25 @@ def build_battery(
     adapter: AdapterFn,
     model: str,
     base_dir: Path,
+    read: ReaderFn | None = None,
 ) -> list[BatteryCase]:
     """Build the blind battery from skill bodies only. Every case -- whether
     adapter-authored or loaded from a pre-built battery file -- is checked
     against the blinding guard before being added."""
+    read = read or _plain_reader
     forbidden = _forbidden_strings(targets)
     battery: list[BatteryCase] = []
 
     battery_file = config.get("battery_file")
     if battery_file:
-        for case in _battery_cases_from_file(_resolve_path(battery_file, base_dir)):
+        battery_path = _resolve_path(battery_file, base_dir)
+        for case in _battery_cases_from_json(read(battery_path, "battery")):
             assert_no_blinding_violation(case.prompt, forbidden, case_id=case.case_id)
             battery.append(case)
         return battery
 
     for target in targets:
-        body = extract_body(target.path)
+        body = extract_body(read(target.path, "target"))
         result = adapter(_build_authoring_prompt(body), model)
         authored = _parse_authoring_response(result.text, target.id)
 
@@ -540,8 +571,9 @@ def write_routing_parity_report(
     conditions: tuple[str, str],
     scores: Mapping[str, ScoreResult],
     verdict_payload: Mapping[str, Any],
+    manifest: Mapping[str, Any] | None = None,
 ) -> tuple[Path, Path]:
-    json_path, md_path = tune.write_report(run_dir, rows, conditions)
+    json_path, md_path = tune.write_report(run_dir, rows, conditions, manifest)
 
     summary = json.loads(json_path.read_text(encoding="utf-8"))
     summary["routing_parity"] = {
@@ -585,13 +617,35 @@ def run_routing_parity_eval(
     allow_unmetered: bool = True,
     auth_mode: str = "subscription",
     yes: bool = True,
+    run_id: str | None = None,
 ) -> dict[str, Any]:
     """Run the full routing-parity pipeline: build battery, run the router
     condition through tune.py's guarded battery executor, pair-check,
     score, gate, and report. Every model call goes through ``adapter``."""
     resolved_base_dir = base_dir if base_dir is not None else Path(".")
-    targets, distractors, trials_n, model = load_config(config, base_dir=resolved_base_dir)
-    battery = build_battery(targets, config, adapter=adapter, model=model, base_dir=resolved_base_dir)
+    pin = config.get("pin")
+    started_at = provenance.utc_now()
+
+    # One provenance-backed reader for the whole run: it resolves each file
+    # once, caches it so a skill read as both target and battery input is not
+    # hashed twice, and accumulates the records the manifest is built from.
+    resolved_inputs: list[provenance.ResolvedInput] = []
+    _cache: dict[str, provenance.ResolvedInput] = {}
+
+    def read(path: Path, role: str) -> str:
+        key = str(path)
+        if key not in _cache:
+            item = provenance.resolve_input(path, role=role, pin=pin)
+            _cache[key] = item
+            resolved_inputs.append(item)
+        return _cache[key].text
+
+    targets, distractors, trials_n, model = load_config(
+        config, base_dir=resolved_base_dir, read=read
+    )
+    battery = build_battery(
+        targets, config, adapter=adapter, model=model, base_dir=resolved_base_dir, read=read
+    )
     specs = build_router_trial_specs(battery, targets, distractors, trials_n)
 
     execute_result = tune.execute_battery(
@@ -620,7 +674,23 @@ def run_routing_parity_eval(
     }
 
     verdict_payload = determine_verdict(scores["original"], scores["pruned"])
-    json_path, md_path = write_routing_parity_report(run_dir, rows, CONDITIONS, scores, verdict_payload)
+    manifest = provenance.build_manifest(
+        run_id=run_id or run_dir.name,
+        inputs=resolved_inputs,
+        model_pin=model,
+        resolved_models=sorted(
+            {row["model_resolved"] for row in rows if row.get("model_resolved")}
+        ),
+        started_at=started_at,
+        finished_at=provenance.utc_now(),
+        cli_version=provenance.cli_version(),
+        tool_version=provenance.tool_version(),
+        extra={"eval": "routing-parity", "pin": pin},
+    )
+
+    json_path, md_path = write_routing_parity_report(
+        run_dir, rows, CONDITIONS, scores, verdict_payload, manifest
+    )
 
     return {
         "run_dir": str(run_dir),
