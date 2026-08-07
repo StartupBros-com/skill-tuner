@@ -901,5 +901,98 @@ class IncrementalPersistenceTest(unittest.TestCase):
             self.assertEqual(result["probe_calls"] + result["verify_calls"], len(rows))
 
 
+# --------------------------------------------------------------------------
+# Scenario 13: every probe run carries a manifest (U9.1/U9.3).
+#
+# A report that cannot say what produced it is an assertion wearing a table.
+# The manifest rides in through tune.write_report, the seam both evals share.
+# --------------------------------------------------------------------------
+
+
+class ProbeManifestTest(unittest.TestCase):
+    def test_report_carries_inputs_model_and_timestamps(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            config = _config(doctrine_path, target_path)
+            run_dir = base / "run"
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                return tune.AdapterResult(
+                    text="[]", cost_usd=0.0, raw={}, model_resolved="claude-sonnet-5-x"
+                )
+
+            probe.run_probe(config, fake_adapter, run_dir, base_dir=base, run_id="r1")
+
+            report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+            manifest = report["manifest"]
+
+            self.assertEqual("r1", manifest["run_id"])
+            self.assertEqual("test-model", manifest["model_pin"])
+            self.assertEqual(["claude-sonnet-5-x"], manifest["resolved_models"])
+            self.assertTrue(manifest["started_at"])
+            self.assertTrue(manifest["finished_at"])
+
+            roles = {item["role"]: item for item in manifest["inputs"]}
+            self.assertEqual({"doctrine", "target"}, set(roles))
+            self.assertTrue(roles["target"]["sha256"].startswith("sha256:"))
+            # The manifest names and hashes an input; it never inlines it.
+            self.assertNotIn("text", roles["target"])
+
+            summary = (run_dir / "report.md").read_text(encoding="utf-8")
+            self.assertIn("## Run manifest", summary)
+
+    def test_pin_reads_committed_content_not_the_working_tree(self):
+        import subprocess
+
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+
+            def git(*args):
+                subprocess.run(["git", "-C", str(repo), *args], check=True,
+                               capture_output=True, text=True)
+
+            git("init", "-q", "-b", "main")
+            git("config", "user.email", "t@example.com")
+            git("config", "user.name", "T")
+            doctrine_path = _write(repo, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(repo, "target.md", TARGET_TEXT)
+            git("add", "-A")
+            git("-c", "commit.gpgsign=false", "commit", "-q", "-m", "initial")
+
+            target_path.write_text("LOCAL UNCOMMITTED EDIT\n", encoding="utf-8")
+
+            seen: list[str] = []
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                seen.append(prompt)
+                return tune.AdapterResult(text="[]", cost_usd=0.0, raw={})
+
+            config = _config(doctrine_path, target_path, pin="HEAD")
+            probe.run_probe(config, fake_adapter, repo / "run", base_dir=repo)
+
+            self.assertIn(TARGET_TEXT, seen[0])
+            self.assertNotIn("LOCAL UNCOMMITTED EDIT", seen[0])
+
+    def test_unresolvable_pin_fails_before_any_model_call(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            config = _config(doctrine_path, target_path, pin="origin/main")
+
+            calls: list[str] = []
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                calls.append(prompt)
+                return tune.AdapterResult(text="[]", cost_usd=0.0, raw={})
+
+            with self.assertRaises(Exception):
+                probe.run_probe(config, fake_adapter, base / "run", base_dir=base)
+
+            self.assertEqual([], calls)  # no spend on an unresolvable input
+
+
 if __name__ == "__main__":
     unittest.main()
