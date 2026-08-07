@@ -1,0 +1,47 @@
+name: Tests
+
+# The suite drives a fake adapter throughout and never calls a model, so this
+# workflow costs nothing to run and needs no credentials. That is the point:
+# a repo whose pitch is that claims should be measured has no business
+# merging a change nobody ran the tests on.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # provenance.py resolves inputs against git refs, and its tests
+          # build real throwaway repositories rather than mocking git.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Unit tests
+        working-directory: skills/skill-tuner/scripts
+        run: python3 -m unittest discover tests -v
+
+      - name: Doctrine boundary (AE4 / KTD4)
+        # The doctrine describes the runner; it must never direct running it,
+        # or a doctrine-firing session could read an instruction to spend the
+        # adopter's tokens.
+        run: |
+          if grep -nEi '^[^|]*\b(run|invoke|execute) (the )?(tune\.py|runner|eval)' \
+              skills/skill-tuner/SKILL.md; then
+            echo "::error::SKILL.md contains imperative runner-invocation phrasing"
+            exit 1
+          fi
+          echo "AE4 grep clean"
+
+      - name: No third-party imports in the shipped runner (R7)
+        run: python3 scripts/check_stdlib_only.py
