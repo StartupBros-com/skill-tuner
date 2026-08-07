@@ -799,5 +799,107 @@ class ProbeBudgetHaltTest(unittest.TestCase):
             self.assertEqual(3, result["probe_calls"])
 
 
+# --------------------------------------------------------------------------
+# Scenario 12: trials persist as they complete (R15 / KTD3).
+#
+# run_probe buffered every row in memory and flushed after the last target,
+# so a crash lost the whole run's spend and an in-flight run showed nothing
+# on disk. Both matter more once one run covers six targets.
+# --------------------------------------------------------------------------
+
+
+class IncrementalPersistenceTest(unittest.TestCase):
+    def test_rows_are_on_disk_before_the_run_finishes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            targets = [
+                _write(base, f"t{i}.md", f"Target {i} line one.\n") for i in range(1, 4)
+            ]
+            run_dir = base / "run"
+            config = {
+                "doctrine_file": str(doctrine_path),
+                "target_files": [str(path) for path in targets],
+                "model": "test-model",
+            }
+
+            seen_mid_run: list[int] = []
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                trials = run_dir / "trials.jsonl"
+                seen_mid_run.append(
+                    len(trials.read_text(encoding="utf-8").splitlines())
+                    if trials.exists()
+                    else 0
+                )
+                return tune.AdapterResult(text="[]", cost_usd=0.0, raw={})
+
+            probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            # By the third target's probe call, earlier rows are already durable.
+            self.assertEqual(3, len(seen_mid_run))
+            self.assertGreater(seen_mid_run[-1], 0)
+
+    def test_a_crash_mid_run_leaves_completed_trials_durable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            targets = [
+                _write(base, f"t{i}.md", f"Target {i} line one.\n") for i in range(1, 4)
+            ]
+            run_dir = base / "run"
+            config = {
+                "doctrine_file": str(doctrine_path),
+                "target_files": [str(path) for path in targets],
+                "model": "test-model",
+            }
+
+            calls = {"n": 0}
+
+            def exploding_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                calls["n"] += 1
+                if calls["n"] > 2:
+                    raise RuntimeError("adapter died")
+                return tune.AdapterResult(text="[]", cost_usd=0.0, raw={})
+
+            with self.assertRaises(RuntimeError):
+                probe.run_probe(config, exploding_adapter, run_dir, base_dir=base)
+
+            trials = run_dir / "trials.jsonl"
+            self.assertTrue(trials.exists())
+            rows = [json.loads(line) for line in trials.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(2, len(rows))  # the two calls that completed
+
+    def test_rows_are_written_exactly_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            run_dir = base / "run"
+            config = _config(doctrine_path, target_path)
+
+            findings_payload = [
+                {
+                    "rule": "R",
+                    "target_quote": "Use the config file to configure the client.",
+                    "issue": "i",
+                    "proposed_fix": "f",
+                }
+            ]
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                if VERIFY_MARKER in prompt:
+                    return tune.AdapterResult(text="CONFIRMED: ok.", cost_usd=0.0, raw={})
+                return tune.AdapterResult(text=json.dumps(findings_payload), cost_usd=0.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            rows = [
+                json.loads(line)
+                for line in (run_dir / "trials.jsonl").read_text(encoding="utf-8").splitlines()
+            ]
+            self.assertEqual(result["probe_calls"] + result["verify_calls"], len(rows))
+
+
 if __name__ == "__main__":
     unittest.main()
