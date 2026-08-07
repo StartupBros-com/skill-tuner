@@ -1,0 +1,5 @@
+{
+  "model": "claude-sonnet-5",
+  "doctrine_file": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+  "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md"
+}

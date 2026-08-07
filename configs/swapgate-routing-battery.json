@@ -1,0 +1,50 @@
+[
+  {
+    "case_id": "should_fire_1",
+    "kind": "obvious",
+    "target_id": "writing-for-agents",
+    "prompt": "I need help writing a clear description for a new skill file so an agent knows exactly when to use it."
+  },
+  {
+    "case_id": "should_fire_2",
+    "kind": "obvious",
+    "target_id": "writing-for-agents",
+    "prompt": "Can you review this AGENTS.md and tighten up the wording so an agent follows it more reliably?"
+  },
+  {
+    "case_id": "should_fire_3",
+    "kind": "paraphrase",
+    "target_id": "writing-for-agents",
+    "prompt": "This CLAUDE.md section is getting long and I think the agent is missing half of what's in it -- help me cut it down without losing anything it actually needs."
+  },
+  {
+    "case_id": "should_fire_4",
+    "kind": "paraphrase",
+    "target_id": "writing-for-agents",
+    "prompt": "I'm putting together a brand new SKILL.md for our team and want the instructions inside structured the way an agent expects to read them."
+  },
+  {
+    "case_id": "near_miss_1",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Write user-facing documentation explaining how to reset a password in our web app."
+  },
+  {
+    "case_id": "near_miss_2",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Draft a blog post for our company site about how AI agents are changing software development."
+  },
+  {
+    "case_id": "none_1",
+    "kind": "none_of_the_above",
+    "target_id": null,
+    "prompt": "Can you help me debug why this SQL query is returning duplicate rows?"
+  },
+  {
+    "case_id": "none_2",
+    "kind": "none_of_the_above",
+    "target_id": null,
+    "prompt": "Set up a GitHub Actions workflow that runs our test suite on every pull request."
+  }
+]

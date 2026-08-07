@@ -1,0 +1,38 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.22683375
+    },
+    "verify": {
+      "trials": 3,
+      "total_cost_usd": 0.0649671
+    }
+  },
+  "total_trials": 4,
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 3,
+    "doctrine_file": "/home/will/dotfiles/claude/skills-local/writing-for-agents/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+    "confirmed_findings": [
+      {
+        "rule": "Pruning \u2014 single source of truth: duplication (the same meaning in more than one place) costs maintenance and tokens and inflates a meaning's prominence past its real rank.",
+        "target_quote": "| Skip query params | Wrong page loads | Full URL, opened in Brave |",
+        "issue": "This anti-pattern row restates the same rule already stated positively in \"Critical rules\" (\"Include FULL URLs with query params (`?project=xyz`) and open them in Brave.\"). Likewise the row `Vague \"click the button\" | Which one? | Click \"Create credentials\"` restates \"Use EXACT element text (copy from the current UI).\" The two lists encode the same meanings in two places with no single authoritative source, so a future rule change requires editing both.",
+        "proposed_fix": "Keep the rule stated once. Either drop the \"Skip query params\" and \"Vague 'click the button'\" rows from Anti-patterns (leaving only anti-patterns not already covered by Critical rules, e.g. \"Playwright/xvfb for OAuth consent\" and \"Assume Will knows the IDs\"), or drop the corresponding Critical rules bullets and let the Anti-patterns table be the sole source.",
+        "reason": "CONFIRMED: The quoted row appears verbatim in the Anti-patterns table, and it does restate the same guidance already given in \"Critical rules\" (\"Include FULL URLs with query params... opened in Brave\"), a genuine duplication of meaning across two lists."
+      },
+      {
+        "rule": "Steps and completion criteria \u2014 Clarity: a vague bound invites premature completion; the criterion should let the agent tell done from not-done.",
+        "target_quote": "6. Verify (re-read the config via API)",
+        "issue": "The step names the action (re-read the config) but not the success condition \u2014 it doesn't state what \"verified\" means (e.g. the stored value matches the value Will reported). An agent can perform the re-read and consider the step complete without ever checking the result against anything, which is exactly the premature-completion failure the doctrine warns about for vague bounds.",
+        "proposed_fix": "6. Verify \u2014 re-read the config via API and confirm the stored value matches what Will reported.",
+        "reason": "CONFIRMED: The quoted text appears verbatim in the workflow list, and the criticism is valid\u2014\"Verify (re-read the config via API)\" specifies the action but not the success condition, matching the cited clarity rule about vague bounds inviting premature completion."
+      }
+    ]
+  }
+}

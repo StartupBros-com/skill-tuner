@@ -1,0 +1,39 @@
+{
+  "conditions": {
+    "original": {
+      "trials": 16,
+      "total_cost_usd": 0.1862349
+    },
+    "pruned": {
+      "trials": 16,
+      "total_cost_usd": 0.08738309999999999
+    }
+  },
+  "total_trials": 32,
+  "routing_parity": {
+    "verdict": "land",
+    "failing_case_ids": [],
+    "scores": {
+      "original": {
+        "condition": "original",
+        "total": 16,
+        "correct": 16,
+        "accuracy": 1.0,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      },
+      "pruned": {
+        "condition": "pruned",
+        "total": 16,
+        "correct": 16,
+        "accuracy": 1.0,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      }
+    }
+  }
+}

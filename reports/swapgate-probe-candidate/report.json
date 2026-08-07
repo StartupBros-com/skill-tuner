@@ -1,0 +1,23 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.26072025
+    },
+    "verify": {
+      "trials": 2,
+      "total_cost_usd": 0.0244503
+    }
+  },
+  "total_trials": 3,
+  "probe": {
+    "findings_confirmed": 0,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 2,
+    "doctrine_file": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+    "confirmed_findings": []
+  }
+}

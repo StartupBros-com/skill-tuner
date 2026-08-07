@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "targets": [
+    {
+      "id": "writing-for-agents",
+      "path": "/home/will/dotfiles/claude/skills-local/writing-for-agents/SKILL.md",
+      "pruned_description": "Evidence-tagged rules for writing documents agents consume. Use when creating or editing skills, AGENTS.md, or CLAUDE.md."
+    }
+  ],
+  "distractors": [
+    "/home/will/.claude/skills/de-slopify/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md"
+  ],
+  "battery_file": "swapgate-routing-battery.json"
+}
