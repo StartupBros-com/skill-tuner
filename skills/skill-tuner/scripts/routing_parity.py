@@ -75,19 +75,46 @@ def extract_body(skill_md_path: Path) -> str:
     return text
 
 
+_BLOCK_SCALAR_INDICATORS = {">-", ">", ">+", "|-", "|", "|+"}
+
+
 def extract_description(skill_md_path: Path) -> str:
-    """Read the ``description:`` field out of a SKILL.md's YAML frontmatter."""
+    """Read the ``description:`` field out of a SKILL.md's YAML frontmatter.
+
+    Handles both a plain single-line value (``description: "..."``) and a
+    YAML block scalar (``description: >-`` / ``|-`` followed by indented
+    continuation lines) -- real-world skills commonly wrap a long
+    description across lines with ``>-`` folding, and reading only the
+    first line there would silently return the bare block indicator
+    instead of the actual text. This is a minimal, field-scoped parser
+    (KTD1: stdlib only, no YAML dependency), not a general YAML engine.
+    """
     text = skill_md_path.read_text(encoding="utf-8")
     match = _FRONTMATTER_RE.match(text)
     if not match:
         raise ValueError(f"{skill_md_path}: no YAML frontmatter found")
-    for line in match.group(0).splitlines():
+    lines = match.group(0).splitlines()
+    for index, line in enumerate(lines):
         stripped = line.strip()
-        if stripped.startswith("description:"):
-            value = stripped[len("description:"):].strip()
-            if value and value[0] == value[-1] and value[0] in "\"'":
-                value = value[1:-1]
-            return value
+        if not stripped.startswith("description:"):
+            continue
+        value = stripped[len("description:"):].strip()
+        if value in _BLOCK_SCALAR_INDICATORS:
+            folded = not value.startswith("|")
+            continuation: list[str] = []
+            for cont_line in lines[index + 1 :]:
+                if cont_line.strip() == "":
+                    continuation.append("")
+                    continue
+                if not cont_line.startswith((" ", "\t")):
+                    break  # dedented back to a new top-level key / end of frontmatter
+                continuation.append(cont_line.strip())
+            if folded:
+                return " ".join(part for part in continuation if part).strip()
+            return "\n".join(continuation).strip()
+        if value and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        return value
     raise ValueError(f"{skill_md_path}: no description field in frontmatter")
 
 

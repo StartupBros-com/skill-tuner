@@ -1,0 +1,47 @@
+{
+  "conditions": {
+    "original": {
+      "trials": 26,
+      "total_cost_usd": 0.2339559
+    },
+    "pruned": {
+      "trials": 26,
+      "total_cost_usd": 0.16804049999999998
+    }
+  },
+  "total_trials": 52,
+  "routing_parity": {
+    "verdict": "refuse",
+    "failing_case_ids": [
+      "agent-swarm__obvious__2",
+      "agent-swarm__paraphrase__1"
+    ],
+    "scores": {
+      "original": {
+        "condition": "original",
+        "total": 26,
+        "correct": 24,
+        "accuracy": 0.9230769230769231,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": [
+          "agent-swarm__paraphrase__1"
+        ]
+      },
+      "pruned": {
+        "condition": "pruned",
+        "total": 26,
+        "correct": 23,
+        "accuracy": 0.8846153846153846,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": [
+          "agent-swarm__obvious__2",
+          "agent-swarm__paraphrase__1"
+        ]
+      }
+    }
+  }
+}

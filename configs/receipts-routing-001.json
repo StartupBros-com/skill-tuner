@@ -1,0 +1,28 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "targets": [
+    {
+      "id": "stash-mining",
+      "path": "/home/will/dotfiles/claude/skills-local/stash-mining/SKILL.md",
+      "pruned_description": "Mine a repo's accumulated git stashes for content worth landing on the primary branch, then drop the rest. Use when a project has piled up stashes (\"*N\" in the prompt), \"clean up my stashes\", or a swarm of parallel agents has left dozens of WIP stashes behind."
+    },
+    {
+      "id": "browser-console-setup",
+      "path": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+      "pruned_description": "Set up cloud consoles that block headless automation, then wire the resulting credentials into Supabase/Vault/Vercel/.env. Use when a console step cannot be scripted: \"browser may not be secure\", 2FA, CAPTCHA, OAuth consent screens, or a webhook signing secret with no reveal API (e.g., Stripe)."
+    },
+    {
+      "id": "agent-swarm",
+      "path": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+      "pruned_description": "Run a large or parallelizable task across many agents. Use when a task is too big for one context, has many independent units (whole-codebase refactor / audit / migration / dead-code sweep), or you need multiple independent perspectives (adversarial verification)."
+    }
+  ],
+  "distractors": [
+    "/home/will/.claude/skills/de-slopify/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md"
+  ]
+}

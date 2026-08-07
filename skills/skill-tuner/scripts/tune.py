@@ -243,6 +243,34 @@ def enforce_budget_preflight(auth_mode: str, budget_usd: float | None, allow_unm
         )
 
 
+def confirm_or_abort(
+    description: str,
+    *,
+    yes: bool,
+    isatty: bool,
+    print_fn: Callable[[str], None] = print,
+    input_fn: Callable[[str], str] = input,
+) -> None:
+    """Shared pre-flight confirm-or-abort gate, same shape as
+    ``execute_battery``'s own (print estimate, skip if --yes, prompt if a
+    tty, else require --yes) -- for eval paths whose call count isn't fixed
+    upfront and so don't run their trials through ``execute_battery``
+    (currently: probe, whose verify-call count depends on findings
+    discovered mid-run).
+    """
+    print_fn(description)
+    if yes:
+        return
+    if isatty:
+        response = input_fn("Proceed? [y/N] ")
+        if response.strip().lower() not in {"y", "yes"}:
+            raise RuntimeError("Pre-flight not confirmed; aborting before any adapter call.")
+    else:
+        raise RuntimeError(
+            "Pre-flight confirmation required for a non-interactive run; pass --yes."
+        )
+
+
 # --------------------------------------------------------------------------
 # Battery execution: pre-flight estimate, budget cap, resume, persistence
 # --------------------------------------------------------------------------
@@ -420,7 +448,19 @@ def build_trial_specs(cases: Sequence[dict[str, Any]], trials_n: int) -> list[Tr
 
 
 def _add_eval_arguments(subparser: argparse.ArgumentParser) -> None:
-    subparser.add_argument("--cases", type=Path, required=True, help="JSONL battery cases")
+    subparser.add_argument(
+        "--cases", type=Path, default=None, help="JSONL battery cases (generic path; superseded by --config)"
+    )
+    subparser.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help=(
+            "JSON eval config for the real orchestrator: routing-parity's "
+            "targets/distractors/battery_file, or probe's doctrine_file/target_file. "
+            "Takes precedence over --cases."
+        ),
+    )
     subparser.add_argument("--trials", type=int, default=1, help="Trials per (case, condition)")
     subparser.add_argument("--model", default=DEFAULT_MODEL)
     subparser.add_argument("--run-id", default=None)
@@ -434,6 +474,10 @@ def _add_eval_arguments(subparser: argparse.ArgumentParser) -> None:
 
 
 def _run_eval(args: argparse.Namespace, prefix: str) -> int:
+    if args.cases is None:
+        raise RuntimeError(
+            f"'{prefix}' needs either --config (the real eval) or --cases (the generic path)"
+        )
     cases = load_cases(args.cases)
     conditions = conditions_from_cases(cases)
     trials = build_trial_specs(cases, args.trials)
@@ -469,11 +513,91 @@ def _run_eval(args: argparse.Namespace, prefix: str) -> int:
     return 0
 
 
+def _load_json_config(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _run_routing_parity_config(args: argparse.Namespace) -> int:
+    """The real routing-parity path: --config names a JSON eval config
+    (targets/distractors/battery_file/model), and every model call funnels
+    through call_adapter -- the same guarded chokepoint every eval path
+    uses. Budget/--yes/--resume are the same flags, passed straight through
+    to routing_parity.run_routing_parity_eval, which honors them via
+    tune.execute_battery internally.
+    """
+    import routing_parity  # local: routing_parity imports tune at module load time
+
+    config = _load_json_config(args.config)
+    base_dir = args.config.resolve().parent
+    content_parts = ["routing-parity", str(args.config.resolve()), json.dumps(config, sort_keys=True)]
+    run_dir, run_id = resolve_run_dir(
+        args.reports_dir, "routing-parity", content_parts, run_id=args.run_id, resume_id=args.resume
+    )
+
+    def adapter(prompt: str, model: str) -> AdapterResult:
+        return call_adapter(prompt, model, retries=args.retries)
+
+    result = routing_parity.run_routing_parity_eval(
+        config,
+        adapter=adapter,
+        run_dir=run_dir,
+        base_dir=base_dir,
+        budget_usd=args.budget_usd,
+        allow_unmetered=args.allow_unmetered,
+        auth_mode=detect_auth_mode(),
+        yes=args.yes,
+    )
+    print(f"Run {run_id}: verdict={result['verdict']} failing_case_ids={result['failing_case_ids']}")
+    return 0
+
+
+def _run_probe_config(args: argparse.Namespace) -> int:
+    """The real probe path: --config names a JSON eval config
+    (doctrine_file/target_file/model/max_findings). probe.run_probe doesn't
+    run its calls through execute_battery (its verify-call count depends on
+    findings discovered mid-run), so the budget gate and the --yes/isatty
+    confirm gate are applied here, ahead of the call, mirroring
+    execute_battery's own pre-flight shape via confirm_or_abort.
+    """
+    import probe  # local: probe imports tune at module load time
+
+    config = _load_json_config(args.config)
+    base_dir = args.config.resolve().parent
+    content_parts = ["probe", str(args.config.resolve()), json.dumps(config, sort_keys=True)]
+    run_dir, run_id = resolve_run_dir(
+        args.reports_dir, "probe", content_parts, run_id=args.run_id, resume_id=args.resume
+    )
+
+    auth_mode = detect_auth_mode()
+    enforce_budget_preflight(auth_mode, args.budget_usd, args.allow_unmetered)
+
+    max_findings = int(config.get("max_findings", probe.DEFAULT_MAX_FINDINGS))
+    planned = 1 + max_findings
+    confirm_or_abort(
+        f"Planned probe calls: up to {planned} (1 probe + up to {max_findings} verify) | "
+        f"estimated cost: ${planned * args.est_cost_per_call:.2f} "
+        f"(${args.est_cost_per_call:.4f}/call, model={config.get('model')})",
+        yes=args.yes,
+        isatty=sys.stdin.isatty(),
+    )
+
+    def adapter(prompt: str, model: str) -> AdapterResult:
+        return call_adapter(prompt, model, retries=args.retries)
+
+    result = probe.run_probe(config, adapter, run_dir, base_dir=base_dir, retries=args.retries)
+    print(f"Run {run_id}: findings_confirmed={result['findings_confirmed']} refuted_count={result['refuted_count']}")
+    return 0
+
+
 def _cmd_routing_parity(args: argparse.Namespace) -> int:
+    if args.config is not None:
+        return _run_routing_parity_config(args)
     return _run_eval(args, "routing-parity")
 
 
 def _cmd_probe(args: argparse.Namespace) -> int:
+    if args.config is not None:
+        return _run_probe_config(args)
     return _run_eval(args, "probe")
 
 

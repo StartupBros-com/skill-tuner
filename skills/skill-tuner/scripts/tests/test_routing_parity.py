@@ -226,6 +226,50 @@ class ParityGateWorseTest(unittest.TestCase):
 # --------------------------------------------------------------------------
 
 
+class DescriptionExtractionTest(unittest.TestCase):
+    """Unit 6 regression: real skills fold a long description with YAML's
+    ``>-`` block-scalar style across multiple indented lines; reading only
+    the first line after ``description:`` used to silently return the bare
+    ``>-`` indicator instead of the folded text."""
+
+    def test_extract_description_folds_block_scalar_across_continuation_lines(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            skill_dir = base / "alpha"
+            skill_dir.mkdir()
+            skill_md = skill_dir / "SKILL.md"
+            skill_md.write_text(
+                textwrap.dedent(
+                    """\
+                    ---
+                    name: alpha
+                    description: >-
+                      Handles alpha reporting end to end. Use when a project needs
+                      an alpha summary, "alpha analysis", or alpha reconciliation.
+                    ---
+
+                    Alpha body.
+                    """
+                ),
+                encoding="utf-8",
+            )
+
+            description = routing_parity.extract_description(skill_md)
+
+            self.assertEqual(
+                'Handles alpha reporting end to end. Use when a project needs '
+                'an alpha summary, "alpha analysis", or alpha reconciliation.',
+                description,
+            )
+            self.assertNotIn(">-", description)
+
+    def test_extract_description_plain_single_line_still_works(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            path = _write_skill(base, "alpha", "Handles alpha things.", "Alpha body.")
+            self.assertEqual("Handles alpha things.", routing_parity.extract_description(path))
+
+
 class BlindingGuardTest(unittest.TestCase):
     def test_extract_body_strips_frontmatter_so_description_never_reaches_builder(self):
         with tempfile.TemporaryDirectory() as tmp:

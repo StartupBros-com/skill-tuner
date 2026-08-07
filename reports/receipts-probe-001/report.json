@@ -1,0 +1,23 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.08588174999999999
+    },
+    "verify": {
+      "trials": 0,
+      "total_cost_usd": 0
+    }
+  },
+  "total_trials": 1,
+  "probe": {
+    "findings_confirmed": 0,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 0,
+    "doctrine_file": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+    "confirmed_findings": []
+  }
+}
