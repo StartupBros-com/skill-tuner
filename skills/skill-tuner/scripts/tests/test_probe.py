@@ -19,6 +19,14 @@ adapter invocation. Scenarios map 1:1 to the unit spec:
    verified.
 6. Malformed probe JSON retries through the adapter path, succeeding on the
    second attempt; persistent malformed JSON raises after retries exhaust.
+7. The quote guard compares prose, not markdown layout: a quote spanning a
+   blockquote or list continuation is found, a fabricated one is not.
+8. Refuted findings reach the report with the mode that killed them, so a
+   fabricated quote is distinguishable from a verifier's own refusal.
+9. verify_trials runs an odd panel of independent skeptics and takes the
+   strict majority; a tie refutes on the skeptic default.
+10. Multi-target runs aggregate totals while preserving per-target detail,
+    and single-target runs keep every field gen_receipts.py reads.
 """
 
 from __future__ import annotations
@@ -410,6 +418,310 @@ class DefaultDoctrineFileTest(unittest.TestCase):
             self.assertTrue(bundled_skill_md.exists())
             self.assertIn("Negation", captured["prompt"])  # from the real bundled doctrine
             self.assertEqual(str(bundled_skill_md), result["doctrine_file"])
+
+
+# --------------------------------------------------------------------------
+# Scenario 7: the quote guard tolerates per-line markdown decoration.
+#
+# Regression test for the U7 swap-gate miscount: the candidate doctrine's one
+# verifier-CONFIRMED finding quoted a blockquote whose continuation line
+# carries a "> " marker. The quote reproduced the prose correctly and dropped
+# the marker, so a raw substring test failed and the guard downgraded a real
+# finding to refuted -- scoring the candidate 0 instead of 1. Since every
+# document this probe targets is markdown, that false negative is systematic.
+# --------------------------------------------------------------------------
+
+
+BLOCKQUOTE_TARGET_TEXT = (
+    "# Console setup\n"
+    "\n"
+    "> **Core pattern:** When a cloud console blocks headless automation, do not fight\n"
+    "> it with Playwright. Open the exact URL in a real browser instead.\n"
+    "\n"
+    "- Use the config file to configure the client.\n"
+)
+
+
+class MarkdownDecoratedQuoteTest(unittest.TestCase):
+    def test_quote_spanning_a_blockquote_continuation_is_found(self):
+        # The model quotes the prose and drops the "> " continuation marker.
+        quote = "When a cloud console blocks headless automation, do not fight\nit with Playwright."
+        self.assertNotIn(quote, BLOCKQUOTE_TARGET_TEXT)  # raw substring fails
+        self.assertTrue(probe.quote_present(quote, BLOCKQUOTE_TARGET_TEXT))
+
+    def test_quote_dropping_a_list_marker_is_found(self):
+        self.assertTrue(
+            probe.quote_present(
+                "Use the config file to configure the client.", BLOCKQUOTE_TARGET_TEXT
+            )
+        )
+
+    def test_fabricated_quote_is_still_rejected(self):
+        self.assertFalse(
+            probe.quote_present(
+                "This sentence does not exist in the target document anywhere.",
+                BLOCKQUOTE_TARGET_TEXT,
+            )
+        )
+
+    def test_empty_quote_is_rejected(self):
+        self.assertFalse(probe.quote_present("", BLOCKQUOTE_TARGET_TEXT))
+
+    def test_confirmed_finding_quoting_a_blockquote_survives_the_guard(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", BLOCKQUOTE_TARGET_TEXT)
+            config = _config(doctrine_path, target_path)
+            run_dir = base / "run"
+
+            findings_payload = [
+                {
+                    "rule": "Negation",
+                    "target_quote": (
+                        "When a cloud console blocks headless automation, do not fight\n"
+                        "it with Playwright."
+                    ),
+                    "issue": "Steers by prohibition.",
+                    "proposed_fix": "State the target behaviour.",
+                }
+            ]
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                if VERIFY_MARKER in prompt:
+                    return tune.AdapterResult(
+                        text="CONFIRMED: appears verbatim and the rule applies.",
+                        cost_usd=0.0,
+                        raw={},
+                    )
+                return tune.AdapterResult(text=json.dumps(findings_payload), cost_usd=0.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            self.assertEqual(1, result["findings_confirmed"])
+            self.assertEqual(0, result["refuted_count"])
+
+
+# --------------------------------------------------------------------------
+# Scenario 8: refuted findings are reported with their refutation mode, so a
+# code-level downgrade is distinguishable from a verifier's own refusal.
+# --------------------------------------------------------------------------
+
+
+class RefutedFindingObservabilityTest(unittest.TestCase):
+    def test_report_separates_quote_not_found_from_verifier_refusal(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            config = _config(doctrine_path, target_path)
+            run_dir = base / "run"
+
+            findings_payload = [
+                {
+                    "rule": "Fabricated",
+                    "target_quote": "This sentence does not exist in the target document anywhere.",
+                    "issue": "Made up.",
+                    "proposed_fix": "N/A",
+                },
+                {
+                    "rule": "Real quote, weak rule",
+                    "target_quote": "Use the config file to configure the client.",
+                    "issue": "Arguable.",
+                    "proposed_fix": "N/A",
+                },
+            ]
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                if VERIFY_MARKER in prompt:
+                    if "does not exist" in prompt:
+                        # A careless verifier confirms a fabricated quote.
+                        return tune.AdapterResult(text="CONFIRMED: looks right.", cost_usd=0.0, raw={})
+                    return tune.AdapterResult(text="REFUTED: rule doesn't apply.", cost_usd=0.0, raw={})
+                return tune.AdapterResult(text=json.dumps(findings_payload), cost_usd=0.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            self.assertEqual(0, result["findings_confirmed"])
+            self.assertEqual(2, result["refuted_count"])
+
+            modes = {
+                entry["rule"]: entry["refutation_mode"] for entry in result["refuted_findings"]
+            }
+            self.assertEqual("quote_not_found", modes["Fabricated"])
+            self.assertEqual("verifier", modes["Real quote, weak rule"])
+
+            report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(2, len(report["probe"]["refuted_findings"]))
+
+            summary = (run_dir / "report.md").read_text(encoding="utf-8")
+            self.assertIn("quote_not_found", summary)
+
+
+# --------------------------------------------------------------------------
+# Scenario 9: verify_trials runs an odd panel of independent skeptics and
+# takes the majority, so one stray verdict cannot decide a gate.
+# --------------------------------------------------------------------------
+
+
+class VerifyTrialsMajorityTest(unittest.TestCase):
+    def _run(self, verdicts: list[str]) -> dict:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            config = _config(doctrine_path, target_path, verify_trials=len(verdicts))
+            run_dir = base / "run"
+
+            findings_payload = [
+                {
+                    "rule": "Single source of truth",
+                    "target_quote": "Use the config file to configure the client.",
+                    "issue": "Duplicated.",
+                    "proposed_fix": "N/A",
+                }
+            ]
+            remaining = list(verdicts)
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                if VERIFY_MARKER in prompt:
+                    return tune.AdapterResult(text=remaining.pop(0), cost_usd=0.0, raw={})
+                return tune.AdapterResult(text=json.dumps(findings_payload), cost_usd=0.0, raw={})
+
+            return probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+    def test_majority_confirm_confirms(self):
+        result = self._run(["CONFIRMED: yes.", "REFUTED: no.", "CONFIRMED: yes."])
+        self.assertEqual(1, result["findings_confirmed"])
+        self.assertEqual(3, result["verify_calls"])
+
+    def test_majority_refute_refutes(self):
+        result = self._run(["CONFIRMED: yes.", "REFUTED: no.", "REFUTED: no."])
+        self.assertEqual(0, result["findings_confirmed"])
+        self.assertEqual("verifier", result["refuted_findings"][0]["refutation_mode"])
+
+    def test_tie_refutes_on_the_skeptic_default(self):
+        result = self._run(["CONFIRMED: yes.", "REFUTED: no."])
+        self.assertEqual(0, result["findings_confirmed"])
+
+    def test_default_is_a_single_verify_call(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            run_dir = base / "run"
+            config = _config(doctrine_path, target_path)
+
+            findings_payload = [
+                {
+                    "rule": "R",
+                    "target_quote": "Use the config file to configure the client.",
+                    "issue": "i",
+                    "proposed_fix": "f",
+                }
+            ]
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                if VERIFY_MARKER in prompt:
+                    return tune.AdapterResult(text="CONFIRMED: ok.", cost_usd=0.0, raw={})
+                return tune.AdapterResult(text=json.dumps(findings_payload), cost_usd=0.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+            self.assertEqual(1, result["verify_calls"])
+
+    def test_verify_trials_must_be_positive(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            with self.assertRaises(ValueError):
+                probe.load_config(
+                    {"target_file": str(target_path), "model": "m", "verify_trials": 0},
+                    base_dir=base,
+                )
+
+
+# --------------------------------------------------------------------------
+# Scenario 10: multi-target runs, so a count-based gate rests on more than
+# one document. Totals aggregate; per-target breakdown is preserved.
+# --------------------------------------------------------------------------
+
+
+class MultiTargetTest(unittest.TestCase):
+    def test_target_files_aggregates_totals_and_keeps_per_target_detail(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_a = _write(base, "a.md", "Alpha line one.\nAlpha line two.\n")
+            target_b = _write(base, "b.md", "Beta line one.\nBeta line two.\n")
+            run_dir = base / "run"
+            config = {
+                "doctrine_file": str(doctrine_path),
+                "target_files": [str(target_a), str(target_b)],
+                "model": "test-model",
+            }
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                if VERIFY_MARKER in prompt:
+                    return tune.AdapterResult(text="CONFIRMED: ok.", cost_usd=0.0, raw={})
+                quote = "Alpha line one." if "Alpha line one." in prompt else "Beta line one."
+                payload = [
+                    {"rule": "R", "target_quote": quote, "issue": "i", "proposed_fix": "f"}
+                ]
+                return tune.AdapterResult(text=json.dumps(payload), cost_usd=0.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            self.assertEqual(2, result["probe_calls"])
+            self.assertEqual(2, result["verify_calls"])
+            self.assertEqual(2, result["findings_confirmed"])
+
+            per_target = {entry["target_file"]: entry for entry in result["per_target"]}
+            self.assertEqual({str(target_a), str(target_b)}, set(per_target))
+            self.assertEqual(1, per_target[str(target_a)]["findings_confirmed"])
+            self.assertEqual(1, per_target[str(target_b)]["findings_confirmed"])
+
+            # Every confirmed finding names the document it came from.
+            self.assertEqual(
+                {str(target_a), str(target_b)},
+                {entry["target_file"] for entry in result["confirmed_findings"]},
+            )
+
+            report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(2, len(report["probe"]["per_target"]))
+            self.assertEqual(
+                [str(target_a), str(target_b)], report["probe"]["target_files"]
+            )
+
+    def test_single_target_file_still_reports_the_legacy_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            doctrine_path = _write(base, "doctrine.md", DOCTRINE_TEXT)
+            target_path = _write(base, "target.md", TARGET_TEXT)
+            config = _config(doctrine_path, target_path)
+            run_dir = base / "run"
+
+            def fake_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                return tune.AdapterResult(text="[]", cost_usd=0.0, raw={})
+
+            result = probe.run_probe(config, fake_adapter, run_dir, base_dir=base)
+
+            self.assertEqual(str(target_path), result["target_file"])
+            report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+            # gen_receipts.py reads these five keys; they must survive.
+            for key in (
+                "findings_confirmed",
+                "refuted_count",
+                "probe_calls",
+                "verify_calls",
+                "confirmed_findings",
+            ):
+                self.assertIn(key, report["probe"])
+
+    def test_config_requires_at_least_one_target(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            with self.assertRaises(ValueError):
+                probe.load_config({"model": "m", "target_files": []}, base_dir=base)
 
 
 if __name__ == "__main__":
