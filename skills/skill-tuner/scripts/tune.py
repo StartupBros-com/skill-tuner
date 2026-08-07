@@ -571,10 +571,19 @@ def _run_probe_config(args: argparse.Namespace) -> int:
     auth_mode = detect_auth_mode()
     enforce_budget_preflight(auth_mode, args.budget_usd, args.allow_unmetered)
 
-    max_findings = int(config.get("max_findings", probe.DEFAULT_MAX_FINDINGS))
-    planned = 1 + max_findings
+    # Parse through probe's own loader so the estimate counts exactly what the
+    # run will spend: every target costs one probe call plus up to
+    # max_findings * verify_trials verify calls.
+    probe_config = probe.load_config(config, base_dir=base_dir)
+    n_targets = len(probe_config.target_paths)
+    max_findings = probe_config.max_findings
+    verify_trials = probe_config.verify_trials
+    per_target = 1 + max_findings * verify_trials
+    planned = n_targets * per_target
     confirm_or_abort(
-        f"Planned probe calls: up to {planned} (1 probe + up to {max_findings} verify) | "
+        f"Planned probe calls: up to {planned} "
+        f"({n_targets} target(s) x [1 probe + up to {max_findings} findings x "
+        f"{verify_trials} verify]) | "
         f"estimated cost: ${planned * args.est_cost_per_call:.2f} "
         f"(${args.est_cost_per_call:.4f}/call, model={config.get('model')})",
         yes=args.yes,

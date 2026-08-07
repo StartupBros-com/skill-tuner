@@ -10,36 +10,42 @@ Python 3 standard library only.
 Pipeline, in order:
 
 1. ``load_config`` parses the eval config: ``doctrine_file`` (defaults to
-   the bundled ``skills/skill-tuner/SKILL.md``), ``target_file`` (required),
-   ``model``, and ``max_findings`` (default 8).
-2. ``run_probe_call`` makes ONE adapter call with the doctrine text and the
-   full target document inline (KTD2: nothing installed anywhere, no
-   out-of-band state), asking for genuine defects as a JSON array; an empty
-   array is an explicitly legitimate answer. Malformed JSON retries through
-   the same adapter path -- no subprocess, no shared state, just another
-   call -- up to ``retries`` bounded attempts.
+   the bundled ``skills/skill-tuner/SKILL.md``), the targets -- ``target_file``
+   for one document or ``target_files`` for several -- ``model``,
+   ``max_findings`` (default 8), and ``verify_trials`` (default 1).
+2. For each target, ``run_probe_call`` makes ONE adapter call with the
+   doctrine text and the full target document inline (KTD2: nothing installed
+   anywhere, no out-of-band state), asking for genuine defects as a JSON
+   array; an empty array is an explicitly legitimate answer. Malformed JSON
+   retries through the same adapter path -- no subprocess, no shared state,
+   just another call -- up to ``retries`` bounded attempts.
 3. ``cap_findings`` truncates the parsed findings to ``max_findings``,
    recording the overflow count rather than silently dropping it.
-4. ``verify_finding`` runs ONE fresh adapter call per capped finding --  a
-   self-contained prompt carrying that finding alone plus the full target
-   document, never another finding's text, never a shared conversation --
-   with a default-refute skeptic instruction: confirm only if the quoted
-   text is verbatim in the target and the cited rule genuinely applies. A
-   local existence check is the code-level backstop: a CONFIRMED verdict
-   for a quote that doesn't literally appear in the target document is
-   downgraded to refuted regardless of what the verifier said.
+4. ``verify_finding`` judges each capped finding with ``verify_trials``
+   independent skeptics -- each a fresh self-contained prompt carrying that
+   finding alone plus the full target document, never another finding's
+   text, never a shared conversation -- under a default-refute instruction:
+   confirm only if the quoted text is verbatim in the target and the cited
+   rule genuinely applies. A finding is confirmed on a strict majority; a
+   tie refutes. ``quote_present`` is the code-level backstop that outranks
+   every vote: a CONFIRMED verdict for a quote absent from the target is
+   downgraded to refuted no matter how the panel voted. That check compares
+   prose, not layout -- markdown repeats blockquote and list markers on
+   every wrapped line and a correct quote drops them, so a raw substring
+   test rejects real findings on exactly the documents this probe targets.
 5. ``write_probe_report`` extends tune.py's report machinery
    (``tune.write_report``) with the probe verdict: confirmed findings with
-   their evidence quotes, the refuted count, the overflow count, probe/verify
-   call counts, and the target/doctrine identifiers. Verdict field:
-   ``findings_confirmed: N``.
+   their evidence quotes, refuted findings with the mode that killed each
+   (``verifier`` or ``quote_not_found``), the overflow count, probe/verify
+   call counts, a per-target breakdown, and the target/doctrine identifiers.
+   Verdict field: ``findings_confirmed: N``.
 """
 
 from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
@@ -55,6 +61,7 @@ DEFAULT_DOCTRINE_PATH = _MODULE_DIR.parent / "SKILL.md"
 
 DEFAULT_MAX_FINDINGS = 8
 DEFAULT_RETRIES = 2
+DEFAULT_VERIFY_TRIALS = 1
 
 
 class ProbeParseError(ValueError):
@@ -75,22 +82,47 @@ def _resolve_path(raw: str, base_dir: Path) -> Path:
 @dataclass(frozen=True)
 class ProbeConfig:
     doctrine_path: Path
-    target_path: Path
+    target_paths: tuple[Path, ...]
     model: str
     max_findings: int
+    verify_trials: int = DEFAULT_VERIFY_TRIALS
+
+    @property
+    def target_path(self) -> Path:
+        """The first target. Single-target configs are the common case and
+        every pre-multi-target caller reads this name."""
+        return self.target_paths[0]
 
 
 def load_config(config: Mapping[str, Any], *, base_dir: Path) -> ProbeConfig:
     """Parse the eval config into a ``ProbeConfig``. ``doctrine_file``
-    defaults to the bundled SKILL.md (resolved independent of base_dir);
-    ``target_file`` is required and resolved relative to base_dir like every
-    other skill-tuner eval config path."""
+    defaults to the bundled SKILL.md (resolved independent of base_dir).
+
+    Targets come from ``target_file`` (one document) or ``target_files`` (a
+    list); both may be given and are concatenated in order, de-duplicated.
+    At least one is required, and each resolves relative to base_dir like
+    every other skill-tuner eval config path. ``verify_trials`` sets how many
+    independent skeptics judge each finding (default 1); a count-based gate
+    wants an odd panel so one stray verdict cannot decide it."""
     doctrine_file = config.get("doctrine_file")
     doctrine_path = _resolve_path(doctrine_file, base_dir) if doctrine_file else DEFAULT_DOCTRINE_PATH
 
-    target_file = config.get("target_file")
-    if not target_file:
-        raise ValueError("config must name a target_file")
+    raw_targets: list[str] = []
+    single = config.get("target_file")
+    if single:
+        raw_targets.append(str(single))
+    listed = config.get("target_files") or []
+    if isinstance(listed, (str, bytes)):
+        raise ValueError("target_files must be a list of paths, not a string")
+    raw_targets.extend(str(item) for item in listed if item)
+    if not raw_targets:
+        raise ValueError("config must name a target_file or a non-empty target_files list")
+
+    target_paths: list[Path] = []
+    for raw in raw_targets:
+        resolved = _resolve_path(raw, base_dir)
+        if resolved not in target_paths:
+            target_paths.append(resolved)
 
     model = config.get("model")
     if not model:
@@ -100,11 +132,16 @@ def load_config(config: Mapping[str, Any], *, base_dir: Path) -> ProbeConfig:
     if max_findings < 1:
         raise ValueError(f"max_findings must be >= 1, got {max_findings}")
 
+    verify_trials = int(config.get("verify_trials", DEFAULT_VERIFY_TRIALS))
+    if verify_trials < 1:
+        raise ValueError(f"verify_trials must be >= 1, got {verify_trials}")
+
     return ProbeConfig(
         doctrine_path=doctrine_path,
-        target_path=_resolve_path(target_file, base_dir),
+        target_paths=tuple(target_paths),
         model=str(model),
         max_findings=max_findings,
+        verify_trials=verify_trials,
     )
 
 
@@ -136,6 +173,45 @@ class Finding:
             "issue": self.issue,
             "proposed_fix": self.proposed_fix,
         }
+
+
+# --------------------------------------------------------------------------
+# Quote existence: the code-level backstop against fabricated evidence
+# --------------------------------------------------------------------------
+
+# Per-line markdown decoration: blockquote markers and list bullets. These
+# carry no prose, so a quote that spans a line break legitimately drops them.
+_LINE_DECORATION_RE = re.compile(r"^\s*(?:>\s?)*(?:[-*+]\s+|\d+[.)]\s+)?")
+
+
+def normalize_for_quote_match(text: str) -> str:
+    """Reduce markdown to the prose a quote can be checked against: strip
+    per-line blockquote and list decoration, then collapse all whitespace.
+
+    A model quoting across a line break reproduces the words, not the ``> ``
+    that markdown repeats on every wrapped line of a blockquote. Comparing
+    raw strings therefore fails on correctly-quoted blockquotes, list items,
+    and any hard-wrapped passage -- and since every document this probe
+    targets is markdown, that false negative is systematic rather than rare.
+    Normalizing both sides identically keeps the check a genuine substring
+    test on the document's words while ignoring only its layout."""
+    lines = [_LINE_DECORATION_RE.sub("", line) for line in text.splitlines()]
+    return " ".join(" ".join(lines).split())
+
+
+def quote_present(quote: str, target_text: str) -> bool:
+    """True when ``quote`` appears in ``target_text`` as prose. Tries the
+    strict raw substring first and falls back to the normalized comparison,
+    so an exact quote is never rejected and a fabricated one is never
+    accepted -- normalization drops layout, never words."""
+    if not quote.strip():
+        return False
+    if quote in target_text:
+        return True
+    normalized_quote = normalize_for_quote_match(quote)
+    if not normalized_quote:
+        return False
+    return normalized_quote in normalize_for_quote_match(target_text)
 
 
 # --------------------------------------------------------------------------
@@ -194,6 +270,7 @@ def run_probe_call(
     model: str,
     retries: int,
     rows: list[dict[str, Any]],
+    case_id: str = "probe",
 ) -> list[dict[str, Any]]:
     """One adapter call carrying the doctrine + target document inline.
     Malformed JSON is retried through the same adapter path -- never
@@ -206,7 +283,7 @@ def run_probe_call(
         result = adapter(prompt, model)
         rows.append(
             {
-                "case_id": "probe",
+                "case_id": case_id,
                 "trial": attempt + 1,
                 "condition": "probe",
                 "response": result.text,
@@ -281,6 +358,13 @@ class VerifiedFinding:
     finding: Finding
     verdict: str  # "confirmed" | "refuted"
     reason: str
+    # Why a refuted finding was refuted: "verifier" (the skeptic panel voted
+    # it down) or "quote_not_found" (the code-level guard downgraded it, so
+    # the probe fabricated its evidence). None when confirmed. The two are
+    # different failures -- a weak rule application versus a hallucinated
+    # quote -- and a bare refuted count cannot tell them apart.
+    refutation_mode: str | None = None
+    target_file: str | None = None
 
 
 def verify_finding(
@@ -291,33 +375,54 @@ def verify_finding(
     model: str,
     case_id: str,
     rows: list[dict[str, Any]],
+    verify_trials: int = DEFAULT_VERIFY_TRIALS,
 ) -> VerifiedFinding:
-    """ONE fresh adapter call for this finding alone. The quote-existence
-    check is a code-level guard: the verifier cannot confirm a quote that
-    isn't actually in the target document, no matter what it answers."""
+    """Judge one finding with ``verify_trials`` independent skeptics, each a
+    fresh self-contained adapter call carrying this finding alone. A finding
+    is confirmed only on a strict majority of confirm votes; a tie refutes,
+    matching the verifier prompt's own default-refute stance.
+
+    The quote-existence check is a code-level guard that outranks every vote:
+    the panel cannot confirm a quote that isn't in the target document, no
+    matter how it votes."""
     prompt = build_verify_prompt(finding, target_text)
-    result = adapter(prompt, model)
-    rows.append(
-        {
-            "case_id": case_id,
-            "trial": 1,
-            "condition": "verify",
-            "response": result.text,
-            "cost_usd": result.cost_usd,
-        }
+    votes: list[str] = []
+    reasons: list[str] = []
+
+    for trial in range(1, verify_trials + 1):
+        result = adapter(prompt, model)
+        rows.append(
+            {
+                "case_id": case_id,
+                "trial": trial,
+                "condition": "verify",
+                "response": result.text,
+                "cost_usd": result.cost_usd,
+            }
+        )
+        votes.append(parse_verify_answer(result.text))
+        reasons.append(result.text.strip())
+
+    confirmed_votes = sum(1 for vote in votes if vote == "confirmed")
+    verdict = "confirmed" if confirmed_votes * 2 > len(votes) else "refuted"
+    reason = reasons[0] if len(reasons) == 1 else (
+        f"panel {confirmed_votes}/{len(votes)} confirmed | " + " || ".join(reasons)
     )
 
-    verdict = parse_verify_answer(result.text)
-    quote_present = bool(finding.target_quote) and finding.target_quote in target_text
-
-    if verdict == "confirmed" and not quote_present:
+    if verdict == "confirmed" and not quote_present(finding.target_quote, target_text):
         return VerifiedFinding(
             finding=finding,
             verdict="refuted",
             reason="downgraded: quoted text not found verbatim in target document",
+            refutation_mode="quote_not_found",
         )
 
-    return VerifiedFinding(finding=finding, verdict=verdict, reason=result.text.strip())
+    return VerifiedFinding(
+        finding=finding,
+        verdict=verdict,
+        reason=reason,
+        refutation_mode=None if verdict == "confirmed" else "verifier",
+    )
 
 
 # --------------------------------------------------------------------------
@@ -325,23 +430,36 @@ def verify_finding(
 # --------------------------------------------------------------------------
 
 
+def _finding_entry(entry: VerifiedFinding) -> dict[str, Any]:
+    payload: dict[str, Any] = {**entry.finding.to_dict(), "reason": entry.reason}
+    if entry.target_file is not None:
+        payload["target_file"] = entry.target_file
+    if entry.refutation_mode is not None:
+        payload["refutation_mode"] = entry.refutation_mode
+    return payload
+
+
 def write_probe_report(
     run_dir: Path,
     rows: Sequence[dict[str, Any]],
     *,
     confirmed: Sequence[VerifiedFinding],
+    refuted: Sequence[VerifiedFinding] = (),
     refuted_count: int,
     overflow: int,
     probe_calls: int,
     verify_calls: int,
     doctrine_path: Path,
     target_path: Path,
+    target_paths: Sequence[Path] | None = None,
+    per_target: Sequence[Mapping[str, Any]] = (),
+    verify_trials: int = DEFAULT_VERIFY_TRIALS,
 ) -> tuple[Path, Path]:
     json_path, md_path = tune.write_report(run_dir, rows, ("probe", "verify"))
 
-    confirmed_findings = [
-        {**entry.finding.to_dict(), "reason": entry.reason} for entry in confirmed
-    ]
+    confirmed_findings = [_finding_entry(entry) for entry in confirmed]
+    refuted_findings = [_finding_entry(entry) for entry in refuted]
+    resolved_targets = list(target_paths) if target_paths else [target_path]
 
     summary = json.loads(json_path.read_text(encoding="utf-8"))
     summary["probe"] = {
@@ -350,9 +468,13 @@ def write_probe_report(
         "overflow": overflow,
         "probe_calls": probe_calls,
         "verify_calls": verify_calls,
+        "verify_trials": verify_trials,
         "doctrine_file": str(doctrine_path),
         "target_file": str(target_path),
+        "target_files": [str(path) for path in resolved_targets],
         "confirmed_findings": confirmed_findings,
+        "refuted_findings": refuted_findings,
+        "per_target": [dict(entry) for entry in per_target],
     }
     json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
@@ -363,14 +485,32 @@ def write_probe_report(
         f"**findings_confirmed: {len(confirmed)}**",
         "",
         f"- doctrine: {doctrine_path}",
-        f"- target: {target_path}",
-        f"- probe calls: {probe_calls}",
-        f"- verify calls: {verify_calls}",
-        f"- refuted: {refuted_count}",
     ]
+    if len(resolved_targets) == 1:
+        lines.append(f"- target: {resolved_targets[0]}")
+    else:
+        lines.append(f"- targets: {len(resolved_targets)}")
+    lines.extend(
+        [
+            f"- probe calls: {probe_calls}",
+            f"- verify calls: {verify_calls} ({verify_trials} skeptic(s) per finding)",
+            f"- refuted: {refuted_count}",
+        ]
+    )
     if overflow:
         lines.append(f"- overflow (beyond max_findings cap, not verified): {overflow}")
     lines.append("")
+
+    if len(resolved_targets) > 1 and per_target:
+        lines.append("### Per target")
+        lines.append("")
+        lines.append("| Target | confirmed | refuted |")
+        lines.append("| --- | --- | --- |")
+        for entry in per_target:
+            lines.append(
+                f"| `{entry['target_file']}` | {entry['findings_confirmed']} | {entry['refuted_count']} |"
+            )
+        lines.append("")
 
     if confirmed_findings:
         lines.append("### Confirmed findings")
@@ -379,6 +519,22 @@ def write_probe_report(
             lines.append(f"- **{entry['rule']}**: {entry['issue']}")
             lines.append(f"  - quote: \"{entry['target_quote']}\"")
             lines.append(f"  - proposed fix: {entry['proposed_fix']}")
+            if entry.get("target_file"):
+                lines.append(f"  - target: {entry['target_file']}")
+        lines.append("")
+
+    if refuted_findings:
+        # Refuted findings are reported, not just counted: a run that raised
+        # findings and lost them all to fabricated quotes is a different
+        # result from one whose findings were judged inapplicable, and the
+        # count alone reads identically for both.
+        lines.append("### Refuted findings")
+        lines.append("")
+        for entry in refuted_findings:
+            lines.append(
+                f"- **{entry['rule']}** — {entry.get('refutation_mode', 'verifier')}: {entry['issue']}"
+            )
+            lines.append(f"  - quote: \"{entry['target_quote']}\"")
         lines.append("")
 
     with md_path.open("a", encoding="utf-8") as handle:
@@ -407,36 +563,68 @@ def run_probe(
     probe_config = load_config(config, base_dir=resolved_base_dir)
 
     doctrine_text = probe_config.doctrine_path.read_text(encoding="utf-8")
-    target_text = probe_config.target_path.read_text(encoding="utf-8")
+    multi_target = len(probe_config.target_paths) > 1
 
     rows: list[dict[str, Any]] = []
-
-    raw_findings = run_probe_call(
-        doctrine_text,
-        target_text,
-        adapter=adapter,
-        model=probe_config.model,
-        retries=retries,
-        rows=rows,
-    )
-
-    capped, overflow = cap_findings(raw_findings, probe_config.max_findings)
-
     verified: list[VerifiedFinding] = []
-    for index, finding in enumerate(capped, start=1):
-        verified.append(
-            verify_finding(
+    per_target: list[dict[str, Any]] = []
+    overflow = 0
+
+    for target_index, target_path in enumerate(probe_config.target_paths, start=1):
+        target_text = target_path.read_text(encoding="utf-8")
+        # Single-target runs keep the original flat case ids so their trial
+        # logs stay byte-comparable with pre-multi-target runs.
+        prefix = f"t{target_index}-" if multi_target else ""
+        before = len(rows)
+
+        raw_findings = run_probe_call(
+            doctrine_text,
+            target_text,
+            adapter=adapter,
+            model=probe_config.model,
+            retries=retries,
+            rows=rows,
+            case_id=f"{prefix}probe",
+        )
+
+        capped, target_overflow = cap_findings(raw_findings, probe_config.max_findings)
+        overflow += target_overflow
+
+        target_verified: list[VerifiedFinding] = []
+        for index, finding in enumerate(capped, start=1):
+            entry = verify_finding(
                 finding,
                 target_text=target_text,
                 adapter=adapter,
                 model=probe_config.model,
-                case_id=f"finding-{index}",
+                case_id=f"{prefix}finding-{index}",
                 rows=rows,
+                verify_trials=probe_config.verify_trials,
             )
+            if multi_target:
+                entry = replace(entry, target_file=str(target_path))
+            target_verified.append(entry)
+
+        verified.extend(target_verified)
+        target_rows = rows[before:]
+        per_target.append(
+            {
+                "target_file": str(target_path),
+                "findings_confirmed": sum(
+                    1 for item in target_verified if item.verdict == "confirmed"
+                ),
+                "refuted_count": sum(
+                    1 for item in target_verified if item.verdict == "refuted"
+                ),
+                "overflow": target_overflow,
+                "probe_calls": sum(1 for row in target_rows if row["condition"] == "probe"),
+                "verify_calls": sum(1 for row in target_rows if row["condition"] == "verify"),
+            }
         )
 
     confirmed = [entry for entry in verified if entry.verdict == "confirmed"]
-    refuted_count = sum(1 for entry in verified if entry.verdict == "refuted")
+    refuted = [entry for entry in verified if entry.verdict == "refuted"]
+    refuted_count = len(refuted)
 
     run_dir.mkdir(parents=True, exist_ok=True)
     for row in rows:
@@ -449,12 +637,16 @@ def run_probe(
         run_dir,
         rows,
         confirmed=confirmed,
+        refuted=refuted,
         refuted_count=refuted_count,
         overflow=overflow,
         probe_calls=probe_calls,
         verify_calls=verify_calls,
         doctrine_path=probe_config.doctrine_path,
         target_path=probe_config.target_path,
+        target_paths=probe_config.target_paths,
+        per_target=per_target,
+        verify_trials=probe_config.verify_trials,
     )
 
     return {
@@ -464,11 +656,13 @@ def run_probe(
         "overflow": overflow,
         "probe_calls": probe_calls,
         "verify_calls": verify_calls,
-        "confirmed_findings": [
-            {**entry.finding.to_dict(), "reason": entry.reason} for entry in confirmed
-        ],
+        "verify_trials": probe_config.verify_trials,
+        "confirmed_findings": [_finding_entry(entry) for entry in confirmed],
+        "refuted_findings": [_finding_entry(entry) for entry in refuted],
+        "per_target": per_target,
         "doctrine_file": str(probe_config.doctrine_path),
         "target_file": str(probe_config.target_path),
+        "target_files": [str(path) for path in probe_config.target_paths],
         "report_json": str(json_path),
         "report_md": str(md_path),
     }
