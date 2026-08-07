@@ -51,6 +51,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
+import provenance
 import tune
 
 AdapterFn = Callable[[str, str], tune.AdapterResult]
@@ -60,6 +61,17 @@ AdapterFn = Callable[[str, str], tune.AdapterResult]
 # so the default never depends on the run's base_dir or cwd.
 _MODULE_DIR = Path(__file__).resolve().parent
 DEFAULT_DOCTRINE_PATH = _MODULE_DIR.parent / "SKILL.md"
+
+def _tool_version() -> str | None:
+    """skill-tuner's own version, read from the repo's VERSION file. A
+    receipt should say which build of the tool produced it, not just which
+    build of the model answered."""
+    candidate = _MODULE_DIR.parents[2] / "VERSION"
+    try:
+        return candidate.read_text(encoding="utf-8").strip() or None
+    except OSError:
+        return None
+
 
 DEFAULT_MAX_FINDINGS = 8
 DEFAULT_RETRIES = 2
@@ -127,6 +139,10 @@ class ProbeConfig:
     model: str
     max_findings: int
     verify_trials: int = DEFAULT_VERIFY_TRIALS
+    # git ref every input is read from, e.g. "origin/main". None reads the
+    # working tree, which is convenient while iterating and wrong for a
+    # published receipt.
+    pin: str | None = None
 
     @property
     def target_path(self) -> Path:
@@ -177,12 +193,15 @@ def load_config(config: Mapping[str, Any], *, base_dir: Path) -> ProbeConfig:
     if verify_trials < 1:
         raise ValueError(f"verify_trials must be >= 1, got {verify_trials}")
 
+    pin = config.get("pin")
+
     return ProbeConfig(
         doctrine_path=doctrine_path,
         target_paths=tuple(target_paths),
         model=str(model),
         max_findings=max_findings,
         verify_trials=verify_trials,
+        pin=str(pin) if pin else None,
     )
 
 
@@ -331,6 +350,7 @@ def run_probe_call(
                 "condition": "probe",
                 "response": result.text,
                 "cost_usd": result.cost_usd,
+                "model_resolved": result.model_resolved,
             },
             trials_path,
         )
@@ -444,6 +464,7 @@ def verify_finding(
                 "condition": "verify",
                 "response": result.text,
                 "cost_usd": result.cost_usd,
+                "model_resolved": result.model_resolved,
             },
             trials_path,
         )
@@ -502,8 +523,9 @@ def write_probe_report(
     per_target: Sequence[Mapping[str, Any]] = (),
     verify_trials: int = DEFAULT_VERIFY_TRIALS,
     halted_on_budget: bool = False,
+    manifest: Mapping[str, Any] | None = None,
 ) -> tuple[Path, Path]:
-    json_path, md_path = tune.write_report(run_dir, rows, ("probe", "verify"))
+    json_path, md_path = tune.write_report(run_dir, rows, ("probe", "verify"), manifest)
 
     confirmed_findings = [_finding_entry(entry) for entry in confirmed]
     refuted_findings = [_finding_entry(entry) for entry in refuted]
@@ -610,14 +632,28 @@ def run_probe(
     *,
     retries: int = DEFAULT_RETRIES,
     budget_usd: float | None = None,
+    run_id: str | None = None,
 ) -> dict[str, Any]:
     """Run the full marginal-value probe pipeline: one probe call (doctrine
     + target inline), cap findings, one fresh self-contained verify call per
     capped finding, then report. Every model call goes through ``adapter``."""
     resolved_base_dir = base_dir if base_dir is not None else Path(".")
     probe_config = load_config(config, base_dir=resolved_base_dir)
+    pin = probe_config.pin
+    started_at = provenance.utc_now()
 
-    doctrine_text = probe_config.doctrine_path.read_text(encoding="utf-8")
+    # Every input is read through the one chokepoint, before any spend: an
+    # unresolvable pin should cost nothing, not fail halfway through a
+    # battery.
+    doctrine_input = provenance.resolve_input(
+        probe_config.doctrine_path, role="doctrine", pin=pin
+    )
+    target_inputs = [
+        provenance.resolve_input(path, role="target", pin=pin)
+        for path in probe_config.target_paths
+    ]
+
+    doctrine_text = doctrine_input.text
     multi_target = len(probe_config.target_paths) > 1
 
     rows: list[dict[str, Any]] = []
@@ -632,10 +668,11 @@ def run_probe(
     run_dir.mkdir(parents=True, exist_ok=True)
     trials_path = run_dir / "trials.jsonl"
 
-    for target_index, target_path in enumerate(probe_config.target_paths, start=1):
+    for target_index, target_input in enumerate(target_inputs, start=1):
         if halted_on_budget:
             break
-        target_text = target_path.read_text(encoding="utf-8")
+        target_path = target_input.path
+        target_text = target_input.text
         # Single-target runs keep the original flat case ids so their trial
         # logs stay byte-comparable with pre-multi-target runs.
         prefix = f"t{target_index}-" if multi_target else ""
@@ -706,9 +743,24 @@ def run_probe(
     probe_calls = sum(1 for row in rows if row["condition"] == "probe")
     verify_calls = sum(1 for row in rows if row["condition"] == "verify")
 
+    manifest = provenance.build_manifest(
+        run_id=run_id or run_dir.name,
+        inputs=[doctrine_input, *target_inputs],
+        model_pin=probe_config.model,
+        resolved_models=sorted(
+            {row["model_resolved"] for row in rows if row.get("model_resolved")}
+        ),
+        started_at=started_at,
+        finished_at=provenance.utc_now(),
+        cli_version=provenance.cli_version(),
+        tool_version=_tool_version(),
+        extra={"eval": "probe", "pin": pin},
+    )
+
     json_path, md_path = write_probe_report(
         run_dir,
         rows,
+        manifest=manifest,
         confirmed=confirmed,
         refuted=refuted,
         refuted_count=refuted_count,

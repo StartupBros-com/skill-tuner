@@ -58,6 +58,33 @@ class AdapterResult:
     text: str
     cost_usd: float
     raw: dict[str, Any]
+    # The model that actually answered, read back from the CLI envelope.
+    # A pin like "claude-sonnet-5" is an alias; if it is ever repointed
+    # upstream, a published receipt changes meaning without a byte of the
+    # report changing. Recording what replied is the only way to notice.
+    model_resolved: str | None = None
+
+
+def extract_resolved_model(payload: Mapping[str, Any]) -> str | None:
+    """Pull the canonical model id out of a `claude -p --output-format json`
+    envelope. The envelope reports usage per model as
+    ``modelUsage: {"<id>": {"canonicalModel": ..., ...}}``; when more than one
+    answered, the busiest by output tokens is the one that produced the
+    result."""
+    usage = payload.get("modelUsage")
+    if not isinstance(usage, Mapping) or not usage:
+        return None
+
+    def output_tokens(entry: Any) -> int:
+        return int(entry.get("outputTokens", 0)) if isinstance(entry, Mapping) else 0
+
+    best_key = max(usage, key=lambda key: output_tokens(usage[key]))
+    entry = usage[best_key]
+    if isinstance(entry, Mapping):
+        canonical = entry.get("canonicalModel")
+        if isinstance(canonical, str) and canonical:
+            return canonical
+    return str(best_key)
 
 
 # --------------------------------------------------------------------------
@@ -134,6 +161,7 @@ def call_adapter(
                         text=str(payload.get("result", "")).strip(),
                         cost_usd=float(payload.get("total_cost_usd") or 0.0),
                         raw=payload,
+                        model_resolved=extract_resolved_model(payload),
                     )
             else:
                 stderr = (completed.stderr or "").strip()
@@ -376,10 +404,59 @@ def build_report(trials: Sequence[dict[str, Any]], conditions: tuple[str, str]) 
     }
 
 
+def _render_manifest_lines(manifest: Mapping[str, Any]) -> list[str]:
+    """The manifest in the human-readable report. A reader who never opens
+    report.json should still be able to see what was measured and when."""
+    lines = ["## Run manifest", ""]
+    started, finished = manifest.get("started_at"), manifest.get("finished_at")
+    lines.append(f"- run: `{manifest.get('run_id')}` ({started} → {finished})")
+    lines.append(
+        f"- claude CLI: `{manifest.get('cli_version') or 'unknown'}` "
+        f"| skill-tuner: `{manifest.get('tool_version') or 'unknown'}`"
+    )
+    resolved = manifest.get("resolved_models") or []
+    lines.append(
+        f"- model pin: `{manifest.get('model_pin')}` "
+        f"→ answered by: {', '.join(f'`{m}`' for m in resolved) or '`unrecorded`'}"
+    )
+    inputs = manifest.get("inputs") or []
+    if inputs:
+        lines.append("")
+        lines.append("| Role | Input | sha256 | Source |")
+        lines.append("| --- | --- | --- | --- |")
+        for item in inputs:
+            digest = str(item.get("sha256") or "")
+            short = digest.split(":", 1)[-1][:12]
+            flags = []
+            if item.get("dirty"):
+                flags.append("dirty")
+            if item.get("differs_from_worktree"):
+                flags.append("differs-from-worktree")
+            source = str(item.get("source", ""))
+            commit = (item.get("git_commit") or "")[:12]
+            if commit:
+                source = f"{source} @ {commit}"
+            if flags:
+                source = f"{source} ({', '.join(flags)})"
+            lines.append(
+                f"| {item.get('role')} | `{item.get('path')}` | `{short}` | {source} |"
+            )
+    lines.append("")
+    return lines
+
+
 def write_report(
-    run_dir: Path, trials: Sequence[dict[str, Any]], conditions: tuple[str, str]
+    run_dir: Path,
+    trials: Sequence[dict[str, Any]],
+    conditions: tuple[str, str],
+    manifest: Mapping[str, Any] | None = None,
 ) -> tuple[Path, Path]:
+    """The shared report seam. Both evals funnel through here, so attaching
+    the run manifest at this one point gives every eval provenance rather
+    than each growing its own."""
     summary = build_report(trials, conditions)
+    if manifest is not None:
+        summary["manifest"] = dict(manifest)
 
     json_path = run_dir / "report.json"
     json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
@@ -394,6 +471,8 @@ def write_report(
         stats = summary["conditions"][condition]
         lines.append(f"- {condition}: {stats['trials']} trial(s), ${stats['total_cost_usd']:.4f} spent")
     lines.append("")
+    if manifest is not None:
+        lines.extend(_render_manifest_lines(manifest))
     md_path = run_dir / "report.md"
     md_path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -471,6 +550,16 @@ def _add_eval_arguments(subparser: argparse.ArgumentParser) -> None:
     subparser.add_argument("--est-cost-per-call", type=float, default=DEFAULT_EST_COST_PER_CALL)
     subparser.add_argument("--yes", action="store_true")
     subparser.add_argument("--retries", type=int, default=DEFAULT_RETRIES)
+    subparser.add_argument(
+        "--pin",
+        default=None,
+        metavar="GIT_REF",
+        help=(
+            "Read every input from this git ref (e.g. origin/main) instead of "
+            "the working tree, so a run does not depend on uncommitted or "
+            "behind-the-remote content. Overrides the config's 'pin'."
+        ),
+    )
 
 
 def _run_eval(args: argparse.Namespace, prefix: str) -> int:
@@ -562,6 +651,8 @@ def _run_probe_config(args: argparse.Namespace) -> int:
     import probe  # local: probe imports tune at module load time
 
     config = _load_json_config(args.config)
+    if getattr(args, "pin", None):
+        config = {**config, "pin": args.pin}
     base_dir = args.config.resolve().parent
     content_parts = ["probe", str(args.config.resolve()), json.dumps(config, sort_keys=True)]
     run_dir, run_id = resolve_run_dir(
@@ -600,6 +691,7 @@ def _run_probe_config(args: argparse.Namespace) -> int:
         base_dir=base_dir,
         retries=args.retries,
         budget_usd=args.budget_usd,
+        run_id=run_id,
     )
     print(
         f"Run {run_id}: findings_confirmed={result['findings_confirmed']} "
@@ -639,6 +731,58 @@ def _cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_verify(args: argparse.Namespace) -> int:
+    """Re-read a finished run's manifest and report what has moved since.
+
+    Makes no model call and costs nothing, which is the point: it is what
+    keeps a published receipt falsifiable long after the run. The doctrine's
+    own time-relative rule says a number measured on one CLI is not evidence
+    about the next one; this is that rule as a command.
+
+    Exit 0 when nothing drifted, 1 when something did, so it composes into a
+    pre-publish check.
+    """
+    import provenance
+
+    run_dir = args.run_dir if args.run_dir is not None else args.reports_dir / args.run_id
+    report_path = run_dir / "report.json"
+    if not report_path.is_file():
+        raise FileNotFoundError(f"no report.json in {run_dir}")
+
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    manifest = report.get("manifest")
+    if not manifest:
+        print(
+            f"{run_dir.name}: no manifest — this run predates provenance "
+            "recording and cannot be verified."
+        )
+        return 1
+
+    result = provenance.verify_manifest(manifest)
+
+    if args.json:
+        print(json.dumps(result, indent=2))
+        return 1 if result["drifted"] else 0
+
+    cli = result["cli_version"]
+    print(f"run: {result['run_id']}")
+    print(
+        f"claude CLI: recorded {cli['recorded'] or 'unknown'} | "
+        f"current {cli['current'] or 'unknown'}"
+        + ("  <-- CHANGED" if cli["changed"] else "")
+    )
+    for item in result["inputs"]:
+        marker = "ok " if item["status"] == "unchanged" else "!! "
+        print(f"{marker}{item['status']:<12} {item['role']:<9} {item['path']}")
+        if item["status"] == "changed":
+            print(f"      recorded {item['recorded_sha256']}")
+            print(f"      current  {item['current_sha256']}")
+    print()
+    print("DRIFTED — this receipt no longer describes current inputs." if result["drifted"]
+          else "No drift: inputs and CLI match the recorded run.")
+    return 1 if result["drifted"] else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="tune.py", description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -658,6 +802,16 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
     report.add_argument("--conditions", nargs=2, metavar=("A", "B"), default=None)
     report.set_defaults(handler=_cmd_report)
+
+    verify = subparsers.add_parser(
+        "verify",
+        help="Check a finished run's inputs and CLI against now (no model calls, no cost)",
+    )
+    verify.add_argument("run_id", nargs="?", default=None)
+    verify.add_argument("--run-dir", type=Path, default=None)
+    verify.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
+    verify.add_argument("--json", action="store_true", help="Machine-readable output")
+    verify.set_defaults(handler=_cmd_verify)
 
     return parser
 

@@ -1,0 +1,10 @@
+{
+  "model": "claude-sonnet-5",
+  "doctrine_file": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+  "pin": "origin/main",
+  "max_findings": 2,
+  "verify_trials": 1,
+  "target_files": [
+    "/home/will/dotfiles/claude/skills-local/papercut/SKILL.md"
+  ]
+}
