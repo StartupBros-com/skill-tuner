@@ -1,5 +1,15 @@
 # Swap-gate evaluation (R13, UNIT U7)
 
+> **SUPERSEDED by [`swapgate2-summary.md`](swapgate2-summary.md), which records
+> the gate as WON.** Two defects invalidate the leg (a) result below. The
+> quote-existence guard compared a model-reproduced quote to the target with a
+> raw substring test, so it downgraded the candidate's one verifier-CONFIRMED
+> finding for dropping a markdown blockquote marker — the candidate's true
+> score on this run is 1, not 0. And a single target document decided a
+> count-based launch gate, which this file already flagged as too thin. The
+> six-target re-run reverses the sign: candidate 11, incumbent 9. Kept
+> unedited below as the original record.
+
 Gate: skill-tuner replaces the incumbent `writing-for-agents` fork only if it
 scores equal-or-better than the incumbent on both legs below, on the same
 pipeline. Model pin: `claude-sonnet-5`. Auth mode: api-key (budget-capped at
