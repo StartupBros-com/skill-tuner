@@ -1,0 +1,18 @@
+{
+  "name": "skill-tuner",
+  "version": "0.1.0",
+  "description": "Measurably optimize your agent-consumed documents: evidence-tagged authoring doctrine plus a bundled eval runner that proves each change on your own harness.",
+  "author": {
+    "name": "StartupBros / House of Vibe",
+    "url": "https://houseofvibe.ai"
+  },
+  "homepage": "https://houseofvibe.ai",
+  "repository": "https://github.com/StartupBros-com/skill-tuner",
+  "license": "MIT",
+  "keywords": [
+    "house-of-vibe",
+    "skills",
+    "evals",
+    "claude-code"
+  ]
+}
