@@ -1,0 +1,76 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.266922
+    },
+    "verify": {
+      "trials": 0,
+      "total_cost_usd": 0
+    }
+  },
+  "total_trials": 1,
+  "manifest": {
+    "run_id": "dogfood-run-skill-8",
+    "started_at": "2026-08-08T08:22:54Z",
+    "finished_at": "2026-08-08T08:25:16Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "0d9e56e5d52ec32a9b4adde059317ea54a58aa73",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:63c6a8cb27073a24e7025dc9479586fb956c2c381fef0d16b6a94e5ca17bbd03",
+        "source": "worktree",
+        "git_commit": "0d9e56e5d52ec32a9b4adde059317ea54a58aa73",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 0,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 0,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 0,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 0,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

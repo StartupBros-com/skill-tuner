@@ -135,7 +135,7 @@ reproducible alternative. Reports land in `reports/<run-id>/`
 | `RuntimeError: API-key auth reports dollar cost; refusing to run without --budget-usd` | Working as intended. Pass `--budget-usd N`, or `--allow-unmetered` if you mean it. |
 | `RuntimeError: Pre-flight confirmation required for a non-interactive run; pass --yes` | Add `--yes`. Non-interactive runs must not spend on an unattended prompt. |
 | `FileNotFoundError: no report.json in reports/<id>` | That run never wrote anything. Pick a directory that contains `report.json`. |
-| `ModuleNotFoundError` running the tests | Run `cd skills/skill-tuner/scripts` first; the tests import sibling modules by bare name. |
+| `ModuleNotFoundError` running the tests | Run from `skills/skill-tuner/scripts` — see "Direct invocation" above. |
 | `no manifest — this run predates provenance recording` from `verify` | Correct for any run made before U9. It cannot be verified; re-run it. |
 | Empty `reports/<id>/` directories piling up | Fixed — resolving a run dir no longer creates it. Any you still see predate that fix; clear them with `find reports -maxdepth 1 -type d -empty -exec rmdir {} \;`. Use that form, not `find`'s delete action, which some shells block as a destructive-command guard. |
 
