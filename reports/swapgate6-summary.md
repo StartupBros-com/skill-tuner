@@ -69,11 +69,15 @@ recorded in the forensics — and the net is +15.
 
 ## What this is not
 
-- **Not a claim against the current upstream.** `writing-for-agents` was
-  renamed and restructured upstream on 2026-07-31; this gate, like every one
-  before it, measures against the pinned pre-rename snapshot the doctrine
-  forked from. A re-baseline against the current upstream is the next
-  experiment and costs two legs.
+- **A claim against current upstream content — checked, not assumed.** The
+  incumbent snapshot (frozen 2026-08-05) includes upstream's 2026-07-23
+  rename/restructure and its last content change (2026-07-28); the only
+  local delta is one added sentence, the time-relative no-op amendment,
+  which makes the baseline strictly harder. An earlier draft of this bullet
+  called the snapshot stale, from a research-agent claim of a 2026-07-31
+  restructure; upstream's commit log disproved it
+  (`gh api repos/mattpocock/skills/commits?path=...`), and this correction
+  replaces it.
 - **Not a per-rule claim.** The doctrine as a whole out-found its ancestor
   once, on one metric (adversarially-confirmed defects at max_findings=5,
   three skeptics). No individual rule is thereby validated.
