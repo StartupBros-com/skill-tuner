@@ -48,6 +48,22 @@ Three things, none of which a first-party harness gives you:
 - **Provenance** — every input content-hashed and git-pinned, model and CLI version recorded. `tune.py verify <run>` re-checks a finished run for **$0** and tells you what drifted. It caught a real input change within hours of being written.
 - **An adversarial probe** — applies an authoring doctrine to a document, judges each finding with an independent skeptic panel, and downgrades any finding whose quote is not actually in the target, regardless of how the panel voted.
 
+## Using it
+
+**`/skill-tuner:skill-tune <path>`** — point it at a `SKILL.md`, `AGENTS.md` or `CLAUDE.md` and your agent will probe it, fix what the probe confirms, re-probe until those findings are gone, and prove the description still routes if it changed.
+
+Findings arrive pre-verified — three independent skeptics in fresh contexts, plus a code-level check that the quoted text actually appears in the document — so the agent acts on them rather than re-litigating them. Refuted findings are shown too, labelled with what killed them.
+
+The command is deliberately explicit about what it may **not** claim: a before/after count on one document is not evidence of improvement. For that you need a paired comparison across many documents, which is what `tune.py compare` is for.
+
+The runner never fires on the model's own initiative. It spends your tokens, so it starts on your instruction, and reports the estimate before the first call and the actual after.
+
+For a one-off, without the loop:
+
+```
+python3 skills/skill-tuner/scripts/tune.py probe --target path/to/SKILL.md --yes --budget-usd 3 --verify-trials 3
+```
+
 ## Works with skill-creator, not against it
 
 skill-creator runs the experiment; skill-tuner decides what it means. Integration is at the **file** boundary — it reads `grading.json` / the benchmark tree and never imports their code, because their scripts have no API contract and the marketplace bumps plugin SHAs nightly.
