@@ -355,8 +355,19 @@ class RunIdResolutionTest(unittest.TestCase):
                 reports_dir, "routing-parity", ["a", "b"], run_id=None, resume_id=None
             )
 
-            self.assertNotEqual(run_id_1, run_id_2)
-            self.assertTrue(run_id_2.startswith(run_id_1))
+            # Same content, nothing written between them: the slug is stable
+            # and no suffix is burned. Suffixes exist to avoid merging into a
+            # run that produced output, not to count attempts.
+            self.assertEqual(run_id_1, run_id_2)
+
+            # Once a run has actually written something, the next fresh run
+            # steps aside rather than merging into it.
+            (reports_dir / run_id_1).mkdir(parents=True)
+            _, run_id_3 = tune.resolve_run_dir(
+                reports_dir, "routing-parity", ["a", "b"], run_id=None, resume_id=None
+            )
+            self.assertNotEqual(run_id_1, run_id_3)
+            self.assertTrue(run_id_3.startswith(run_id_1))
 
     def test_resolve_run_dir_resume_reuses_exact_directory(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -379,7 +390,12 @@ class RunIdResolutionTest(unittest.TestCase):
                 reports_dir, "probe", ["x"], run_id="my-explicit-id", resume_id=None
             )
             self.assertEqual("my-explicit-id", run_id)
-            self.assertTrue(run_dir.exists())
+            # Resolving a run dir must not create it. A pre-flight that then
+            # refuses to spend -- unmetered, or non-interactive without --yes
+            # -- has to leave nothing behind, and these directories are
+            # invisible to git (it does not track empty ones), so strays
+            # accumulate unseen.
+            self.assertFalse(run_dir.exists())
 
 
 class CaseLoadingTest(unittest.TestCase):
