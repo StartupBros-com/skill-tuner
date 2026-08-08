@@ -30,7 +30,29 @@ What can be said honestly:
 - It is *plausibly* costing yield, consistent with the doctrine's own Sprawl
   rule, but 16 documents cannot separate +0.44 from zero.
 
-## The remaining gap points at H2
+## Correction: the "2.5× thinner rules" figure was wrong
+
+H2 was stated here and in `swapgate3-summary.md` as "20 rules at ~490
+characters against the incumbent's 9 at ~1,240." That came from
+`total_chars / bullet_count`, which folds a document's prose into its
+per-bullet number. Measured properly:
+
+| | total | bullets | avg bullet | prose |
+| --- | --- | --- | --- | --- |
+| incumbent | 11,108 | 9 | 276 | **8,616 (77%)** |
+| candidate v1 | 12,742 | 20 | **393** | 2,630 (21%) |
+
+The candidate's bullets were always *thicker* than the incumbent's. The
+structural difference is **form**, not rule density: the incumbent carries
+most of its content as explanatory prose and uses bullets sparingly; the
+candidate is a bullet list with little framing around it.
+
+That is a different hypothesis, and a weaker one — it rests on a correlation
+across two documents. It is recorded as an observation, not a conclusion, and
+deliberately not over-fitted to: reading a mechanism off a two-point
+comparison is the same error that produced the figure being corrected here.
+
+## The remaining gap
 
 Even ablated, the candidate loses 9 documents to 3. Rule thinness was held
 constant on purpose: the ablated doctrine still carries 20 rules to the
