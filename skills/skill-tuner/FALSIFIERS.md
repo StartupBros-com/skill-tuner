@@ -159,9 +159,11 @@ applied):
   near-boundary win, published with the same calibration as the losses
   (`reports/swapgate6-summary.md`).
 
-The upstream `writing-for-agents` was renamed and restructured on 2026-07-31
-(mattpocock/skills); every comparison above is against the pinned pre-rename
-snapshot in the authors' dotfiles, and a re-baseline against the current
-upstream has not yet been run. The doctrine as a whole measured better once,
-against that snapshot; no individual rule is thereby validated, and no claim
-is made against the current upstream.
+The incumbent in these gates was frozen from upstream on 2026-08-05 and
+includes upstream's 2026-07-23 rename/restructure and its last content
+change (2026-07-28), plus one local sentence this project added (the
+time-relative no-op amendment) — the comparison is against current upstream
+content, made strictly harder by that amendment. (An earlier revision here
+called the snapshot pre-rename and stale; upstream's commit log disproved
+that.) The doctrine as a whole measured better once; no individual rule is
+thereby validated.
