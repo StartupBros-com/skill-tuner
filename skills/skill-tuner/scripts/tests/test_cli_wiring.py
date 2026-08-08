@@ -197,3 +197,48 @@ class ProbeCliWiringTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ProbeTargetFlagTest(unittest.TestCase):
+    """`probe --target` builds the config in memory.
+
+    A committed config file is the right interface for a reproducible
+    battery. It is the wrong one for an agent mid-way through fixing a
+    document, which would otherwise have to author JSON to a temp path just
+    to ask what is wrong with a file. Same runner, same guards, one less step.
+    """
+
+    def _args(self, argv):
+        return tune.build_parser().parse_args(argv)
+
+    def test_target_builds_a_config_without_a_file(self):
+        args = self._args([
+            "probe", "--target", "a.md", "--target", "b.md",
+            "--model", "m", "--max-findings", "3", "--verify-trials", "5",
+        ])
+        config = tune._config_from_targets(args)
+
+        self.assertEqual("m", config["model"])
+        self.assertEqual(3, config["max_findings"])
+        self.assertEqual(5, config["verify_trials"])
+        self.assertEqual(2, len(config["target_files"]))
+        # Paths are resolved, so the run does not depend on the caller's cwd.
+        self.assertTrue(all(p.startswith("/") for p in config["target_files"]))
+        self.assertNotIn("doctrine_file", config)  # bundled default
+
+    def test_doctrine_and_pin_pass_through(self):
+        args = self._args([
+            "probe", "--target", "a.md", "--doctrine", "d.md",
+            "--pin", "origin/main", "--model", "m",
+        ])
+        config = tune._config_from_targets(args)
+
+        self.assertTrue(config["doctrine_file"].endswith("d.md"))
+        self.assertEqual("origin/main", config["pin"])
+
+    def test_config_still_works_and_target_takes_precedence(self):
+        plain = self._args(["probe", "--config", "c.json"])
+        self.assertIsNone(plain.target)
+
+        both = self._args(["probe", "--config", "c.json", "--target", "a.md"])
+        self.assertEqual(["a.md"], both.target)

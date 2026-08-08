@@ -29,7 +29,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
-DEFAULT_MODEL = "claude-sonnet-4-5-20250929"
+# Matches every committed config and every published receipt. A CLI
+# default that drifts from the configs means an ad-hoc run silently
+# measures a different model than the numbers it gets compared against.
+DEFAULT_MODEL = "claude-sonnet-5"
 # Conservative placeholder; overridable per-run with --est-cost-per-call.
 DEFAULT_EST_COST_PER_CALL = 0.05
 DEFAULT_RETRIES = 2
@@ -643,7 +646,9 @@ def _run_routing_parity_config(args: argparse.Namespace) -> int:
     return 0
 
 
-def _run_probe_config(args: argparse.Namespace) -> int:
+def _run_probe_config(
+    args: argparse.Namespace, config: dict[str, Any] | None = None
+) -> int:
     """The real probe path: --config names a JSON eval config
     (doctrine_file/target_file/model/max_findings). probe.run_probe doesn't
     run its calls through execute_battery (its verify-call count depends on
@@ -653,11 +658,15 @@ def _run_probe_config(args: argparse.Namespace) -> int:
     """
     import probe  # local: probe imports tune at module load time
 
-    config = _load_json_config(args.config)
-    if getattr(args, "pin", None):
-        config = {**config, "pin": args.pin}
-    base_dir = args.config.resolve().parent
-    content_parts = ["probe", str(args.config.resolve()), json.dumps(config, sort_keys=True)]
+    if config is None:
+        config = _load_json_config(args.config)
+        if getattr(args, "pin", None):
+            config = {**config, "pin": args.pin}
+        base_dir = args.config.resolve().parent
+    else:
+        base_dir = Path.cwd()
+    content_parts = ["probe", str(args.config) if args.config else "targets",
+                     json.dumps(config, sort_keys=True)]
     run_dir, run_id = resolve_run_dir(
         args.reports_dir, "probe", content_parts, run_id=args.run_id, resume_id=args.resume
     )
@@ -715,9 +724,32 @@ def _cmd_routing_parity(args: argparse.Namespace) -> int:
 
 
 def _cmd_probe(args: argparse.Namespace) -> int:
+    if args.target:
+        return _run_probe_config(args, config=_config_from_targets(args))
     if args.config is not None:
         return _run_probe_config(args)
     return _run_eval(args, "probe")
+
+
+def _config_from_targets(args: argparse.Namespace) -> dict[str, Any]:
+    """Build a probe config from --target flags.
+
+    The config file is the right interface for a committed, reproducible
+    battery. It is the wrong one for an agent part-way through fixing a
+    document, which would have to author JSON to a temp path just to ask
+    "what is wrong with this file". Same runner, same guards, one less step.
+    """
+    config: dict[str, Any] = {
+        "model": args.model,
+        "target_files": [str(Path(t).resolve()) for t in args.target],
+        "max_findings": args.max_findings,
+        "verify_trials": args.verify_trials,
+    }
+    if args.doctrine:
+        config["doctrine_file"] = str(Path(args.doctrine).resolve())
+    if getattr(args, "pin", None):
+        config["pin"] = args.pin
+    return config
 
 
 def _cmd_report(args: argparse.Namespace) -> int:
@@ -855,6 +887,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     probe = subparsers.add_parser("probe", help="Run the marginal-value probe eval")
     _add_eval_arguments(probe)
+    probe.add_argument(
+        "--target", action="append", default=None, metavar="PATH",
+        help="Document to probe. Repeatable. Skips the need for a config file.",
+    )
+    probe.add_argument(
+        "--doctrine", default=None, metavar="PATH",
+        help="Doctrine to apply (defaults to the bundled skill-tuner SKILL.md)",
+    )
+    probe.add_argument("--max-findings", type=int, default=8)
+    probe.add_argument("--verify-trials", type=int, default=1)
     probe.set_defaults(handler=_cmd_probe)
 
     report = subparsers.add_parser("report", help="Rebuild report.json/report.md for a run")
