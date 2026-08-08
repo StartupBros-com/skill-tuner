@@ -1,5 +1,15 @@
 # Swap-gate re-run (R13, UNIT U8)
 
+> **SUPERSEDED by [`swapgate3-summary.md`](swapgate3-summary.md), which
+> records the gate as WORSE — do not swap.** The WON below was noise. At
+> n=16 with inputs pinned to `origin/main`, the candidate confirms 19
+> findings against the incumbent's 30, mean difference −0.688/document with a
+> 95% CI of [−1.19, −0.18], losing 8 documents and winning 1. Re-measured,
+> the three documents that carried this run's +2 margin (3, 3, 4) came back
+> 1, 1, 1 — this run caught a good draw, not a better doctrine. The caveat
+> below about the margin resting on magnitude rather than consistency was
+> pointing at exactly this. Kept unedited as the original record.
+
 Gate: skill-tuner replaces the incumbent `writing-for-agents` fork only if it
 scores equal-or-better than the incumbent on both legs below, on the same
 pipeline. Model pin: `claude-sonnet-5`. Auth mode: api-key, budget-capped per
