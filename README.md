@@ -113,17 +113,18 @@ Session-measured on the authors' harness (2026-08-08). Costs and what actually r
 
 `skills/skill-tuner/SKILL.md` is an authoring doctrine where every rule carries an evidence tag and a falsifier — and, new in v3, every `[research]` tag carries a fetched-and-verified citation in [`FALSIFIERS.md`](skills/skill-tuner/FALSIFIERS.md). It descends from [mattpocock/skills](https://github.com/mattpocock/skills)' `writing-for-agents` (MIT). Upstream renamed and restructured that skill on 2026-07-31; every comparison below is against the pinned pre-rename snapshot this doctrine actually forked from, and a re-baseline against the current upstream has not yet been run.
 
-**We have never shown it beats its ancestor.** Measured on 15 shared documents, three times:
+Measured on 15 shared documents, four times, against the same banked ancestor leg:
 
 | version | confirmed | 95% CI | verdict |
 | --- | --- | --- | --- |
 | v1 | 18 vs 29 | [−1.27, −0.20] | inconclusive — regression confirmed* |
 | v1, apparatus stripped | 22 vs 29 | [−1.30, +0.37] | inconclusive |
-| **v2** | **27 vs 29** | **[−0.76, +0.49]** | **not_worse** |
+| v2 | 27 vs 29 | [−0.76, +0.49] | not_worse |
+| **v3** | **42 vs 29** | **[+0.03, +1.70]** | **better** |
 
 \* v1 was originally published as **worse**. A 2026-08-08 statistics review found the worse verdict anchored at zero rather than −δ, so it fired on any confirmed regression even inside the declared-tolerable band; the corrected reading of the same interval is a confirmed regression of unresolved size against the margin. The data did not move — the label did, and the fix is in `compare.py` with a regression test.
 
-That is the honest state: *not worse*, never better. It is published because it is the point. Every other authoring guide asserts its rules work and has measured nothing; this one measured, lost, and shipped the data — and the harness refused its own doctrine twice on the way.
+Three gates in a row said *not better* — and every one shipped, because publishing the losses is the point. The fourth (`swapgate6`, 2026-08-08) is the first **better**, and it gets the same calibration as the losses did: the interval clears zero by +0.03, the bootstrap CI agrees, the sign test alone would not resolve it — a near-boundary win, not a landslide. The rewrite behind it did not chase style. A forensic diff of the earlier legs located the deficit in one place — duplication-hunting was 41% of the ancestor's confirmed yield and 4% of v2's — and v3 restored that single rule to the terminal, elaborated position it holds in the ancestor. The category came back 1 → 16, and the four gates move together: 18 → 22 → 27 → 42 confirmed, mean −0.73 → −0.47 → −0.13 → +0.87 (`reports/swapgate6-summary.md`). Against the *current* upstream — renamed and restructured 2026-07-31 — no claim is made until a re-baseline runs.
 
 If you want a doctrine, use either. If you want to know whether the one you picked is doing anything, that's what the rest of this repo is for.
 
