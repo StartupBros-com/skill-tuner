@@ -1,0 +1,90 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.1736949
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.1405026
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood-tune-cmd",
+    "started_at": "2026-08-08T07:48:05Z",
+    "finished_at": "2026-08-08T07:51:06Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d3c66d4e8af3953bfe2a7e2ae100da07d6d44fe65688a14797ab4bf3870d46f2",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md",
+        "sha256": "sha256:e8c70a8306f1558ed03024ab0dbb803593262de669dc3bafad39f8b6203b33d6",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "commands/tune.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition drags the forbidden behaviour into context and makes it more available; pair a prohibition with its positive target, and don't lead a rule with the ban alone.",
+        "target_quote": "Do not act on those, and do not re-litigate them.",
+        "issue": "This bullet leads with two bans back-to-back and never states the positive target (what to do with refuted findings instead \u2014 e.g. treat them as closed and move on). Unlike the negations elsewhere in this document (e.g. \"Fix the defect, not the sentence containing it\" and the 'What you may not claim' section, both of which state the positive instruction first), this one has no positive counterpart anywhere nearby, matching the doctrine's tell for a genuine negation defect.",
+        "proposed_fix": "Replace with a positive framing, e.g.: \"Treat refuted findings as closed \u2014 leave them out of your fix list and your report's 'refuted' section is the only place they belong.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 quote appears verbatim (\"Do not act on those, and do not re-litigate them.\") and it is indeed a bare double-negation with no positive framing of what to do with refuted findings stated nearby. || CONFIRMED \u2014 the quote appears verbatim, and the sentence does lead with two back-to-back \"do not\" bans with no positive framing stated nearby, matching the negation rule's failure pattern. || CONFIRMED \u2014 the quote appears verbatim in step 2, and it does lead with two prohibitions (\"Do not act... do not re-litigate...\") without an adjacent positive framing of what to do with refuted findings instead."
+      },
+      {
+        "rule": "Cut identity the body already states [craft] \u2014 a pointer restating what the body says about itself adds permanent context load for no routing signal; the pointer's job is when to reach, not what it is.",
+        "target_quote": "Adversarially verified \u2014 every defect is confirmed by independent skeptics before you act on it.",
+        "issue": "This clause in the always-loaded frontmatter description states a property of the tool (how it verifies findings) rather than a trigger for when to reach it, and that same identity is restated in full in the body: \"Every finding it reports has already survived three independent skeptics in fresh contexts, plus a code-level check that the quoted text genuinely appears in the document.\" The description pays permanent load to say what the body already explains at the point it matters.",
+        "proposed_fix": "Trim the description to the routing-relevant clause only, e.g. \"Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes.\" and let step 2 of the body carry the adversarial-verification detail alone.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted description text appears verbatim, and the body's step 2 explanation (\"already survived three independent skeptics...\") does restate the same identity claim, making the case that the description clause is redundant framing rather than a routing trigger genuinely apply. || CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and it does state an identity/property (verification method) rather than a trigger, while the body separately restates the same claim in more detail (\"Every finding it reports has already survived three independent skeptics...\"). || CONFIRMED \u2014 the quote appears verbatim in the frontmatter description, and it does restate (as a property/identity claim) what the body already explains in step 2, without adding a routing trigger."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

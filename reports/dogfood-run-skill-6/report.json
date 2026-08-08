@@ -1,0 +1,83 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.43220024999999995
+    },
+    "verify": {
+      "trials": 3,
+      "total_cost_usd": 0.1403322
+    }
+  },
+  "total_trials": 4,
+  "manifest": {
+    "run_id": "dogfood-run-skill-6",
+    "started_at": "2026-08-08T08:11:04Z",
+    "finished_at": "2026-08-08T08:15:25Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:59bbdc4f0d6e0ab2784098826ea7e31e3aaaef3318ca090f815a6c7626adadac",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 3,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Co-location [craft] \u2014 keep a concept's definition, rules, and caveats under one heading, so reading one part brings its neighbours. Spot it by asking whether applying a rule correctly requires having read a different section.",
+        "target_quote": "Judge two banked runs, or re-check one for drift \u2014 both free:\n\n```bash\npython3 skills/skill-tuner/scripts/tune.py compare \\\n  --baseline swapgate3-probe-incumbent \\\n  --candidate swapgate5-probe-doctrine-v2 --exclude design-drift\n\npython3 skills/skill-tuner/scripts/tune.py verify swapgate5-probe-doctrine-v2\n```",
+        "issue": "This is the canonical usage example for `verify`, but the fact that a normal DRIFTED result exits 1 \u2014 and that a wrapper must treat 'produced a verdict' as success \u2014 is stated only later, in the Gotchas section. An agent that copies this example into a script (e.g. under `set -e`, or checking `$?` / `&&`) would treat a healthy DRIFTED verdict as a crash, which is exactly the misinterpretation the Gotchas bullet warns against. Correctly using the command shown here requires having already read a different, non-adjacent section.",
+        "proposed_fix": "Add the exit-code caveat right at the point of use, e.g. append '`verify` exits 1 on DRIFTED \u2014 that is a verdict, not a failure; treat any verdict as success' immediately after the verify example in Direct invocation, instead of leaving it only in Gotchas.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted example appears verbatim in \"Direct invocation\", and its critical exit-code caveat lives only in the separate, non-adjacent Gotchas section. || CONFIRMED \u2014 the quoted example appears verbatim, and the exit-1-on-DRIFTED caveat needed to use it safely lives only in the separate Gotchas section, not adjacent to the example. || CONFIRMED \u2014 the quoted verify example appears verbatim in \"Direct invocation,\" and the exit-code caveat needed to use it safely lives only in the separate Gotchas section, not adjacent to the example."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 3,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

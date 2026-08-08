@@ -1,0 +1,92 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.3065973
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.19307805
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood-run-skill-4",
+    "started_at": "2026-08-08T08:00:50Z",
+    "finished_at": "2026-08-08T08:04:57Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d3c66d4e8af3953bfe2a7e2ae100da07d6d44fe65688a14797ab4bf3870d46f2",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:87e0c850131ef8e8150842cae6b48c2129545cfa0b3ba977e944ccf0c4496973",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Leading words [craft] \u2014 coining your own works only if you define it clearly: a made-up word recruits no priors, so you pay in definition tokens what a pretrained word gives free.",
+        "target_quote": "Use that form, not `find`'s delete action, which dcg-guarded shells refuse.",
+        "issue": "\"dcg-guarded\" is an undefined coined term. Nothing else in the document explains what \"dcg\" stands for or what makes a shell \"dcg-guarded,\" so the agent cannot tell when this restriction applies or verify the claim \u2014 it's asked to accept an opaque label as the sole reason to avoid `find`'s delete action.",
+        "proposed_fix": "Either spell out what dcg-guarded means inline (e.g., \"which some sandboxed/permission-guarded shells refuse\") or drop the jargon and state the concrete symptom (e.g., \"which some shells block as a destructive-command guard\").",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quoted text appears verbatim, and \"dcg-guarded\" is indeed an undefined coined term with no explanation elsewhere in the document. || CONFIRMED \u2014 the quote appears verbatim, and \"dcg-guarded\" is indeed an undefined coined term with no explanation elsewhere in the document. || CONFIRMED \u2014 the quoted text appears verbatim, and \"dcg-guarded\" is indeed an undefined coined term with no explanation anywhere in the document."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition drags the forbidden behaviour into context and makes it more available, not less; state the target behaviour so the banned one is never named.",
+        "target_quote": "There is nothing to click and no window to screenshot.",
+        "issue": "This sentence names the exact banned actions (\"click\", \"screenshot\") rather than stating the positive target behavior (how to actually drive and verify the tool). Per the doctrine's research-backed rule, naming \"click\" and \"screenshot\" makes those actions more available to the agent, not less, instead of simply directing it to the CLI-appropriate method (checking exit codes/stdout).",
+        "proposed_fix": "Replace with a positive instruction, e.g., \"Drive it entirely from the shell and verify results via exit codes and stdout.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quote is descriptive framing (\"it's a CLI, not a GUI\") clarifying the tool's nature, not a prohibitive steering instruction; the negation-research rule targets directive prompts telling an agent not to do something, not factual scoping statements like this. || REFUTED \u2014 the quote is verbatim, but the rule is about imperative prohibitions (\"don't do X\") priming an undesired behavior; this sentence is a descriptive clarification that the tool is a CLI, not a behavioral instruction telling the agent not to click or screenshot, so the negation-steering mechanism doesn't genuinely apply here. || REFUTED \u2014 the quote is verbatim, but this is descriptive clarification of the tool's nature (CLI vs GUI), not a behavioral prohibition instruction; the negation-priming rule targets steering commands like \"don't do X,\" not factual scoping statements that establish what kind of tool this is.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

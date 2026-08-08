@@ -1,0 +1,90 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.2712834
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.11875485
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood-run-skill-3",
+    "started_at": "2026-08-08T07:54:23Z",
+    "finished_at": "2026-08-08T07:57:43Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d3c66d4e8af3953bfe2a7e2ae100da07d6d44fe65688a14797ab4bf3870d46f2",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:51e8ae11841d941e3d46e624a1d9577d3c63362e1387051081cfb1d535eef6f8",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Negation [research] \u2014 steer toward the target behaviour instead of leading with the ban; keep prohibition paired with its positive target and never as the unexplained lead.",
+        "target_quote": "**Never `tail` the test output.** The suite prints cost estimates to stdout\n  while unittest writes its verdict to stderr; the last few interleaved lines\n  are usually noise. Grep the whole capture for `^OK$`.",
+        "issue": "The bullet leads with the banned action (\"Never tail\"), which the doctrine flags as making the forbidden behaviour more available rather than less. The positive target (\"Grep the whole capture for ^OK$\") is buried at the end instead of leading, so the rule reads as a prohibition-first warning rather than a stated target behaviour.",
+        "proposed_fix": "Reorder to lead with the target: \"**Grep the whole capture for `^OK$`.** The suite prints cost estimates to stdout while unittest writes its verdict to stderr, so tailing the output shows interleaved noise instead of the verdict.\"",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the \"Negation\" rule cited is a generic style/research heuristic, not an established, clearly-applicable rule for this doctrine document; treating a single \"Never X\" bullet (one of several parallel gotcha bullets, most of which do lead with the concrete rule/fact rather than a ban) as a genuine violation is a stretch rather than a clear match. || CONFIRMED \u2014 the quoted text appears verbatim, and it does lead with the prohibition (\"Never `tail`\") before the positive target (\"Grep the whole capture\"), matching the negation-ordering rule as described. || CONFIRMED \u2014 the quoted text appears verbatim, and it does lead with the prohibition (\"Never tail...\") before stating the positive target at the end, matching the negation-ordering issue described."
+      },
+      {
+        "rule": "Single source of truth [craft] \u2014 keep each meaning in one authoritative place so it doesn't need reconciling against a contradicting statement elsewhere.",
+        "target_quote": "All paths below are relative to the repo root.",
+        "issue": "The document declares this as the governing convention for every path shown afterward, but the \"Test\" section's commands (`python3 scripts/check_stdlib_only.py`, `python3 scripts/validate_skillcreator_reader.py`) omit the `skills/skill-tuner/` prefix and don't resolve from the repo root \u2014 nor do they match the `cd skills/skill-tuner/scripts` convention set up in \"Direct invocation\" either. An agent following the stated rule literally hits the exact `ModuleNotFoundError` the Troubleshooting table already anticipates for a different case, because the doc gives two irreconcilable statements about where these two commands must be run from.",
+        "proposed_fix": "Either prefix the Test section's commands with `skills/skill-tuner/` to match the stated repo-root convention, or state explicitly that the Test section assumes `cd skills/skill-tuner` first.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted \"All paths below are relative to the repo root\" is verbatim, and the Test section's `python3 scripts/check_stdlib_only.py` genuinely contradicts it since that path only resolves from `skills/skill-tuner/`, not the repo root. || CONFIRMED \u2014 the quoted \"All paths below are relative to the repo root\" is verbatim and genuinely contradicted by the Test section's `scripts/check_stdlib_only.py` and `scripts/validate_skillcreator_reader.py`, which lack the `skills/skill-tuner/` prefix required to resolve from repo root. || CONFIRMED \u2014 the quote appears verbatim, and the Test section's `scripts/check_stdlib_only.py` paths are neither valid from the repo root (missing `skills/skill-tuner/` prefix) nor from the `skills/skill-tuner/scripts` cwd set up in \"Direct invocation\" (extra `scripts/` prefix), so the stated single-source-of-truth path convention is genuinely violated."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

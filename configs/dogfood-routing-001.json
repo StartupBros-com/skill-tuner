@@ -1,0 +1,23 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "targets": [
+    {
+      "id": "run-skill-tuner",
+      "path": "/home/will/SITES/skill-tuner/.claude/skills/run-skill-tuner/SKILL.md",
+      "pruned_description": "Run, smoke-test and debug skill-tuner. Use when asked to run skill-tuner, probe a document, compare two runs, or verify a banked run."
+    },
+    {
+      "id": "skill-tuner-tune",
+      "path": "/home/will/SITES/skill-tuner/commands/tune.md",
+      "pruned_description": "Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes."
+    }
+  ],
+  "distractors": [
+    "/home/will/.claude/skills/writing-for-agents/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+    "/home/will/.claude/skills/de-slopify/SKILL.md"
+  ]
+}
