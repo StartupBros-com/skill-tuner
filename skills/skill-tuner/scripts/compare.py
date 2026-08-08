@@ -123,35 +123,7 @@ def compare_probe_reports(
     base_counts = _per_target(baseline)
     cand_counts = _per_target(candidate)
 
-    excluded: list[str] = []
-    if exclude:
-        def dropped(name: str) -> bool:
-            return any(pattern and pattern in name for pattern in exclude)
-
-        excluded = sorted({n for n in {**base_counts, **cand_counts} if dropped(n)})
-        base_counts = {k: v for k, v in base_counts.items() if not dropped(k)}
-        cand_counts = {k: v for k, v in cand_counts.items() if not dropped(k)}
-
-    if set(base_counts) != set(cand_counts):
-        only_base = sorted(set(base_counts) - set(cand_counts))
-        only_cand = sorted(set(cand_counts) - set(base_counts))
-        raise ComparisonError(
-            "runs measured different documents; pairing by position would "
-            f"compare unrelated things. baseline-only={only_base} "
-            f"candidate-only={only_cand}"
-        )
-
-    documents = sorted(base_counts)
-    if len(documents) < MIN_DOCUMENTS:
-        raise ComparisonError(
-            f"need at least {MIN_DOCUMENTS} documents to say anything; got {len(documents)}"
-        )
-
     warnings: list[str] = []
-    if excluded:
-        warnings.append(
-            f"excluded from both sides: {', '.join(excluded)}"
-        )
     base_model = _manifest_field(baseline, "model_pin")
     cand_model = _manifest_field(candidate, "model_pin")
     if base_model and cand_model and base_model != cand_model:
@@ -170,6 +142,58 @@ def compare_probe_reports(
     if not _manifest_field(baseline, "run_id") or not _manifest_field(candidate, "run_id"):
         warnings.append(
             "at least one run predates provenance recording; its inputs and model cannot be verified"
+        )
+
+    return compare_paired(
+        base_counts, cand_counts, delta=delta, exclude=exclude, warnings=warnings
+    )
+
+
+def compare_paired(
+    baseline: Mapping[str, float],
+    candidate: Mapping[str, float],
+    *,
+    delta: float,
+    exclude: Sequence[str] = (),
+    warnings: Sequence[str] | None = None,
+    extra: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The statistical core: two paired series keyed by the same case names.
+
+    Separated from the probe-report loader on purpose. The verdict -- an
+    interval, a stated non-inferiority margin, and the four-way outcome -- is
+    the part worth having, and it does not care whether the numbers are
+    confirmed findings from this repo's probe or pass rates lifted out of a
+    skill-creator benchmark. Loaders extract; this decides.
+    """
+    base_counts = dict(baseline)
+    cand_counts = dict(candidate)
+    collected: list[str] = list(warnings or [])
+
+    excluded: list[str] = []
+    if exclude:
+        def dropped(name: str) -> bool:
+            return any(pattern and pattern in name for pattern in exclude)
+
+        excluded = sorted({n for n in {**base_counts, **cand_counts} if dropped(n)})
+        base_counts = {k: v for k, v in base_counts.items() if not dropped(k)}
+        cand_counts = {k: v for k, v in cand_counts.items() if not dropped(k)}
+        if excluded:
+            collected.append(f"excluded from both sides: {', '.join(excluded)}")
+
+    if set(base_counts) != set(cand_counts):
+        only_base = sorted(set(base_counts) - set(cand_counts))
+        only_cand = sorted(set(cand_counts) - set(base_counts))
+        raise ComparisonError(
+            "runs measured different cases; pairing by position would "
+            f"compare unrelated things. baseline-only={only_base} "
+            f"candidate-only={only_cand}"
+        )
+
+    documents = sorted(base_counts)
+    if len(documents) < MIN_DOCUMENTS:
+        raise ComparisonError(
+            f"need at least {MIN_DOCUMENTS} cases to say anything; got {len(documents)}"
         )
 
     diffs = [cand_counts[name] - base_counts[name] for name in documents]
@@ -220,7 +244,8 @@ def compare_probe_reports(
         # exactly which claim the old rule was making.
         "passes_legacy_count_rule": sum(cand_counts.values()) >= sum(base_counts.values()),
         "n_for_delta": n_for_delta,
-        "warnings": warnings,
+        **(dict(extra) if extra else {}),
+        "warnings": collected,
     }
 
 
@@ -229,22 +254,45 @@ def load_report(path: Path) -> dict[str, Any]:
     return json.loads(report_path.read_text(encoding="utf-8"))
 
 
+def _num(value: float, integral: bool = True) -> str:
+    """Render a paired value without assuming it is a count. Findings are
+    integers; a pass rate is not, and formatting one with an integer code
+    raises rather than rounding."""
+    return f"{value:g}" if integral else f"{value:.3f}"
+
+
+def _signed(value: float, integral: bool = True) -> str:
+    return f"{value:+g}" if integral else f"{value:+.3f}"
+
+
 def render(result: Mapping[str, Any]) -> str:
+    source = result.get("source")
+    label = "case" if source else "document"
+    heading = (
+        f"# Paired comparison — {source}" if source else "# Paired probe comparison"
+    )
     lines = [
-        "# Paired probe comparison",
+        heading,
         "",
         f"**Verdict: {result['verdict']}**  (non-inferiority margin delta = "
-        f"{result['delta']:.2f} findings/document)",
+        f"{result['delta']:g} {result.get('metric', 'findings')} per {label})",
         "",
-        f"- totals: candidate {result['candidate_total']} vs baseline {result['baseline_total']} "
-        f"across {result['n']} documents",
-        f"- mean difference: {result['mean_diff']:+.3f} findings/document "
+        (
+            f"- {result['metric']} paired across {result['n']} {label}s "
+            f"({result['candidate_config']} vs {result['baseline_config']})"
+            if source else
+            f"- totals: candidate {result['candidate_total']} vs baseline "
+            f"{result['baseline_total']} across {result['n']} documents"
+        ),
+        f"- mean difference: {result['mean_diff']:+.3f} per " + label + " "
         f"(sd {result['sd']:.3f}, se {result['se']:.3f})",
         f"- 95% CI: [{result['ci_low']:+.2f}, {result['ci_high']:+.2f}]",
-        f"- document record: {result['documents_won']} won, "
+        f"- {label} record: {result['documents_won']} won, "
         f"{result['documents_lost']} lost, {result['documents_tied']} tied",
-        f"- the pre-U9 raw-count rule would say: "
-        f"{'PASS' if result['passes_legacy_count_rule'] else 'FAIL'}",
+        (
+            "- a bare total comparison would say: " if source
+            else "- the pre-U9 raw-count rule would say: "
+        ) + ("PASS" if result["passes_legacy_count_rule"] else "FAIL"),
     ]
     if result["verdict"] == "inconclusive":
         needed = result["n_for_delta"]
@@ -257,15 +305,21 @@ def render(result: Mapping[str, Any]) -> str:
         else:
             lines.append(
                 f"- to clear the margin at this mean and spread you would need "
-                f"about {needed} documents ({needed - result['n']:+d} on this run)"
+                f"about {needed} {label}s ({needed - result['n']:+d} on this run)"
             )
     lines.append("")
-    lines.append("| Document | baseline | candidate | diff |")
+    lines.append(f"| {label.title()} | baseline | candidate | diff |")
     lines.append("| --- | --- | --- | --- |")
+    integral = all(
+        float(v).is_integer()
+        for row in result["per_document"]
+        for v in (row["baseline"], row["candidate"], row["diff"])
+    )
     for row in result["per_document"]:
         name = Path(row["target_file"]).parent.name or row["target_file"]
         lines.append(
-            f"| {name} | {row['baseline']} | {row['candidate']} | {row['diff']:+d} |"
+            f"| {name} | {_num(row['baseline'], integral)} "
+            f"| {_num(row['candidate'], integral)} | {_signed(row['diff'], integral)} |"
         )
     if result["warnings"]:
         lines.append("")

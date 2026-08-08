@@ -21,7 +21,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SHIPPED_DIR = REPO_ROOT / "skills" / "skill-tuner" / "scripts"
 
 # Modules that live beside the shipped scripts and import each other.
-LOCAL_MODULES = {"tune", "probe", "routing_parity", "provenance", "compare"}
+# Derived from what is actually there rather than hardcoded: a manual list
+# silently turns every new sibling module into a false R7 violation, which is
+# exactly what a new module looks like on the day it is added.
+LOCAL_MODULES = {path.stem for path in SHIPPED_DIR.glob("*.py")}
 
 
 def _top_level_imports(tree: ast.AST) -> set[str]:
