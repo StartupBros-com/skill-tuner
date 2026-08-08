@@ -1,0 +1,83 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 2,
+      "total_cost_usd": 0.6098505000000001
+    },
+    "verify": {
+      "trials": 3,
+      "total_cost_usd": 0.03860775
+    }
+  },
+  "total_trials": 5,
+  "manifest": {
+    "run_id": "dogfood-run-skill-7",
+    "started_at": "2026-08-08T08:16:08Z",
+    "finished_at": "2026-08-08T08:21:46Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:a6a6fef7604a33c6e8f30b14e7a753f96881b33bdbcba40cb4fb426e0a6b1495",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 2,
+    "verify_calls": 3,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Single source of truth [craft]",
+        "target_quote": "Run **from that directory** \u2014 the tests import sibling modules by bare name.",
+        "issue": "The same meaning (run the unit suite from skills/skill-tuner/scripts because tests import sibling modules by bare name) is restated almost verbatim in the Troubleshooting table row for ModuleNotFoundError ('Run `cd skills/skill-tuner/scripts` first; the tests import sibling modules by bare name.'). The doctrine requires each meaning live in one authoritative place so a behavior change is a one-place edit; the document itself demonstrates the correct alternative elsewhere ('The unit suite runs from `skills/skill-tuner/scripts` as shown under \"Direct invocation\"' in the Test section), showing the duplication here was avoidable.",
+        "proposed_fix": "Replace the Troubleshooting row's explanation with a cross-reference, e.g. 'Run from `skills/skill-tuner/scripts` \u2014 see \"Direct invocation\" above.' instead of restating the sibling-import rationale.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 both quotes appear verbatim, and the Troubleshooting row's \"cd skills/skill-tuner/scripts first; the tests import sibling modules by bare name\" duplicates the same fact/rationale already stated in Direct invocation, while the Test section shows the document already knows how to cross-reference instead of restating. || CONFIRMED \u2014 Both quotes appear verbatim, and the sibling-import rationale is genuinely restated in two places (Direct invocation and the Troubleshooting table), which is exactly the kind of duplication a single-source-of-truth rule flags. || CONFIRMED \u2014 the quoted text appears verbatim, and the same rationale (\"tests import sibling modules by bare name\") is genuinely restated in the Troubleshooting table row for ModuleNotFoundError."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 2,
+        "verify_calls": 3,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}
