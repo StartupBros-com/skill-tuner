@@ -323,6 +323,78 @@ class BlindingGuardTest(unittest.TestCase):
                     targets, config, adapter=leaking_adapter, model=model, base_dir=base
                 )
 
+    def test_authoring_response_in_a_code_fence_still_builds_the_battery(self):
+        # 2026-08-08, live: the authoring model wrapped its array in a fence
+        # and the strict parse died at char 0. Extraction now goes through
+        # the probe's tolerant helper, so a fenced answer is still an answer.
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            target_path = _write_skill(
+                base, "alpha", "Alpha routes alpha work.", "This body talks about alpha work only."
+            )
+            distractors = _write_distractors(base)
+            config = {
+                "model": "test-model",
+                "trials": 2,
+                "targets": [
+                    {"id": "alpha", "path": str(target_path), "pruned_description": "Alpha."}
+                ],
+                "distractors": [str(p) for p in distractors],
+            }
+
+            fenced = (
+                "```json\n"
+                + json.dumps(
+                    [
+                        {"kind": "obvious", "prompt": "Please do the alpha task."},
+                        {"kind": "obvious", "prompt": "Run an alpha pass on this."},
+                        {"kind": "paraphrase", "prompt": "Give this the once-over you do."},
+                    ]
+                )
+                + "\n```"
+            )
+
+            def fencing_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                return tune.AdapterResult(text=fenced, cost_usd=0.0, raw={})
+
+            targets, _d, _t, model = routing_parity.load_config(config, base_dir=base)
+            battery = routing_parity.build_battery(
+                targets, config, adapter=fencing_adapter, model=model, base_dir=base
+            )
+
+            authored = [case for case in battery if case.target_id == "alpha"]
+            self.assertEqual(3, len(authored))
+
+    def test_authoring_retries_are_bounded_then_raise(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            target_path = _write_skill(
+                base, "alpha", "Alpha routes alpha work.", "This body talks about alpha work only."
+            )
+            distractors = _write_distractors(base)
+            config = {
+                "model": "test-model",
+                "trials": 2,
+                "targets": [
+                    {"id": "alpha", "path": str(target_path), "pruned_description": "Alpha."}
+                ],
+                "distractors": [str(p) for p in distractors],
+            }
+
+            calls = []
+
+            def broken_adapter(prompt: str, model: str) -> tune.AdapterResult:
+                calls.append(prompt)
+                return tune.AdapterResult(text="I cannot answer in JSON.", cost_usd=0.0, raw={})
+
+            targets, _d, _t, model = routing_parity.load_config(config, base_dir=base)
+            with self.assertRaises(ValueError):
+                routing_parity.build_battery(
+                    targets, config, adapter=broken_adapter, model=model, base_dir=base
+                )
+            import probe as probe_module
+            self.assertEqual(probe_module.DEFAULT_RETRIES + 1, len(calls))
+
     def test_build_battery_from_battery_file_also_passes_through_the_guard(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
