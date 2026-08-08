@@ -832,7 +832,37 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     """
     import compare as compare_mod
 
-    if args.skill_creator is not None:
+    if args.paired_json and args.skill_creator is not None:
+        print("--paired-json and --skill-creator are different sources; pick one")
+        return 2
+    if args.paired_json:
+        if args.metric is not None:
+            print("--metric is a grading.json concept; it does not apply to --paired-json")
+            return 2
+        if args.delta is None:
+            print(
+                "--delta is required with --paired-json: the margin is in the "
+                "units of your score series, which this tool cannot guess. "
+                "Pick the smallest change that would matter to you."
+            )
+            return 2
+        try:
+            baseline = compare_mod.load_paired_scores(Path(args.baseline))
+            candidate = compare_mod.load_paired_scores(Path(args.candidate))
+            result = compare_mod.compare_paired(
+                baseline, candidate,
+                delta=args.delta,
+                exclude=args.exclude or (),
+                extra={
+                    "source": "paired-json",
+                    "baseline_path": str(args.baseline),
+                    "candidate_path": str(args.candidate),
+                },
+            )
+        except compare_mod.ComparisonError as exc:
+            print(f"cannot compare: {exc}")
+            return 2
+    elif args.skill_creator is not None:
         import skillcreator
 
         if args.delta is None:
@@ -849,7 +879,7 @@ def _cmd_compare(args: argparse.Namespace) -> int:
                 baseline=args.baseline,
                 candidate=args.candidate,
                 delta=args.delta,
-                metric=args.metric,
+                metric=args.metric or "pass_rate",
                 exclude=args.exclude or (),
             )
         except (skillcreator.BenchmarkError, compare_mod.ComparisonError) as exc:
@@ -939,8 +969,17 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     compare_cmd.add_argument(
-        "--metric", default="pass_rate",
-        help="Metric to pair on inside grading.json (skill-creator source only)",
+        "--paired-json",
+        action="store_true",
+        help=(
+            "Read two flat {case: number} JSON files instead of this repo's "
+            "probe reports. --baseline/--candidate then name the score files "
+            "(any external tool with paired per-case scores can produce them)."
+        ),
+    )
+    compare_cmd.add_argument(
+        "--metric", default=None,
+        help="Metric to pair on inside grading.json (skill-creator source only; default pass_rate)",
     )
     compare_cmd.add_argument(
         "--delta",

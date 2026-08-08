@@ -1,6 +1,6 @@
 {
   "name": "skill-tuner",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Tells you whether a change to an agent-consumed document actually worked: paired comparison with a confidence interval and a non-inferiority margin, content-hashed provenance with drift detection, and an adversarial defect probe. Reads Anthropic's skill-creator benchmark output and supplies the verdict it stops short of.",
   "author": {
     "name": "StartupBros / House of Vibe",
