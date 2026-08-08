@@ -252,9 +252,13 @@ def resolve_run_dir(
             suffix += 1
             chosen = f"{base}-{suffix}"
 
-    run_dir = reports_dir / chosen
-    run_dir.mkdir(parents=True, exist_ok=True)
-    return run_dir, chosen
+    # Deliberately not created here. A pre-flight that refuses to spend --
+    # unmetered, or a non-interactive run without --yes -- must leave nothing
+    # behind. Creating the directory before those gates also poisoned the
+    # collision loop above: an aborted run counted as a prior run, so the next
+    # attempt was pushed to <slug>-2, then -3, for runs that never happened.
+    # Whoever writes trials creates it.
+    return reports_dir / chosen, chosen
 
 
 # --------------------------------------------------------------------------
@@ -461,6 +465,8 @@ def write_report(
     if manifest is not None:
         summary["manifest"] = dict(manifest)
 
+    # resolve_run_dir no longer creates this, so the first writer does.
+    run_dir.mkdir(parents=True, exist_ok=True)
     json_path = run_dir / "report.json"
     json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
