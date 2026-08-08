@@ -27,6 +27,19 @@ tune.py compare --skill-creator <benchmark-dir> \
   --baseline without_skill --candidate with_skill --delta 0.05
 ```
 
+The same verdict engine accepts any external paired series — two flat
+`{case: number}` JSON files from whatever produced your scores (e.g.
+memory-dream's `eval export-paired`):
+
+```
+tune.py compare --paired-json \
+  --baseline before-scores.json --candidate after-scores.json --delta 2.0
+```
+
+`--delta` is always yours to state in that mode: the margin is in the units
+of your series, and a tool that guessed it would be repeating the founding
+mistake above.
+
 ```
 # Paired comparison — skill-creator benchmark
 

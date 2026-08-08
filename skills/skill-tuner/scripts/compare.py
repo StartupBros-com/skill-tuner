@@ -335,6 +335,29 @@ def load_report(path: Path) -> dict[str, Any]:
     return json.loads(report_path.read_text(encoding="utf-8"))
 
 
+def load_paired_scores(path: Path) -> dict[str, float]:
+    """Loader for an external paired-score series: a flat JSON object mapping
+    case name -> number, produced by any tool with per-case scores (e.g.
+    memory-dream's `eval export-paired`). Validation stops at shape; key
+    pairing and the minimum-n floor stay compare_paired's job, so every
+    source hits the same wall."""
+    path = Path(path)
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ComparisonError(f"{path}: cannot read paired scores: {error}") from error
+    if not isinstance(data, dict) or not data:
+        raise ComparisonError(
+            f"{path}: expected a non-empty JSON object of case name -> number"
+        )
+    scores: dict[str, float] = {}
+    for name, value in data.items():
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ComparisonError(f"{path}: score for {name!r} is not a number")
+        scores[str(name)] = float(value)
+    return scores
+
+
 def _num(value: float, integral: bool = True) -> str:
     """Render a paired value without assuming it is a count. Findings are
     integers; a pass rate is not, and formatting one with an integer code
