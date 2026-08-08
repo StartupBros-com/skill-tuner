@@ -1,0 +1,789 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 15,
+      "total_cost_usd": 4.20148335
+    },
+    "verify": {
+      "trials": 153,
+      "total_cost_usd": 3.04693545
+    }
+  },
+  "total_trials": 168,
+  "manifest": {
+    "run_id": "swapgate5-probe-doctrine-v2",
+    "started_at": "2026-08-08T03:13:41Z",
+    "finished_at": "2026-08-08T04:15:37Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:b81b22f9884f54b7322c4262273e2d3e5b66e9bf4138818b4c0a96e3cac84e19",
+        "source": "git:origin/main",
+        "git_commit": "b7e2cc2244b212b944237e2a24114607909575b9",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "sha256": "sha256:0dc154c88283606e7844eb9992ba4ee9e1fd68d4884fac74179530617786c5e3",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/agent-swarm/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "sha256": "sha256:7d2290123e006c255360c9eaf77a305a0d169335b0203f8c1f9ff3746d174f6a",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/animate/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "sha256": "sha256:a8d1903218b15ff08928308e339c448299c5f2fbd9b8f05b0d0b7df70f77878f",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/apple-design/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "sha256": "sha256:2d965c7d2ff902ada682dc3e7dd5f0c01d5ad2b033782e18cf302532957ca804",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/automating-your-automations-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "sha256": "sha256:824fdef961197b72f87a1173cce31231604a9e1c654bfb2485140da62231d525",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/branch-harmonization/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "sha256": "sha256:808fcc7103af2a868a7ca0c3a37f87d69b54b7fb21de2d871d0c3fe70bbe4cde",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/brand-voice-builder/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "sha256": "sha256:b6e7cba9bcb5ce4e8f84cce1c24169a032e12096cef03a397c5d4df829e76586",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/browser-console-setup/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "sha256": "sha256:6bcf11e24d2f6858a1a79c0f42f7878305fb68abf347e542087638e5108b0cbe",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/cass-rerank-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "sha256": "sha256:291233457df4b48ec1e4afdc99312446c0f9dfe48f013bd09f60f2c310c4e7f4",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:a14d423610c4d96c910995196c4b0893f4328a1137e740d1f6dcc677b9b5547c",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/cli-doctor-mode/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "sha256": "sha256:334f346806344a87fd306b61bdc5f9bce70ab3f547ed02074144575afb132daa",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/codex-consult/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:c6db47a75b839c4c55255906ac9fd567d0cc4291146571eed98ecf2926259813",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/curl-bash-installer/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "sha256": "sha256:ce83411bd389d27f9ce319f8435d3ce934b81dea2b3eaef2eccb8eeed188dace",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "sha256": "sha256:e55823e32a45cb9accf051e3e66d0d35e34c8931dd2aeaa0411a32214debe8d7",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/emil-design-eng/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "sha256": "sha256:9ab5c7a6100cdec23efc64e09fe37bbce17ace7e2c94e7a2c06573c6e2a1c3b7",
+        "source": "git:origin/main",
+        "git_commit": "e46a8ca22461546a27fd3aa2cbe5e2b1d16573a1",
+        "git_path": "claude/skills-local/find-animation-opportunities/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": false
+      }
+    ],
+    "eval": "probe",
+    "pin": "origin/main"
+  },
+  "probe": {
+    "findings_confirmed": 27,
+    "refuted_count": 24,
+    "overflow": 0,
+    "probe_calls": 15,
+    "verify_calls": 153,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+      "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "The shared swarm/delegation layer other skills route through for scale.",
+        "issue": "This sentence states what the skill *is* (a shared layer other skills route through) rather than *when* to reach it, and duplicates the identity claim already made in the file's own scope note (\"Skills that need campaign-scale parallelism reference this instead of re-deriving swarm coordination\") and the H1/core-shift framing. It adds permanent context load with no branch/trigger signal.",
+        "proposed_fix": "Remove the sentence from the description; if cross-skill discoverability is the goal, state it once in the body (it already is, in the intro comment) rather than in the always-loaded pointer.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted sentence appears verbatim as the final line of the description field, and it does state identity (\"the shared layer...\") rather than a usage trigger, redundant with the intro comment's discoverability claim. || CONFIRMED \u2014 quote appears verbatim in the description, and the identity claim (\"shared layer other skills route through\") is indeed already stated in the body's HTML comment (\"Skills that need campaign-scale parallelism reference this instead of re-deriving swarm coordination\"), making the rule's application legitimate. || CONFIRMED: The quoted sentence appears verbatim as the final line of the description field, and it does restate identity (\"the shared...layer\") rather than a when/trigger, duplicating the comment's scope note.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md"
+      },
+      {
+        "rule": "Demand",
+        "target_quote": "UI duration over 300ms with no reason",
+        "issue": "This Never Ship row is otherwise a precise, checkable list (named properties, named keyframe cases, named thresholds), but 'with no reason' is an uncheckable qualifier \u2014 the agent can satisfy the whole row impressionistically by inventing any justification for a long duration, defeating the self-check the table exists to provide.",
+        "proposed_fix": "Drop the qualifier and state the real exception explicitly, e.g. 'UI duration over 300ms outside modals/drawers' or just 'UI duration over 300ms' and let the Duration table's modal/drawer row stand as the sanctioned exception.",
+        "reason": "panel 2/3 confirmed | CONFIRMED: The quote \"UI duration over 300ms with no reason\" appears verbatim in the Never Ship table, and the critique is valid \u2014 the table is framed as an \"automatic block\" self-check, yet \"with no reason\" introduces a subjective judgment call that undermines the checkability of an otherwise objective row (unlike the other rows, which use named properties/thresholds with no qualifier). || CONFIRMED \u2014 the text \"UI duration over 300ms with no reason\" appears verbatim in the Never Ship table, and the critique is valid: every other row in that table is a hard, checkable violation, while this row's \"with no reason\" clause is a subjective escape hatch that lets any invented justification pass the self-check, undermining the table's purpose despite the document already having a concrete sanctioned exception (marketing/explanatory) it could have cited instead. || REFUTED \u2014 the quoted text is verbatim, but the \"with no reason\" qualifier isn't an unchecked loophole: the doc's own Duration table already enumerates the valid exceptions (modals/drawers 200\u2013500ms, marketing/explanatory \"can be longer\"), so \"reason\" is checkable against those explicit categories rather than left to impressionistic invention.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md"
+      },
+      {
+        "rule": "Demand [craft] \u2014 criteria that mix checkable and uncheckable terms let the agent satisfy the whole thing impressionistically; watch for a stray uncheckable qualifier inside an otherwise precise list.",
+        "target_quote": "then confidently cancel the losers once intent is clear",
+        "issue": "This item sits in a list explicitly labeled 'the feel checklist' alongside concrete, measurable items (~10px hysteresis threshold, ~10px hit padding), but 'confidently' and 'once intent is clear' are impressionistic qualifiers with no checkable bound, letting the whole item be satisfied by judgment rather than a verifiable condition.",
+        "proposed_fix": "Tie cancellation to the same measurable threshold already used elsewhere: \"then cancel the losers once movement crosses the ~10px direction threshold defined above.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 quote appears verbatim in \u00a710's \"feel checklist,\" and it genuinely mixes an unmeasurable qualifier (\"confidently,\" \"once intent is clear\") with concrete numeric bounds elsewhere in the same list. || CONFIRMED \u2014 The quoted text appears verbatim in \u00a710, and the critique is accurate: the checklist mixes concrete thresholds (~10px hysteresis/hit padding) with unbounded qualifiers (\"confidently\", \"once intent is clear\") that have no verifiable condition. || CONFIRMED \u2014 the quote appears verbatim in \u00a710's \"feel checklist,\" which mixes measurable items (~10px hysteresis/hit padding) with this vague, unbounded qualifier (\"confidently,\" \"once intent is clear\"), matching the described issue.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md"
+      },
+      {
+        "rule": "One trigger per branch",
+        "target_quote": "analyzing command patterns or finding automation opportunities.",
+        "issue": "The description lists two trigger phrases at the end, but both route to the exact same path through the document (mine history \u2192 cluster \u2192 score \u2192 propose \u2192 build). 'Analyzing command patterns' and 'finding automation opportunities' don't diverge into different handling anywhere in the body; they're one branch described twice, paying context-load cost twice for a single routing decision.",
+        "proposed_fix": "Collapse to a single trigger phrase, e.g. 'Use when hunting for automation opportunities in your command history.' and drop the redundant 'analyzing command patterns' synonym.",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 \"One trigger per branch\" applies to branching logic (if/else paths) in the document body, not to a description field listing trigger phrases, so the rule doesn't genuinely apply here even though the quoted text is verbatim. || CONFIRMED \u2014 The quoted text matches the description verbatim, and the document's body indeed has a single linear pipeline (mine\u2192cluster\u2192score\u2192propose\u2192build) with no divergent handling for the two trigger phrases, so the \"one trigger per branch\" critique is accurately applied. || CONFIRMED \u2014 The quoted text matches the description verbatim, and both trigger phrases (\"analyzing command patterns\" / \"finding automation opportunities\") indeed route through the identical Mine\u2192Cluster\u2192Score\u2192Propose\u2192Build loop with no divergent handling in the body, supporting the redundancy claim.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md"
+      },
+      {
+        "rule": "Completion criteria / Demand",
+        "target_quote": "Force failure \u2192 verify graceful behavior",
+        "issue": "This checklist item sits among otherwise checkable bounds (5x run, --dry-run produces no side effects, --json parses, \u22653x faster) but 'verify graceful behavior' requires judgment to evaluate \u2014 there's no stated condition distinguishing 'graceful' from 'not graceful.' One uncheckable qualifier inside an otherwise precise checklist lets the whole validation step be satisfied impressionistically.",
+        "proposed_fix": "Replace with a checkable bound, e.g. 'Force failure \u2192 confirm the process exits non-zero, prints a one-line error to stderr, and leaves no partial output files.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the Validate checklist, and \"verify graceful behavior\" is indeed an unbounded qualitative judgment amid otherwise checkable items (5\u00d7, --dry-run, valid JSON, \u22653\u00d7 faster). || CONFIRMED \u2014 the quoted text appears verbatim in the Validate checklist, and \"verify graceful behavior\" is indeed an unquantified/subjective bound amid otherwise checkable items (5\u00d7, --dry-run, --json validity, \u22653\u00d7 faster). || CONFIRMED \u2014 the quote appears verbatim in the Validate checklist, and \"graceful behavior\" is indeed an unquantified judgment call sitting alongside precise, checkable criteria (5\u00d7, --dry-run no side effects, valid JSON, \u22653\u00d7 faster).",
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md"
+      },
+      {
+        "rule": "Progressive disclosure",
+        "target_quote": "Upstream sync is NOT automatic.",
+        "issue": "The upstream-sync/cherry-pick procedure is relevant only to the rare maintenance branch of updating this fork from jsm \u2014 it's never needed on the ordinary mine/cluster/score/build path this skill exists for. It's inlined at the very top of the file instead of behind a pointer, so every invocation pays its context-load cost even though only a fork-maintenance task reaches it.",
+        "proposed_fix": "Trim the header comment to a one-line fork marker ('LOCAL FORK \u2014 not managed by jsm') and move the cherry-pick/sync procedure to a disclosed reference (e.g. references/UPSTREAM-SYNC.md) reached only when a sync task is underway.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the header comment, and the doctrine's progressive-disclosure principle plausibly applies since the file already uses a references/ pattern for other rarely-needed procedures (e.g. SYSTEMD.md, SCAFFOLD.md) but inlines the upstream-sync details instead. || CONFIRMED \u2014 the quoted text appears verbatim in the header comment, and progressive disclosure genuinely applies since the fork-maintenance/cherry-pick procedure is inlined at the top of every load despite being relevant only to a rare, distinct task (syncing from upstream) rather than the mine/cluster/score/build path the skill is invoked for. || CONFIRMED \u2014 the quoted text appears verbatim in the header comment, and the critique correctly applies progressive disclosure: the cherry-pick/sync procedure is a rare fork-maintenance task inlined at the top of the file, loaded on every invocation of the ordinary mine/cluster/score/build workflow, and could reasonably be moved to a disclosed reference file.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md"
+      },
+      {
+        "rule": "Relevance and sediment",
+        "target_quote": "Distilled 2026-07-04 from the retired 130-file `git-worktree-branch-rationalization`\n     skill: kept the archaeology + harmonization + safety kernel; dropped the multi-agent\n     swarm tiers, wizard-style adjudication, fuzzing/conformance testing, per-language\n     deep-dives, the Bayesian machinery, and the 30 subagents.",
+        "issue": "This HTML comment is plain text loaded into the agent's context on every invocation (comments aren't stripped from a file read as text). It records the skill's distillation lineage \u2014 a fact about the document's history, not something that bears on performing the harmonization task. It pays permanent context load for zero task-relevant signal, the textbook definition of sediment.",
+        "proposed_fix": "Delete the comment from the skill body, or move the lineage note to a git commit message / CHANGELOG outside the always-loaded file.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim as an HTML comment in the target document, and it is indeed pure lineage/history metadata with no bearing on performing the harmonization task, matching the \"sediment\" critique. || CONFIRMED \u2014 the quoted text appears verbatim as an HTML comment in the target document and is indeed pure historical/lineage metadata with no bearing on performing the harmonization task, fitting the \"sediment\" critique. || CONFIRMED \u2014 the quote appears verbatim as an HTML comment in the file body, and it's genuinely a historical note irrelevant to performing the harmonization task, so the sediment critique applies.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md"
+      },
+      {
+        "rule": "One trigger per branch",
+        "target_quote": "Use for parallel-agent branch cleanup.",
+        "issue": "This closing sentence renames the same branch already stated in the description's opening clause (\"forgotten branches/worktrees left by parallel agents\"). A run reaching the skill via \"parallel-agent branch cleanup\" takes the identical path as one reaching it via \"forgotten branches/worktrees left by parallel agents\" \u2014 it's one branch billed twice in an always-loaded field.",
+        "proposed_fix": "Drop the trailing sentence, or replace it with a genuinely distinct trigger the opening clause doesn't already cover (e.g. naming the RESIDUE hand-off point explicitly: \"Use after wt-sweep.sh/branch-triage.sh leave un-disposed RESIDUE\").",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted sentence appears verbatim in the description, and it does merely restate the opening clause's trigger (\"forgotten branches/worktrees left by parallel agents\") without adding a distinct condition. || CONFIRMED: The quoted text appears verbatim in the description field, and it genuinely restates the same trigger scenario (\"parallel-agent branch cleanup\") already covered by the opening clause (\"forgotten branches/worktrees left by parallel agents\"). || CONFIRMED \u2014 the quoted sentence appears verbatim as the closing clause of the description, and it does restate \"parallel-agent branch cleanup\" \u2248 \"forgotten branches/worktrees left by parallel agents\" from the same sentence, making it a redundant trigger rather than a distinct one.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Outputs a complete Voice Profile with tone spectrum, vocabulary, mechanical rules, on-brand and off-brand example phrases, aspiration and anti-aspiration models, and a quality test.",
+        "issue": "This restates the Voice Profile's own structure, which the body already documents exhaustively under '## The Voice Profile (Output Format)' (Tone Spectrum, Vocabulary, Mechanical Rules, On-Brand/Off-Brand Example Phrases, Aspiration Models, Anti-Aspiration, Quality Test headings). It describes what the skill produces, not when to reach it, so it adds permanent context load with no routing signal.",
+        "proposed_fix": "Remove this sentence from the description and let the body's Output Format section be the single place that states the profile's structure.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the description field, and it does exhaustively restate the Voice Profile's structure that is separately documented under \"## The Voice Profile (Output Format),\" matching the critique's characterization as identity/output detail rather than routing signal. || CONFIRMED \u2014 the quoted sentence appears verbatim in the frontmatter description, and it does duplicate the structural list of sections found under \"## The Voice Profile (Output Format)\" without adding routing signal. || CONFIRMED \u2014 the quoted sentence appears verbatim in the frontmatter description, and it does duplicate the structural elements (tone spectrum, vocabulary, mechanical rules, on/off-brand examples, aspiration/anti-aspiration, quality test) that are documented exhaustively in the body's \"## The Voice Profile (Output Format)\" section, adding description bloat without aiding routing.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md"
+      },
+      {
+        "rule": "Completion criteria / Demand [craft]",
+        "target_quote": "**Authentic:** does it feel true to who they are or want to be?",
+        "issue": "This criterion sits in a list otherwise anchored by checkable items like \"Mechanically clean: does it pass every Mechanical Rule above?\" but itself requires judgment (\"feel true\") with no observable bound. Since the Quality Test gates whether to lock in the profile (\"If any answer is no ... Iterate before locking it in\"), this stray uncheckable qualifier lets the whole gate be satisfied impressionistically.",
+        "proposed_fix": "Replace with a checkable version, e.g. \"Authentic: does every trait trace back to a specific answer from Q1-Q4 (Extract: an observed pattern) rather than an aspirational or generic label?\"",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 the quoted text is verbatim, but calling this a flaw is a stretch: the Quality Test's other criteria (Recognizable, Differentiated, Consistent) are equally judgment-based, so \"Authentic\" isn't a stray outlier undermining an otherwise checkable list. || CONFIRMED \u2014 the quote appears verbatim in the Quality Test list, and the critique is accurate: \"Authentic\" is a subjective, unbound criterion sitting alongside genuinely checkable ones like \"Mechanically clean,\" undermining the gate's rigor as described. || CONFIRMED \u2014 the quote appears verbatim in the Quality Test list, and it is genuinely a judgment-based, unobservable criterion amid otherwise checkable items.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "by opening the exact URL in the local Windows Brave browser and handing paste-ready click steps, then wiring the reported credentials into Supabase/Vault/Vercel/.env",
+        "issue": "This clause restates the body's \"Core pattern\" blockquote almost verbatim (\"Open the exact URL in Will's real Windows Brave, hand him precise paste-ready clicks, get the resulting IDs/secrets back, then wire them in programmatically\"). It's identity the body already states in full, so it adds permanent context load on every turn with no added routing signal \u2014 the description's job here should be limited to naming the trigger conditions.",
+        "proposed_fix": "Trim the description to the routing conditions and drop the mechanism restatement, e.g. \"Set up cloud consoles that block headless automation (Google OAuth consent, Stripe webhooks, GCP credentials). Use when a console step cannot be scripted: bot detection, 'browser may not be secure', 2FA, or CAPTCHA.\" and let the body's Core pattern blockquote be the sole statement of the mechanism.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the description and duplicates the \"Core pattern\" blockquote's mechanism almost word-for-word, matching the \"identity already stated\" issue described. || CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and it does closely restate the body's Core pattern blockquote mechanism (open URL in Brave, hand paste-ready clicks, wire in credentials), adding permanent context weight without extra routing signal. || CONFIRMED \u2014 the quoted text appears verbatim in the description and does closely restate the \"Core pattern\" blockquote's mechanism.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use INSTEAD of bare `cass search` when you want the most relevant past session first (past fixes, decisions, \"how did I do X\"). Prefer this for top-1/top-few results; fall back to plain cass for broad scans.",
+        "issue": "The always-loaded description states the same branch condition (use cass-rerank for a single best result vs. plain cass for a broad scan) twice in different wording \u2014 'most relevant past session first' / 'INSTEAD of bare cass search' duplicates 'top-1/top-few results' / 'fall back to plain cass for broad scans' \u2014 plus stacks three synonymous examples ('past fixes, decisions, \"how did I do X\"') for that one branch. Per the doctrine, synonyms renaming a single branch pay their context-load cost multiple times while routing only once.",
+        "proposed_fix": "Collapse to a single statement of the branch, e.g.: 'Use INSTEAD of bare `cass search` for top-1/top-few results (e.g. finding the one session that fixed X); fall back to plain cass for broad scans.' Drop the redundant second sentence and the extra example synonyms.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 Quote appears verbatim in the description field, and the two sentences do restate the same top-1-vs-broad-scan branch condition in different words, which is a legitimate one-trigger-per-branch violation. || CONFIRMED \u2014 the quoted text appears verbatim in the description field, and it genuinely double-states the same trigger (want the single best result \u2192 use cass-rerank vs. broad scan \u2192 use plain cass) using two synonymous phrasings (\"most relevant past session first\" / \"top-1/top-few results\") plus three synonymous examples (\"past fixes, decisions, how did I do X\"), which is a legitimate instance of paying context cost multiple times for one routing decision. || CONFIRMED \u2014 the quote matches the description verbatim, and it genuinely restates the same branch condition twice (\"most relevant past session first\" / \"INSTEAD of bare cass search\" vs. \"top-1/top-few results\" / \"fall back to plain cass\") plus stacks three synonymous examples for one branch.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md"
+      },
+      {
+        "rule": "Demand [craft] \u2014 watch for criteria that mix checkable and uncheckable terms; one stray uncheckable qualifier inside an otherwise precise list lets the agent satisfy the whole thing impressionistically.",
+        "target_quote": "ship \u22655 substantive changes across \u22653 dimensions before calling it done",
+        "issue": "The numeric thresholds (\u22655, \u22653) are checkable, but \"substantive\" is not \u2014 nothing in the document defines what makes a change substantive, so the agent can decide for itself that trivial edits qualify and satisfy the whole gate impressionistically.",
+        "proposed_fix": "Replace the qualifier with a checkable proxy, e.g. \"ship \u22655 changes, each traceable to a named operator or Recurring Fixes item, across \u22653 dimensions.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quote appears verbatim (\"Ambition gate... ship \u22655 substantive changes across \u22653 dimensions before calling it done\"), and \"substantive\" is indeed left undefined while \u22655/\u22653 are checkable numeric thresholds, matching the rule's description of mixed checkable/uncheckable criteria. || CONFIRMED \u2014 the quote appears verbatim in the \"Ambition gate\" line, and \"substantive\" is indeed left undefined while \u22655/\u22653 are checkable, making the rule's application accurate. || CONFIRMED \u2014 the quote appears verbatim (\"Ambition gate... ship \u22655 substantive changes across \u22653 dimensions before calling it done\"), and \"substantive\" is indeed left undefined alongside the checkable \u22655/\u22653 thresholds, matching the rule's pattern.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md"
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 a bound is checkable when the agent can tell done from not-done without judgment.",
+        "target_quote": "re-run the affected surfaces; confirm uplift; run the project's lint/typecheck/tests",
+        "issue": "\"Confirm uplift\" has no defined measure to check against: the doctrine's own scoring machinery (\"per-pass 0-1000 scoring\") was explicitly dropped from this distilled skill, and the 11-dimension section gives no scale, so there is no way to tell \"uplift confirmed\" from \"not confirmed\" without judgment.",
+        "proposed_fix": "Give the check a concrete bound, e.g. \"re-run the 11-dimension score sheet and confirm no targeted dimension regresses and each targeted dimension moves from fail to pass.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quote appears verbatim in step 7, and \"confirm uplift\" indeed lacks any defined measure \u2014 the doc's 11 dimensions have no scale/threshold (just descriptive citations), and the numeric scoring was explicitly dropped from this distillation, making the criterion judgment-dependent. || CONFIRMED: The quote appears verbatim in step 7, and \"confirm uplift\" indeed lacks a defined scale in this document (the 11-dim section only says \"score each... cite what you saw,\" with no numeric bound, consistent with the note that \"per-pass 0-1000 scoring machinery\" was dropped). || CONFIRMED \u2014 the quote matches verbatim, and the doc indeed drops explicit scoring machinery (\"per-pass 0-1000 scoring\") while the 11-dimension section gives no scale, leaving \"confirm uplift\" without a judgment-free check.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md"
+      },
+      {
+        "rule": "Leading words [craft] \u2014 coining your own symbol works only if you define it clearly; a made-up anchor that maps to more than one meaning stops functioning as an anchor.",
+        "target_quote": "\ud83d\udeab No TUI on bare invocation.",
+        "issue": "The \ud83d\udeab icon is used as the leading symbol for two distinct kernel axioms (\"Never silent-fail\" and \"No TUI on bare invocation\"). A single coined icon standing for two unrelated concepts can't do reliable anchoring work \u2014 later mentions of \ud83d\udeab (e.g. in the grading ladder) are ambiguous between the two definitions.",
+        "proposed_fix": "Give the TUI axiom its own distinct icon instead of reusing \ud83d\udeab, e.g. reserve \ud83d\udeab for \"never silent-fail\" only.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 both \"\ud83d\udeab Never silent-fail.\" and \"\ud83d\udeab No TUI on bare invocation.\" appear verbatim as separate kernel axioms using the same icon, so the symbol genuinely maps to two distinct meanings within the doc. || CONFIRMED \u2014 Both \"\ud83d\udeab Never silent-fail.\" and \"\ud83d\udeab No TUI on bare invocation.\" appear verbatim in the kernel axioms list using the identical icon for two distinct concepts, which genuinely undermines the icon's use as a unique anchor. || CONFIRMED \u2014 the quoted text \"\ud83d\udeab No TUI on bare invocation.\" appears verbatim in the kernel axioms list, and \ud83d\udeab is indeed reused for the distinct \"Never silent-fail\" axiom, creating a genuine icon collision.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md"
+      },
+      {
+        "rule": "Relevance and sediment [craft] \u2014 every line must still bear on what the document does; a line that never matters to the task is sediment kept because removing feels risky.",
+        "target_quote": "per-pass 0-1000 scoring machinery, agent-profile reweighting, 27 subagents, and 47 scripts.",
+        "issue": "This always-loaded HTML comment enumerates features removed from a retired 192-file predecessor skill. None of it bears on executing the current skill \u2014 it's a history of what isn't there, paid for on every turn.",
+        "proposed_fix": "Delete the list of dropped features from the comment; keep only a one-line pointer to references/ERGONOMICS-SPEC.md if that isn't already stated in the body (it is, in the Named operators section).",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the HTML comment, and the comment is plain text within the SKILL.md body (not stripped), so it loads on every invocation while listing only historical removals that don't affect executing the current skill, matching the \"relevance and sediment\" critique. || CONFIRMED \u2014 the quoted text appears verbatim in the always-loaded HTML comment, and the critique is valid: this is historical trivia about a retired skill's dropped features, not information needed to execute the current skill. || CONFIRMED \u2014 the quoted text appears verbatim in the always-loaded HTML comment, and it genuinely is inert provenance detail (list of dropped features) that doesn't bear on executing the skill, matching the sediment rule.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md"
+      },
+      {
+        "rule": "Completion criteria \u2014 sharpen a vague bound before relying on judgment",
+        "target_quote": "**Iterate** \u2014 a fresh-eyes/adversarial re-read until clean; re-mine as the project evolves (no doctor is ever \"done\").",
+        "issue": "\"Until clean\" gives no way to tell done from not-done without judgment \u2014 it's the same shape as the doctrine's \"verify the config\" counter-example. Paired with \"no doctor is ever done,\" the step has no checkable exit condition at all, inviting the agent to stop whenever it feels satisfied.",
+        "proposed_fix": "State a checkable exit condition, e.g. \"re-read adversarially until no dimension in the 10-dim rubric scores below N for any implemented FM; re-run this step whenever a new FM is added.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text matches verbatim (final bullet of \"The build loop\"), and \"until clean\" is indeed an unbounded, judgment-only completion criterion with no checkable threshold, while the document elsewhere already has a scorable mechanism (the 10-dim rubric) that could supply one. || CONFIRMED \u2014 the quote matches verbatim, and \"until clean\" paired with \"never done\" is indeed an unbounded completion criterion with no checkable exit condition, unlike other steps in the doc that do cite concrete checks (e.g., hash verification, exit codes). || CONFIRMED \u2014 The quoted text matches verbatim (final bullet of \"The build loop\"), and the critique is accurate: \"until clean\" and \"never done\" together give no checkable stopping condition, and the document elsewhere provides a natural checkable criterion (the 10-dim rubric) that this step fails to reference.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md"
+      },
+      {
+        "rule": "Context pointers \u2014 a pointer must name the out-of-context material and the condition for reaching it",
+        "target_quote": "match against the cookbook pattern",
+        "issue": "\"The cookbook\" is never introduced or pointed to anywhere in the instructional body. The only place its location (`references/DOCTOR-SPEC.md`) is stated is the HTML distillation comment at the top of the file, which is editorial metadata, not an agent-facing pointer. An agent executing the build loop has no stated way to reach the material this step tells it to consult.",
+        "proposed_fix": "Add an explicit pointer where \"cookbook\" is first used, e.g. \"match against the failure-mode cookbook in [DOCTOR-SPEC.md](references/DOCTOR-SPEC.md#cookbook)\", and drop the reliance on the dev comment to carry that routing information.",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quoted text \"match against the cookbook pattern\" appears verbatim in step 2 of the build loop, and \"cookbook\" is otherwise referenced only in the HTML distillation comment at the top (editorial metadata, not an agent-facing pointer) \u2014 no inline link in the instructional body actually routes the agent to references/DOCTOR-SPEC.md for the cookbook. || CONFIRMED \u2014 \"match against the cookbook pattern\" appears verbatim in the build loop, and the only stated location of the cookbook (DOCTOR-SPEC.md) is in the top HTML comment, not an agent-facing pointer in the instructional body. || CONFIRMED \u2014 the quote appears verbatim in the build loop step, and no instructional-body pointer (only the top HTML distillation comment) names where \"the cookbook\" material lives.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md"
+      },
+      {
+        "rule": "Relevance and sediment \u2014 every line must bear on what the document does",
+        "target_quote": "Distilled 2026-07-04 from the retired 166-file `world-class-doctor-mode-for-cli-tools` skill:\n     kept the One Rule + core axioms, the CLI surface, the mutate() chokepoint / safety envelope,\n     the (detector,fixer,fixture,test) tuple, the 10-dim rubric, and the portable cookbook. Dropped\n     the multi-model swarm tiers, session-mining, external issue-tracker plumbing, the per-run 0-1000\n     scoring machinery, 18 subagents, and 39 scripts.",
+        "issue": "This editorial history of what was kept/dropped from a retired 166-file skill never bears on performing the doctor-mode task itself; it is provenance for a future human editor, not routing or execution guidance, yet it is inlined in the body and loaded on every use of the skill.",
+        "proposed_fix": "Move the distillation rationale to a CHANGELOG or the repo's PR description, keeping only the still-needed routing fact (JSON shapes, rubric, and cookbook live in references/DOCTOR-SPEC.md) as a proper in-body pointer.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the HTML comment near the top of the document, and it genuinely is editorial provenance (what was kept/dropped from a retired skill) rather than task-execution guidance, so the \"relevance and sediment\" critique applies. || CONFIRMED \u2014 the quote appears verbatim in the HTML comment block at the top of the document, and the cited rule genuinely applies: this is provenance/editorial history (what was kept/dropped from a retired skill) that doesn't provide routing or task-execution guidance, yet is inlined in the file and would be loaded/parsed on every use. || CONFIRMED \u2014 the quoted comment block appears verbatim at the top of the document, and it is genuine editorial/provenance sediment (what was kept/dropped from a retired skill) that doesn't inform execution of the doctor-mode task, consuming context on every load.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md"
+      },
+      {
+        "rule": "One trigger per branch",
+        "target_quote": "Use when creating install.sh, a curl-pipe-bash installer, or a one-liner install for a Rust/TS/Go CLI.",
+        "issue": "The three phrasings \u2014 \"install.sh\", \"curl-pipe-bash installer\", \"one-liner install for a Rust/TS/Go CLI\" \u2014 all name the same single branch (writing this kind of installer). A run reaching the document through any one of them takes the identical path through the body; they don't split into distinct handling. This is one branch written three times, paying triple context cost to route once.",
+        "proposed_fix": "Collapse to one trigger, e.g. \"Use when writing a curl|bash install.sh one-liner for a Rust/TS/Go CLI.\"",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and the three phrasings (\"install.sh\", \"curl-pipe-bash installer\", \"one-liner install for a Rust/TS/Go CLI\") do all route to the identical skill body with no differentiated handling, matching the \"one trigger per branch\" redundancy concern. || CONFIRMED \u2014 the quote appears verbatim in the description, and the three trigger phrasings genuinely do route to the identical single skill body with no branching distinction between them. || REFUTED \u2014 the quoted text appears verbatim, but \"One trigger per branch\" concerns multiple *branches* (distinct handling paths) sharing one trigger, not multiple *phrasings* of a single trigger for one branch, which is a redundancy/verbosity issue, not a rule violation as described.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states",
+        "target_quote": "Self-contained (real bash inline).",
+        "issue": "This restates, in the always-loaded description, the exact fact already recorded in the body's HTML comment (\"This version is self-contained: real snippets inline, no external line-refs\"). It carries no routing signal \u2014 it doesn't help decide whether to reach the document, only describes an attribute of the document itself \u2014 so it's paying permanent context load for nothing.",
+        "proposed_fix": "Drop the sentence from the description; leave the self-contained/real-snippets fact only in the body's introductory comment, where it's read once rather than loaded every turn.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 \"Self-contained (real bash inline).\" appears verbatim in the description, and the body's HTML comment already states the same fact (\"This version is self-contained: real snippets inline, no external line-refs\"), making the description's restatement pure identity redundancy with no routing value. || CONFIRMED \u2014 the phrase appears verbatim in the description, and the same fact (\"self-contained: real snippets inline, no external line-refs\") is already stated in the body's HTML comment, so the description sentence is redundant restatement rather than routing signal. || CONFIRMED: The phrase \"Self-contained (real bash inline).\" appears verbatim at the end of the description field, and it does duplicate the self-contained/real-snippets fact already stated in the body's HTML comment, adding no routing value to the always-loaded description.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md"
+      },
+      {
+        "rule": "Progressive disclosure",
+        "target_quote": "the `draw_box` implementation, and the uninstall/service snippets are in\n[references/PATTERNS.md](references/PATTERNS.md)",
+        "issue": "Non-negotiable #12 (final summary box) and #13 (uninstall instructions) are required on every run of every installer this skill produces \u2014 not just the AI-agent-integration branch. Bundling draw_box and the uninstall snippet behind the same pointer as the genuinely branch-specific agent-hook-config material means universal-need code rides on a pointer meant for branch-only reference, so a run that never touches AI-agent detection still has to remember to open PATTERNS.md for material every run needs.",
+        "proposed_fix": "Inline the draw_box and uninstall-instructions snippets in the main body next to non-negotiables #12/#13, and keep only the agent-detection/JSON-merge pattern and the optional systemd/launchd service snippet disclosed in references/PATTERNS.md.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 The quote matches the target verbatim, and the critique is accurate: non-negotiables #12/#13 (final summary box, uninstall instructions) are required on every installer run per the checklist (\"final summary box + uninstall printed\"), yet their implementations (draw_box, uninstall snippet) are bundled behind the same PATTERNS.md pointer as the genuinely branch-specific agent-hook JSON-merge logic, violating progressive disclosure by hiding universal-need code behind a conditional-content link. || CONFIRMED \u2014 the quote is verbatim, and the critique correctly identifies that non-negotiables #12/#13 (required every run) are deferred behind the same reference pointer as the branch-specific agent-hook material, which is a genuine progressive-disclosure misapplication. || CONFIRMED \u2014 the quoted text appears verbatim, and the critique is accurate: non-negotiables #12 (summary box/draw_box) and #13 (uninstall instructions) apply to every installer run, yet their real implementations are deferred to references/PATTERNS.md bundled together with the genuinely optional/branch-specific agent-hook JSON-merge pattern, while other universal non-negotiables (checksum, lock, install) get real inline snippets in the main body \u2014 an inconsistent application of progressive disclosure.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md"
+      },
+      {
+        "rule": "Demand",
+        "target_quote": "SHA256 (dual tool) + Sigstore (soft-skip / hard-fail); build-from-source fallback works",
+        "issue": "\"works\" is an uncheckable qualifier tacked onto two otherwise precise, checkable clauses in the same checklist line. The agent can satisfy \"dual tool\" and \"soft-skip/hard-fail\" concretely, but there is no bound for what \"works\" means for the source-build fallback, letting that half of the item be ticked off impressionistically.",
+        "proposed_fix": "Replace with a checkable bound, e.g. \"build-from-source fallback: --force --from-source on a clean checkout produces a runnable binary at $DEST.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim in the pre-ship checklist, and \"works\" is indeed the only unbounded/impressionistic qualifier in that line, contrasting with the concrete, verifiable criteria given for the other checklist items (dual tool, soft-skip/hard-fail). || CONFIRMED \u2014 the quote appears verbatim in the checklist, and \"works\" is indeed a vague, uncheckable qualifier compared to the precise \"dual tool\" and \"soft-skip/hard-fail\" criteria in the same line. || CONFIRMED \u2014 the quoted text matches the checklist verbatim, and \"works\" is indeed an unbound, unverifiable qualifier on an otherwise checkable checklist item, unlike the concrete \"dual tool\"/\"soft-skip / hard-fail\" criteria beside it.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md"
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "Polish 4\u20135 rounds against the same standard as the plan itself",
+        "issue": "Mixes a checkable count (\"4\u20135 rounds\") with an uncheckable qualifier \u2014 \"the same standard as the plan itself\" is never operationalized anywhere in the document \u2014 letting the agent satisfy the whole bound impressionistically by hitting the round count without a way to verify the polish quality itself.",
+        "proposed_fix": "Replace the qualifier with a checkable bound, e.g. \"Polish 4\u20135 rounds; each round confirms every field carried from phase8_decomposition_plan.md (winner, runners-up, migration mechanics) is still present verbatim in the issue body.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim in the GitHub Issues Handoff section, and \"the same standard as the plan itself\" is never defined anywhere else in the document, making the polish bar unverifiable beyond the round count. || CONFIRMED \u2014 quote is verbatim, and \"the same standard as the plan itself\" is never defined elsewhere in the document (no earlier passage specifies criteria for polishing phase8_decomposition_plan.md), leaving only the vague parenthetical DO NOT OVERSIMPLIFY/DO NOT LOSE FEATURES as an uncheckable qualifier alongside the checkable \"4\u20135 rounds\" count. || CONFIRMED \u2014 the quote appears verbatim, and \"the same standard as the plan itself\" (only glossed by the vague parenthetical \"DO NOT OVERSIMPLIFY; DO NOT LOSE FEATURES\") is not tied to any checkable criterion, so the round-count bound can be satisfied without verifiable polish quality.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md"
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "The \"Why\" column briefly explains the reasoning.",
+        "issue": "This sentence is part of the Review Format's required-output specification, which is otherwise fully checkable (table with named columns, one row per issue). 'Briefly explains the reasoning' is an uncheckable qualifier smuggled into that precise list, letting the agent satisfy the Why column impressionistically rather than against a fixed bound.",
+        "proposed_fix": "Replace with a checkable bound, e.g. 'The Why column states the specific rule violated, in one sentence.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and \"briefly explains the reasoning\" is indeed a vague, uncheckable qualifier embedded in an otherwise strict tabular format spec. || CONFIRMED \u2014 the quote appears verbatim in the Review Format section, and \"briefly explains the reasoning\" is indeed a subjective, uncheckable qualifier embedded in an otherwise concrete formatting spec (table structure, one row per issue). || CONFIRMED \u2014 the quote appears verbatim in the Review Format section, and the critique correctly identifies that \"briefly explains the reasoning\" is a vague, unmeasurable qualifier embedded in an otherwise precise formatting spec (named columns, one row per issue).",
+        "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth [craft]",
+        "target_quote": "| `scale(0)` entry animation                 | Start from `scale(0.95)` with `opacity: 0`                       |",
+        "issue": "This exact rule (never `scale(0)`, use `scale(0.95)` + `opacity: 0`) is stated three separate times: the Review Format example table, the dedicated '### Never animate from scale(0)' section, and this Review Checklist row. The same triplication pattern recurs for the ease-in rule and the transform-origin/popover rule. Each value now has three places to edit if it changes, and the checklist inflates rules already fully covered in-body.",
+        "proposed_fix": "Keep the full rule only in its dedicated section; have the checklist and Review Format example link back to that section by name (e.g. 'scale(0) entry \u2014 see Never animate from scale(0)') instead of restating the fix value.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 The quoted checklist row appears verbatim, and the scale(0)/opacity(0.95) rule is indeed restated near-identically in three places (Review Format example table, \"Never animate from scale(0)\" section, and this Review Checklist row), as are the ease-in and transform-origin rules, matching the described triplication pattern. || CONFIRMED \u2014 Quoted text matches the Review Checklist row verbatim, and the scale(0)/opacity(0.95) fix genuinely appears three times (Review Format example, dedicated \"Never animate from scale(0)\" section, and this checklist row), matching the duplication pattern described. || CONFIRMED \u2014 the quoted checklist row appears verbatim, and the scale(0) rule, ease-in rule, and transform-origin/popover rule are each genuinely restated three times (Review Format example, dedicated section, Review Checklist), supporting the single-source-of-truth duplication claim.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Read-only; it proposes motion with exact values, it does not implement it.",
+        "issue": "This identity claim in the pointer is restated by the body twice more: the intro ('...or write the implementation itself') and Hard Rule 1 ('This skill reports; it does not implement.'). The pointer's job is when to reach the skill, not what it is \u2014 this clause adds permanent load with no routing signal since the same fact is authoritative in the body.",
+        "proposed_fix": "Drop the sentence from the description and let the body's intro paragraph and Hard Rule 1 carry the read-only/no-implementation fact.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and the body genuinely restates the same read-only/no-implementation fact twice (intro's \"...or write the implementation itself\" and Hard Rule 1's \"This skill reports; it does not implement\"), making the description's inclusion redundant identity information rather than routing guidance. || CONFIRMED \u2014 the quote appears verbatim in the frontmatter description, and the read-only/no-implementation fact is indeed restated twice in the body (intro's \"write the implementation itself\" and Hard Rule 1's \"This skill reports; it does not implement\"). || CONFIRMED \u2014 The quoted text appears verbatim in the description field, and the claim is accurate: the same read-only/no-implementation fact is independently restated in the intro (\"or write the implementation itself\") and Hard Rule 1 (\"This skill reports; it does not implement\"), making the description clause redundant identity-stating rather than routing guidance.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md"
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when a task is too big for one context or has many independent units: whole-codebase campaigns (refactor / audit / migration / dead-code sweep), broad multi-file sweeps, N-independent-units work, or when you need multiple independent perspectives (adversarial verification).",
+        "issue": "\"has many independent units\" and \"N-independent-units work\" name the same branch twice with different phrasing. A run reaching the skill through one phrase takes the same path as one reaching it through the other, so the second instance pays permanent context load on every turn without adding routing signal.",
+        "proposed_fix": "Drop the redundant restatement \u2014 e.g. \"Use when a task is too big for one context or has many independent units: whole-codebase campaigns (refactor / audit / migration / dead-code sweep), broad multi-file sweeps, or when you need multiple independent perspectives (adversarial verification).\"",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 the quote is verbatim, and \"N-independent-units work\" is indeed just a restatement of the already-stated \"has many independent units\" trigger rather than a distinct example like the other listed items. || REFUTED \u2014 the quoted text is verbatim, but the rule doesn't genuinely apply: \"N-independent-units work\" is one item in a colon-separated list of concrete examples illustrating the general criterion \"has many independent units,\" alongside sibling examples like \"whole-codebase campaigns\" and \"broad multi-file sweeps.\" Those other examples aren't flagged as duplicative, so treating just this one item as a redundant restatement of the umbrella clause misreads normal list-of-examples structure as a duplicate branch. || REFUTED \u2014 The quoted text matches verbatim, but \"N-independent-units work\" is one item in a list of concrete examples (alongside \"whole-codebase campaigns,\" \"broad multi-file sweeps\") illustrating the general category \"has many independent units,\" not a duplicate branch restating the same trigger. This is normal keyword/example diversity in a description field for retrieval matching, not a \"one trigger per branch\" violation.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth",
+        "target_quote": "| Built-in `ease-out` on a deliberate animation | `cubic-bezier(0.23, 1, 0.32, 1)` |",
+        "issue": "The curve value cubic-bezier(0.23, 1, 0.32, 1) is hardcoded here identically to its definition in the `--ease-out` token block above. If the token's value is ever tuned, this literal copy in the Never Ship table has no mechanical link to it and can silently drift out of sync \u2014 exactly the fork Hard Rule 3 ('extend the codebase's tokens, don't fork them') warns against, applied to the document's own content.",
+        "proposed_fix": "Reference the token instead of the literal value, e.g. 'Built-in `ease-out` on a deliberate animation \u2192 `var(--ease-out)`'.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 Hard Rule 3 governs codebase token usage in implementation code, not internal consistency of the skill document's own prose tables; the quoted text is illustrating the literal curve value as an example, not forking a project token system. || REFUTED \u2014 Hard Rule 3 governs codebase token usage in implementation code, not internal consistency of literal values within the skill document's own reference tables; the quoted text is accurate but the rule doesn't genuinely apply to this meta-documentation duplication concern. || REFUTED \u2014 the quoted text is verbatim, but Hard Rule 3 governs codebase token usage in implementations, not internal consistency between two mentions within this document; the Never Ship table entry is illustrating what value to use, not forking a token system.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth",
+        "target_quote": "**UI animations stay under 300ms.**",
+        "issue": "This blanket statement directly contradicts the Duration table's own 'Modals, drawers | 200\u2013500ms' row immediately above it, which explicitly sanctions durations up to 500ms for UI elements (modals/drawers are UI, per the Build Sequence's own tier table). An agent applying the '300ms' rule to a modal can't tell done from not-done without judgment, since two authoritative-looking statements disagree.",
+        "proposed_fix": "Scope the claim, e.g. 'UI animations stay under 300ms, except modals/drawers which may run to 500ms' \u2014 or move the 500ms allowance out of the general 'UI' bucket entirely.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quote is verbatim, but the doctrine text elsewhere already treats \"UI\" as excluding modals in this context (the surrounding examples/Never-Ship table use it for dropdowns/tooltips), so the tension is a minor imprecision rather than a genuine contradiction an agent can't resolve; the more specific \"Modals, drawers\" row naturally overrides the general statement per normal specificity precedence. || REFUTED \u2014 the quoted text appears verbatim, but the doc's own examples (dropdown 180ms vs 400ms) and context make clear \"UI animations\" refers to the general/default case, not an override of the explicit modals/drawers exception listed right above it; this is a reasonable, resolvable emphasis rather than a genuine contradiction. || REFUTED \u2014 The quoted text is verbatim, but the \"contradiction\" is a plausible interpretive tension, not a genuine rule violation; the doc's own example (\"A 180ms dropdown feels more responsive than a 400ms one\") and surrounding context make clear the 300ms line is a general guideline for typical UI elements, not an absolute contradicting the explicit modals/drawers exception stated two lines above it.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition drags the forbidden behaviour into context; prohibition should be paired with its positive target, not lead a rule that never says what to do instead.",
+        "target_quote": "Never lock out input during a transition.",
+        "issue": "This bullet is pure prohibition with no positive target anywhere in the section \u2014 it never states what the agent should do instead (e.g. keep pointer/touch listeners live). The surrounding bullets address interrupt-from-value and library choice, not input lockout, so nothing else in the section fills the gap.",
+        "proposed_fix": "Reword to lead with the positive behaviour: \"Keep pointer/touch event listeners active throughout every transition so the element can always be grabbed mid-animation.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote appears verbatim, but the very next bullets in the same section (\"Always animate from the presentation... value\" and the interruptible-spring guidance) directly supply the positive target (keep it grabbable/animatable mid-flight), so the claim that \"nothing else in the section fills the gap\" is false. || REFUTED \u2014 the quoted bullet is immediately followed in the same section by positive-target guidance (animate from presentation value, avoid CSS transitions, blend velocity, decompose axes), so the prohibition is not left unpaired within its section. || REFUTED \u2014 the quoted bullet is immediately followed in the same section by positive-target bullets (animate from presentation value, avoid non-interruptible CSS transitions, blend velocity on reversal) that state what to do instead, so the claim that \"nothing else in the section fills the gap\" is false.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition drags the forbidden behaviour into context; prohibition should be paired with its positive target, not lead a rule that never says what to do instead.",
+        "target_quote": "Never stack a light translucent surface on another \u2014 legibility collapses.",
+        "issue": "This bullet leads with a ban and gives only the failure mode (legibility collapses), never the positive alternative (what to put beneath a light translucent surface instead). No other bullet in the Materials & depth section supplies that alternative.",
+        "proposed_fix": "Reword to state the positive rule: \"Back a light translucent surface with a solid or opaque layer, not another translucent one \u2014 stacking two collapses legibility.\"",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 the quote appears verbatim in \u00a712, and the bullet is indeed a pure prohibition (\"Never stack...\") with only the failure mode stated, no positive alternative given anywhere else in the Materials & depth section. || REFUTED \u2014 quote is verbatim, but the claim that \"no bullet supplies the alternative\" is false: the same bullet's first sentence (\"darker/heavier materials separate structural regions... lighter materials draw attention to interactive elements\") already establishes the light/dark pairing that the negation warns against violating, so the prohibition isn't unpaired from a positive target. || REFUTED \u2014 the quote is verbatim, but it's not leading a rule: it's the trailing sentence of the bullet \"Material weight encodes hierarchy: darker/heavier materials separate structural regions...; lighter materials draw attention...\", which already states the positive framing (what darker vs. lighter materials are for) before the prohibition. The finding's premise that this negation \"leads a rule that never says what to do instead\" misdescribes the bullet's actual structure.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation",
+        "target_quote": "**Never skip 1-3.**",
+        "issue": "This bullet leads with the ban ('Never skip') rather than stating the required behaviour directly, and the sentence itself never restates the positive target \u2014 it only gestures at it via 'data wins.' Per the doctrine, prohibition should be reserved for hard guardrails paired explicitly with their positive target, not used as the lead phrasing of a rule.",
+        "proposed_fix": "Rephrase as a positive requirement, e.g. 'Complete steps 1-3 (mine, cluster, score) before proposing automations \u2014 intuition about what's repetitive is unreliable; data wins.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the full sentence \"Never skip 1-3. Intuition about what's repetitive is unreliable; data wins.\" does state a positive rationale/target (\"data wins\"), so the claim that it \"never restates the positive target\" is false. || REFUTED \u2014 the quoted text \"Never skip 1-3\" appears verbatim, but the full sentence includes the positive rationale \"Intuition about what's repetitive is unreliable; data wins,\" so the negation is paired with its positive target as the doctrine requires. || REFUTED \u2014 The quoted text \"Never skip 1-3.\" does appear verbatim, but the sentence is immediately followed by \"Intuition about what's repetitive is unreliable; data wins,\" which does restate the positive target/rationale, contradicting the finding's claim that it \"never restates the positive target.\"",
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Cut identity the body already states",
+        "target_quote": "the judgment layer over wt-sweep.sh/branch-triage.sh that harmonizes competing variants rather than picking one winner",
+        "issue": "The body's opening blockquote (\"The core move... the job is NOT 'pick the right branch'... That synthesis is harmonization\") already states this identity at length. Repeating it in the always-loaded description adds permanent context cost with no additional routing signal \u2014 the pointer's job is to say when to reach the skill, not to re-explain what harmonization is.",
+        "proposed_fix": "Shorten the description to the triggering condition only, e.g. \"...forgotten branches/worktrees left by parallel agents, after wt-sweep.sh/branch-triage.sh have run and left RESIDUE.\" and let the body's core-move callout carry the identity explanation.",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 the quoted phrase appears verbatim in the frontmatter description, and it does duplicate the identity/purpose already stated at length in the body's opening blockquote (\"the job is NOT 'pick the right branch'... That synthesis is harmonization\"). || REFUTED \u2014 the quoted text does not appear verbatim in the description (which reads \"the judgment layer over wt-sweep.sh/branch-triage.sh that harmonizes competing variants rather than picking one winner\" split across the actual description differently: \"...that harmonizes competing variants rather than picking one winner. Use for parallel-agent branch cleanup.\" \u2014 actually checking closely, this phrase does appear verbatim in the description), but the rule's premise is flawed: the description's job includes routing/identity signal for standalone discovery, and removing identity context (what harmonization means vs. picking a winner) would weaken triggering for users who don't know the term \"harmonization\" \u2014 this is a subjective style judgment, not a clear violation. || REFUTED \u2014 the quoted text is not verbatim in the target document; the description reads \"the judgment layer over wt-sweep.sh/branch-triage.sh that harmonizes competing variants rather than picking one winner\" only in the frontmatter description, but the finding also mischaracterizes it as pure duplication when the description serves the distinct routing function of naming the two prerequisite scripts, which the blockquote never mentions.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria",
+        "target_quote": "Confidence < 0.7 \u21d2 don't auto-classify; surface to the user.",
+        "issue": "This reads as a checkable numeric bound, but \"Confidence\" is never defined or computed anywhere in the document \u2014 unlike fingerprint_coverage, file_existence_coverage, and the \u226530% signature-divergence threshold, which are all explicitly derived. Without a stated formula, the agent cannot tell done (confident) from not-done (not confident) without judgment, so the 0.7 threshold is precision theater over an impressionistic call.",
+        "proposed_fix": "Either define confidence as a stated function of the already-computed metrics (e.g. \"confidence = fingerprint_coverage when apply-probe is clean and signature sampling is unambiguous; otherwise treat as <0.7\"), or replace the threshold with an explicit compound checkable condition using the metrics already defined in steps 4-5.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote is verbatim, but \"confidence\" is reasonably read as an informal judgment call by the agent (analogous to the classify/surface distinction elsewhere), not a promised numeric formula, so the critique overstates a gap as a defect. || REFUTED \u2014 the quote is verbatim, but this is stylistic critique of an undefined heuristic (\"Completion criteria\" isn't a real rule in the doc), not a genuine rule violation \u2014 the finding is an opinion about precision theater, not a verifiable defect against a stated rule. || REFUTED \u2014 The quote is verbatim, but it's a completion/escalation gate not a \"completion criteria\" formula defect claim that holds up: the document deliberately treats confidence as a holistic judgment call (explicitly invoking archaeology like `git log -S`, reflog, and commit messages alongside the quantitative metrics), so an undefined-but-human-judged threshold is consistent with the skill's design, not a genuine gap.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when starting a new brand, sub-brand, product, persona, or author voice. Outputs a complete Voice Profile with tone spectrum, vocabulary, mechanical rules, on-brand and off-brand example phrases, aspiration and anti-aspiration models, and a quality test. The profile is structured so it can be encoded as a project-specific brand-voice skill afterward. Use when copy sounds generic, when a new persona needs voice definition, or when the answer to \"how should this sound?\" is unclear.",
+        "issue": "\"persona\" appears as a trigger in the first 'Use when' list, then reappears as \"a new persona needs voice definition\" in the second 'Use when' list. A run reaching the skill via 'persona' and one reaching it via 'a new persona needs voice definition' take the same path -- it's one branch written twice, paying context load twice for one route.",
+        "proposed_fix": "Drop \"a new persona needs voice definition\" from the second list since persona-definition is already covered by \"persona\" in the first list; keep only genuinely distinct triggers (copy sounds generic, \"how should this sound?\" is unclear) in that clause.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text is verbatim, but this is a description field listing multiple legitimate triggers, not a \"branch\" in the skill's logic; \"One trigger per branch\" doesn't meaningfully apply to overlapping keywords within a frontmatter description. || REFUTED \u2014 the quoted text is verbatim, but \"persona\" in the first list is a subject/entity trigger (new persona needing a voice defined) while the second list's items describe symptom-based triggers (generic copy, unclear tone), so they aren't the same branch written twice. || REFUTED \u2014 the quoted text does appear verbatim, but the two lists serve different rules (mode/entity triggers vs. symptom triggers), and \"persona\" alone (a category) is not the same trigger as \"a new persona needs voice definition\" (a symptom), so this isn't a duplicated branch.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research]",
+        "target_quote": "Don't skip the encoding step: a profile that isn't wired into a skill gets ignored.",
+        "issue": "This closing admonition leads with the ban (\"Don't skip the encoding step\") and follows it with a consequence, not a restated positive instruction in the same breath -- the tell the doctrine flags. It drags \"skip the encoding step\" into context as the most available frame instead of reinforcing the concrete action.",
+        "proposed_fix": "State the positive target directly, e.g. \"Always finish by encoding the profile as a project skill -- an un-encoded profile gets ignored.\"",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but it's immediately preceded by the positive instruction \"The builder CREATES voice. The encoded skill APPLIES voice,\" and the negation is paired with its consequence in the same breath, contradicting the claim that no positive framing accompanies it. || CONFIRMED \u2014 the quoted text appears verbatim in the \"After the Profile\" section, and it does lead with a negation (\"Don't skip the encoding step\") followed by a consequence clause rather than a positive restatement, matching the described pattern. || REFUTED: The quoted text appears verbatim, but the sentence is preceded by three positive instruction steps (1\u20133) already stating the concrete action to encode the profile as a skill, so the negation isn't the sole/primary framing the doctrine flags.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Set up cloud consoles that block headless automation (Google OAuth consent, Stripe webhooks, GCP credentials) by opening the exact URL in the local Windows Brave browser and handing paste-ready click steps, then wiring the reported credentials into Supabase/Vault/Vercel/.env. Use when a console step cannot be scripted: bot detection, \"browser may not be secure\", 2FA, CAPTCHA, or OAuth consent screens.",
+        "issue": "\"Google OAuth consent\" in the parenthetical example list and \"OAuth consent screens\" in the trigger list name the same branch twice with different wording. A run reaching the doc via either phrase routes to the same content (the Google OAuth playbook), so the second mention pays context load without adding a distinct routing path.",
+        "proposed_fix": "Drop the duplicate \u2014 remove \"or OAuth consent screens\" from the trailing trigger list since it's already covered by \"Google OAuth consent\" in the parenthetical, e.g. end the sentence with \"...bot detection, \\\"browser may not be secure\\\", 2FA, or CAPTCHA.\"",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the two phrases aren't the same branch: \"Google OAuth consent\" is one example in a list of console *products* (Google, Stripe, GCP), while \"OAuth consent screens\" is a general trigger *category* (like CAPTCHA/2FA) not limited to Google, so removing it would narrow the trigger scope rather than eliminate a true duplicate. || REFUTED \u2014 the quote is verbatim, but \"Google OAuth consent\" (an example console product) and \"OAuth consent screens\" (a trigger condition) serve different list purposes rather than naming the same branch twice; this isn't a genuine redundant-trigger violation. || CONFIRMED \u2014 the quoted description text appears verbatim in the frontmatter, and \"Google OAuth consent\" (in the parenthetical) and \"OAuth consent screens\" (in the trigger list) both route to the same skill/content, making the second mention redundant.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "Clear \"report back\" format",
+        "issue": "This checklist item sits among otherwise checkable items (\"URLs verified\", \"Element names match the current UI exactly\", \"All identifiers included\") but \"Clear\" is an uncheckable qualifier \u2014 the agent cannot tell a clear format from an unclear one without judgment, letting it check the box impressionistically.",
+        "proposed_fix": "Replace with a checkable bound, e.g. \"Report-back line names the exact value and its format (e.g. `whsec_...`)\" \u2014 matching the instruction template's own \"Report back: [exactly what to copy back, with format]\" language.",
+        "reason": "panel 1/3 confirmed | REFUTED: The quote appears verbatim, but the document already defines the checkable bound elsewhere (\"Say precisely WHAT to report back and the format\" and the template's \"Report back: [exactly what to copy back, with format]\"), so the checklist item is not genuinely uncheckable/impressionistic in context. || CONFIRMED \u2014 the quote appears verbatim in the pre-flight checklist and \"clear\" is indeed an unbounded, judgment-dependent qualifier unlike the other checklist items. || REFUTED \u2014 the quoted text appears verbatim but the pre-flight checklist is a self-check for the agent authoring instructions, not a \"demand craft\" issue; the document already elsewhere specifies the exact format requirement (\"Report back: [exactly what to copy back, with format]\"), so this checklist line is a reasonable shorthand reminder, not vague uncheckable prose.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft]",
+        "target_quote": "Verify (re-read the config via API)",
+        "issue": "The step names a mechanism (re-read via API) but not a comparison, so it stops short of a checkable bound \u2014 the doctrine's own worked example distinguishes \"verify the config\" (uncheckable) from \"re-read the config via the API and confirm the field equals the value you wrote\" (checkable). As written, the agent can satisfy this step by reading the API response without confirming it matches the value it wrote.",
+        "proposed_fix": "State the comparison explicitly: \"Verify: re-read the config via the API and confirm the stored value matches what was wired in.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote is verbatim, but this is a one-line workflow summary step, not a completion-criteria specification meant to be an exhaustive checkable bound; faulting it for omitting an explicit comparison clause misapplies the rule's intent. || REFUTED \u2014 the quote appears verbatim as a workflow step label, but the finding critiques a terse checklist item as if it required the doctrine's full checkable-bound phrasing, which is an unreasonably strict reading of a one-line step in an already-detailed workflow. || REFUTED \u2014 the quote is verbatim but \"6. Verify (re-read the config via API)\" is a one-line workflow step reference, not a completion-criteria specification meant to stand alone as a checkable bound; the critique overreads a terse workflow bullet as if it were the doctrine's formal completion-criteria section.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "check health explicitly if results look unranked",
+        "issue": "'Results look unranked' is a judgment call, not a checkable condition \u2014 the agent cannot reliably tell 'looks unranked' from 'looks ranked' without inference. This is the kind of stray uncheckable qualifier the doctrine warns lets a criterion be satisfied impressionistically instead of on a verifiable bound.",
+        "proposed_fix": "Tie the trigger to something checkable, e.g.: 'check health explicitly if the stderr fallback warning wasn't printed but you're unsure the rerank lane fired' or 'run the health curl before trusting top-1 ordering when in doubt, since a dead lane fails silently.'",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the surrounding sentence explicitly ties the trigger to a checkable condition (a stderr warning that \"fails open... silently\"), not a vague visual judgment; the finding mischaracterizes an already-qualified heuristic as an uncheckable one. || REFUTED: The quote is verbatim, but the doctrine issue misapplies \u2014 the document already states the fallback is silent (no stderr distinction needed) and explicitly names the checkable failure mode (\"Fails open... silent, so a dead lane can go unnoticed\"), so \"check health explicitly if results look unranked\" is a human-facing heuristic tied to that documented silent-failure context, not a stray uncheckable qualifier undermining a verifiable bound. || CONFIRMED \u2014 quoted text appears verbatim, and \"looks unranked\" is indeed a subjective judgment call rather than a checkable condition, especially since the same bullet already offers a concrete signal (the stderr warning) that could serve as the actual trigger.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition drags the forbidden behaviour into context; keep prohibition only as a hard guardrail paired with its positive target. The tell is a rule that leads with the ban and never says what to do instead.",
+        "target_quote": "**Bare `<tool>` opening a TUI**; **exit 1 meaning \"no results\"**; **prompting for confirmation** in a non-TTY.",
+        "issue": "Unlike its neighboring bullets in the same Anti-patterns list, which each pair the ban with a positive fix, this bullet stacks three banned behaviors with no accompanying \"do X instead\" in the same breath.",
+        "proposed_fix": "Pair each ban with its fix inline: \"Bare <tool> opening a TUI (show help/triage and exit instead); exit 1 meaning \\\"no results\\\" (use exit 0 + empty items); prompting for confirmation in a non-TTY (error and exit instead).\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text is verbatim, but the \"negation\" framing is misapplied: the document already states the positive alternative for each of these three bans earlier (TUI axiom explicitly says \"show useful help/triage and exits, or `<tool> tui`\"; recurring-fix #10 says \"empty result = exit 0 + `{\"items\":[]}`\"; error-anti-patterns says \"never *prompt* for confirmation... error and exit\"). This bullet is a compressed recap in the Anti-patterns list, not a standalone rule omitting guidance, and the claim that neighboring bullets \"each pair the ban with a positive fix\" is also false (the ANSI/emoji bullet has no paired fix either). || REFUTED \u2014 the quote is verbatim, but the document does pair these exact prohibitions with positive fixes elsewhere (TUI: \"shows useful help/triage and exits\"; exit 1: \"empty result = exit 0 + {\\\"items\\\":[]}\"; confirmation: \"never *prompt* for confirmation... error and exit, let the agent drive\"), so the \"never says what to do instead\" premise is false, and the \"unlike its neighbors\" framing also ignores that the ANSI/emoji bullet in the same list similarly lacks an inline fix. || REFUTED \u2014 The quoted text is verbatim, but the claim that \"neighboring bullets... each pair the ban with a positive fix\" is false: the immediately preceding bullet (\"ANSI/emoji or stack traces in errors, or errors on stdout \u2014 all break non-TTY agents and `| jq`\") also states no positive fix, only a consequence, so the contrast the finding relies on doesn't hold.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Demand \u2014 watch for criteria that mix checkable and uncheckable terms",
+        "target_quote": "**agent_intuitiveness** \u2014 can an agent guess the right invocation from `--help` alone?",
+        "issue": "This is the first item in a 10-dimension scoring list where every other dimension (agent_ergonomics, data_safety, idempotence, reversibility, etc.) is stated as a checkable fact (byte-identical backups, exit codes, stable schema_version). \"Can an agent guess the right invocation\" is a subjective judgment call with no bound for telling a pass from a fail, so it lets the whole rubric be scored impressionistically once this one stray uncheckable qualifier is present.",
+        "proposed_fix": "Replace with a checkable bound, e.g. \"agent_intuitiveness \u2014 the exact invocation for the top 3 failure modes appears verbatim in `doctor --help` output.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the finding mischaracterizes it: this is a self-review checklist with 10 dimensions used to prioritize a backlog (`frequency \u00d7 score_gap \u00d7 blast_radius`), not a formal spec requiring uniformly checkable pass/fail criteria, so a qualitative dimension alongside quantitative ones isn't a genuine rule violation. || REFUTED \u2014 the quote is verbatim, but the rule mischaracterizes intent: this is a self-review scoring rubric item (explicitly framed as subjective grading against dimensions), not a single \"demand\" mixing checkable/uncheckable acceptance criteria in a spec. || REFUTED \u2014 the quote is verbatim, but the rule is misapplied: this is a self-review scoring dimension with a subjective element by design (a \"backlog\" heuristic), not a hard requirement mixed into checkable acceptance criteria, so calling it a stray uncheckable qualifier corrupting the rubric mischaracterizes its purpose.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "Anything you (Claude) are low-confidence on",
+        "issue": "This catch-all sits inside an otherwise checkable list (\u22652 failed fixes, specific security paths like auth/crypto/user-input/shell-exec). Per the Demand rule, one stray uncheckable qualifier inside an otherwise precise list lets the whole criterion be satisfied impressionistically \u2014 'low-confidence' has no checkable bound, so it licenses invoking Codex for any question at all, undermining the specificity the rest of the list establishes.",
+        "proposed_fix": "Drop the catch-all and let the four concrete categories stand alone, or replace it with a checkable version, e.g. 'You've stated a plan and immediately want to stress-test it before acting' or 'Two plausible explanations remain after your own analysis.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but this is a reasonable, deliberately open-ended catch-all item in a \"when it's worth it\" list, not a rule violated by imprecision; the finding's premise that one uncheckable qualifier invalidates the whole list is an overreach not supported by any stated craft standard requiring every list item be independently checkable. || REFUTED \u2014 the quoted text does appear verbatim, but this is a subjective judgment call about list design, not a genuine craft violation; \"low-confidence\" is a self-assessable trigger condition (not a claim needing verification), so the \"impressionistic satisfaction\" critique doesn't actually undermine the document's craft. || REFUTED \u2014 the quoted text appears verbatim, but this is a reasonable, self-aware inclusion criterion (Claude assessing its own confidence) rather than an uncheckable catch-all that \"undermines specificity\"; the item is plausibly applicable and not a meaningful defect.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when de-monolithize, split giant file, modularize repo, or file too big.",
+        "issue": "Four trigger phrases route to only two distinct branches: \"de-monolithize\" and \"modularize repo\" both land on the whole-repo/Standard path, and \"split giant file\" and \"file too big\" both land on the single-file/Quick path (confirmed by the Recipe Selector table, which maps 'Split this ONE file' to Quick and 'De-monolithize the repo (generic)' to Standard). Per the doctrine, synonyms that rename a single branch pay context load on every turn but route only once.",
+        "proposed_fix": "Collapse to one trigger per branch, e.g. \"Use when de-monolithizing a repo or splitting an oversized file.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text is verbatim, but the rule is misapplied: the description's trigger words are for skill-discovery matching (whether to invoke this skill at all), not a branching decision tree. The smell-test table itself bundles \"De-monolithize this repo\" together with \"split this 14k-line file\" in the same YES row, showing \"de-monolithize\" is the generic umbrella term spanning both file- and repo-scope, not exclusively the \"Standard/whole-repo\" branch as the finding assumes. The claimed 1:1 mapping of the four description phrases onto exactly two Recipe Selector branches isn't supported by the document. || REFUTED \u2014 the quoted text is verbatim, but the rule's application is a stretch: the description's four phrases are skill-invocation triggers (smell test), not routing branches, and the Recipe Selector table never actually contains \"split giant file\" or \"file too big\" as rows \u2014 the smell-test table instead groups \"file too big\"-style phrasing (\"files have gotten huge\", \"find every file that's too big\") with the generic whole-repo examples, not the single-file Quick path, contradicting the finding's claimed 2-branch mapping. || REFUTED \u2014 the quoted text is verbatim, but the rule is misapplied: the four phrases in the frontmatter `description` are skill-discovery/invocation triggers (helping a router decide *whether* to invoke this skill at all, versus a sibling skill), not routing labels for internal phase branches like Quick vs Standard. The actual mode routing happens via the separate Recipe Selector table based on full user phrasing/context, not by matching these four keywords 1:1. Treating \"de-monolithize\" and \"modularize repo\" as redundant synonyms for the same branch conflates two different mechanisms.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research]",
+        "target_quote": "(DO NOT OVERSIMPLIFY; DO NOT LOSE FEATURES)",
+        "issue": "This parenthetical leads with two bans and never states the positive target \u2014 what a correctly-preserved, non-oversimplified issue looks like \u2014 which per the doctrine drags 'oversimplify' and 'lose features' into context as the most available concepts rather than steering toward the desired behavior.",
+        "proposed_fix": "State the target directly instead, e.g. \"(carry every migration-mechanics detail and runner-up rationale over from the plan verbatim).\"",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the sentence already states the positive target immediately before it (\"Polish 4\u20135 rounds against the same standard as the plan itself\"), so the parenthetical is reinforcement, not the sole instruction. || CONFIRMED \u2014 the quoted text \"(DO NOT OVERSIMPLIFY; DO NOT LOSE FEATURES)\" appears verbatim in the GitHub Issues Handoff section, and it is indeed phrased as two negative bans without stating the positive target. || REFUTED \u2014 the quote appears verbatim, but the positive target is already stated immediately before it (\"Polish 4\u20135 rounds against the same standard as the plan itself\"), so the parenthetical is added emphasis on constraints, not the sole framing the negation critique assumes.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Front-load the leading word [craft]",
+        "target_quote": "This skill encodes Emil Kowalski's philosophy on UI polish, component design, animation decisions, and the invisible details that make software feel great.",
+        "issue": "The description pointer opens with throat-clearing ('This skill encodes...') instead of leading with the trigger word, spending the most-read position on self-identification rather than routing signal \u2014 the exact anti-pattern the doctrine names ('This skill provides guidance on...').",
+        "proposed_fix": "Open with the branch/trigger directly, e.g. 'UI polish passes: component design, animation timing, and easing decisions per Emil Kowalski's design-engineering philosophy.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but \"Rule: Front-load the leading word [craft]\" isn't a rule established or referenced in this document, and the doctrine's anti-pattern example cited ('This skill provides guidance on...') doesn't appear in the target text. || REFUTED \u2014 the quoted text does appear verbatim, but the rule cited (\"front-load the leading word [craft]\") is not part of the target document itself; the finding invokes an external doctrine not present in this target to judge the description field. || REFUTED \u2014 the quoted text appears verbatim, but \"craft\" never appears anywhere in the target document, so the rule's premise (front-loading a word called \"craft\") doesn't apply to this skill at all.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when the user asks \"what could be animated here?\" or wants to \"make this feel more alive\".",
+        "issue": "The skill does exactly one thing (it says so itself: 'It does ONE thing'), so there is only one branch to route to. These two quoted phrases are synonyms for entering that single branch, not distinct triggers for distinct paths \u2014 a run reaching the skill through either phrase executes the identical workflow. Per the doctrine, synonyms that rename a single branch are one branch written twice.",
+        "proposed_fix": "Collapse to one trigger phrase, e.g. \"Use when the user asks what could be animated here.\" and drop the second paraphrase.",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted text is verbatim, but \"One trigger per branch\" targets branching workflows with multiple execution paths, not description-field trigger phrasing for a single-purpose skill \u2014 this is a style nitpick about redundant phrasing, not a rule violation about branch/trigger mapping. || REFUTED \u2014 the quoted text appears verbatim, but \"One trigger per branch\" targets branching workflows with multiple distinct paths; two paraphrased trigger phrases for a single-branch skill's description field isn't the kind of multi-branch redundancy this rule addresses. || REFUTED \u2014 the quoted text appears verbatim in the description field, but this is a \"Use when\" trigger list for a single-purpose skill's description, not a multi-branch dispatch structure the \"one trigger per branch\" rule targets, and having two example phrasings of user intent in a description is normal/idiomatic, not a doctrine violation.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft]",
+        "target_quote": "Build a rough frequency map of the surfaces you'll judge.",
+        "issue": "This is the closing instruction of Step 1 (Recon) but gives no checkable done-condition \u2014 'rough' is inherently a judgment call, and there is no bound analogous to Step 2's explicit 'Done when every seam class has either yielded candidates with file:line evidence or been explicitly cleared.' The agent cannot tell when Recon is finished versus merely started.",
+        "proposed_fix": "Replace with a checkable bound, e.g. 'Done when you can name, for each major surface, its rough frequency tier (100+/day, tens/day, occasional, rare) and the existing easing/duration tokens it should extend.'",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 the quote appears verbatim as Step 1's closing line, and unlike Step 2 it lacks any checkable completion bound, making the finding's claim accurate. || REFUTED \u2014 The quoted text does appear verbatim, but the criticism ignores that Step 1 already lists three checkable sub-tasks (identify stack/libraries, existing tokens, product personality) plus the frequency map, so it's not an unbounded judgment call comparable to a missing completion criterion. || REFUTED: The quoted text appears verbatim, but the finding ignores that Step 1 already lists checkable requirements (identify stack, motion libraries, existing tokens, product personality) and the \"frequency map\" step ties directly to the Gate's frequency table, giving an implicit but genuine completion criterion.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "Gate every candidate through all four questions. Be ruthless.",
+        "issue": "'Through all four questions' is a checkable criterion (each candidate is scored pass/fail on each). 'Be ruthless' is an uncheckable qualifier tacked onto it, letting the agent satisfy the whole instruction impressionistically \u2014 e.g. skipping or softening a question while still feeling it was 'ruthless' \u2014 exactly the mixed checkable/uncheckable pattern the doctrine warns about.",
+        "proposed_fix": "Drop 'Be ruthless' and let the four-question gate itself (plus the required rejected-candidates section) enforce rigor, since that is already checkable.",
+        "reason": "downgraded: quoted text not found verbatim in target document",
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "refutation_mode": "quote_not_found"
+      },
+      {
+        "rule": "Completion criteria [craft]",
+        "target_quote": "| Modals, drawers | 200\u2013500ms |",
+        "issue": "This budget directly contradicts the section's own framing, 'The suggestion must work within the standard budgets (UI under 300ms)', stated immediately above the table. A modal/drawer suggestion at 350\u2013500ms is simultaneously inside the table's stated budget and outside the '300ms' ceiling, so the agent cannot tell pass from fail without guessing which number governs.",
+        "proposed_fix": "Either raise the stated ceiling to cover modals/drawers (e.g. 'UI under 500ms, marketing exempt') or cap the Modals/drawers row at 300ms to match the stated rule.",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted table row is accurate, but the claimed contradiction is not genuine\u2014\"UI under 300ms\" is a loose framing statement immediately followed by a table whose own values (up to 500ms for modals) are the actual specified budget, so a reader applies the table, not an invented conflict. || REFUTED \u2014 The quoted text does appear verbatim, but the claimed contradiction is trivial/not a genuine ambiguity: \"UI under 300ms\" is a loose framing statement immediately followed by the actual table which explicitly authorizes up to 500ms for modals/drawers; the table, being more specific, clearly governs, so an agent would not be meaningfully blocked from determining pass/fail. || REFUTED: The quoted text appears verbatim, but \"UI under 300ms\" is a loose parenthetical summary, not a strict ceiling overriding the explicit table below it, which clearly allows modals/drawers up to 500ms \u2014 no genuine contradiction that would block an agent from applying the gate.",
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "findings_confirmed": 4,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "findings_confirmed": 0,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 3,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "findings_confirmed": 4,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}
