@@ -139,9 +139,10 @@ harness.
 
 ## Where this doctrine's own claims stand
 
-This doctrine forked from `writing-for-agents` and has not yet beaten it.
-Measured against the banked ancestor leg on shared documents (probe =
-confirmed defects found when the doctrine is applied):
+This doctrine forked from `writing-for-agents`. Three gates failed to beat
+it; the fourth measured better. All against the banked ancestor leg on
+shared documents (probe = confirmed defects found when the doctrine is
+applied):
 
 - **v1** (16 docs): 19 confirmed vs 30. 95% CI [−1.19, −0.18] — a real
   regression, size versus the margin unresolved. Originally published as
@@ -153,9 +154,14 @@ confirmed defects found when the doctrine is applied):
   (`reports/swapgate4-summary.md`) — which is why this file exists.
 - **v2** (15 docs): 27 vs 29, 95% CI [−0.76, +0.49], **not_worse** at
   δ = 1.0 (`reports/swapgate5-summary.md`).
+- **v3** (15 docs, 2026-08-08): 42 vs 29, 95% CI [+0.03, +1.70],
+  **better** — bootstrap CI agrees, sign test alone would not resolve; a
+  near-boundary win, published with the same calibration as the losses
+  (`reports/swapgate6-summary.md`).
 
 The upstream `writing-for-agents` was renamed and restructured on 2026-07-31
 (mattpocock/skills); every comparison above is against the pinned pre-rename
 snapshot in the authors' dotfiles, and a re-baseline against the current
-upstream has not yet been run. No rule here should be cited as outperforming
-its ancestor.
+upstream has not yet been run. The doctrine as a whole measured better once,
+against that snapshot; no individual rule is thereby validated, and no claim
+is made against the current upstream.
