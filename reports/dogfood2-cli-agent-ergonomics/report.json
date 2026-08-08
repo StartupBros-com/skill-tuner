@@ -1,0 +1,114 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.32735939999999997
+    },
+    "verify": {
+      "trials": 15,
+      "total_cost_usd": 0.34486485
+    }
+  },
+  "total_trials": 16,
+  "manifest": {
+    "run_id": "dogfood2-cli-agent-ergonomics",
+    "started_at": "2026-08-08T10:34:30Z",
+    "finished_at": "2026-08-08T10:40:10Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md",
+        "sha256": "sha256:6c65c9665c35bf85beb411514ec1ca8c917b68b8e860ec645fbb07ef38964fe9",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 4,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 15,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Demand [craft] \u2014 watch for criteria that mix checkable and uncheckable terms",
+        "target_quote": "ship \u22655 substantive changes across \u22653 dimensions before calling it done",
+        "issue": "The numeric bounds (\u22655, \u22653) are checkable, but \"substantive\" is a judgment call with no definition. One stray uncheckable qualifier inside an otherwise precise gate lets the agent satisfy it impressionistically, exactly the failure mode the doctrine warns against.",
+        "proposed_fix": "Replace \"substantive\" with a checkable proxy, e.g. \"ship \u22655 changes that each close a Recurring-fixes checklist item, across \u22653 of the 11 dimensions.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim (\"Ambition gate\" line), and it genuinely mixes checkable numeric bounds (\u22655, \u22653) with the uncheckable qualifier \"substantive,\" which lacks any operational definition. || CONFIRMED \u2014 the quote appears verbatim (\"Ambition gate\" line), and it does mix checkable numeric bounds (\u22655, \u22653) with the undefined judgment term \"substantive.\" || CONFIRMED \u2014 the quote appears verbatim as the \"Ambition gate\" text, and \"substantive\" is indeed an undefined judgment qualifier alongside the checkable \u22655/\u22653 bounds."
+      },
+      {
+        "rule": "Duplication / Single source of truth [craft]",
+        "target_quote": "stderr only",
+        "issue": "This restates a meaning the document already gives twice: the shared axiom \"stdout is data / stderr is diagnostics\" and the \ud83d\udeab axiom \"Every failure \u2192 stderr + non-zero exit.\" A third restatement adds maintenance and token cost without new signal.",
+        "proposed_fix": "Drop \"stderr only\" from the Error anti-patterns list; the earlier axioms already establish it.",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 \"stderr only\" appears verbatim in the anti-patterns list, and the concept is indeed already stated via \"stdout is data / stderr is diagnostics\" and \"Every failure \u2192 stderr + non-zero exit,\" making it a genuine third restatement. || CONFIRMED \u2014 \"stderr only\" appears verbatim in the Error anti-patterns list, and it does restate the stdout/stderr separation concept already stated in the shared axioms and the \ud83d\udeab never-silent-fail axiom. || REFUTED \u2014 \"stderr only\" is a terse checklist reminder in the specific \"Error anti-patterns\" list, placed near the error-writing guidance for practical scanability; it's a defensible checklist convention (local reminder near point-of-use) rather than a genuine harmful duplication warranting removal."
+      },
+      {
+        "rule": "Duplication [craft] \u2014 \"an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice\"",
+        "target_quote": "never bare \"see --help\" without naming the flag",
+        "issue": "This is the exact pattern the doctrine names: the \ud83e\ude79 Errors teach axiom already states positively that \"'See --help' alone is failure\" and requires the exact command. The anti-pattern list repeats the same rule in negated form.",
+        "proposed_fix": "Remove this line from Error anti-patterns and let the \ud83e\ude79 axiom stand as the single authoritative statement of the rule.",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 the quoted text exists, but it's a checklist restatement of the \ud83e\ude79 axiom in the context of a concrete error-formatting checklist, not clear redundant duplication; such reinforcement between principle and actionable checklist is standard practice, not the \"same meaning written twice\" the rule targets. || CONFIRMED \u2014 the quote appears verbatim in \"Error anti-patterns,\" and it is indeed a negated restatement of the \ud83e\ude79 axiom's positive claim that \"'See --help' alone is failure\" requiring the exact command, so the same rule is stated twice. || CONFIRMED \u2014 The quote appears verbatim in the \"Error anti-patterns\" list, and it does restate the same rule the \ud83e\ude79 axiom already states positively (\"'See --help' alone is failure\" / requires naming the exact command), just phrased as a negation."
+      },
+      {
+        "rule": "Duplication / Single source of truth [craft]",
+        "target_quote": "Fixes the #1 recurring bug: ANSI/log lines leaking into piped stdout.",
+        "issue": "The same claim \u2014 that stdout/stderr contamination via leaking log lines is the most common bug \u2014 is restated almost verbatim later as \"the single most-caught bug: verbose/log lines leaking into stdout under `--verbose`, breaking `| jq`\" in Recurring fixes item 7. One meaning is stated in two places.",
+        "proposed_fix": "State the \"#1 bug\" claim once (in Recurring fixes item 7) and have the Output-Contract Quartet entry simply cross-reference it rather than restate it.",
+        "reason": "panel 3/3 confirmed | CONFIRMED: Both quotes appear verbatim in the document and genuinely restate the same \"leaking log lines into stdout\" claim as the top recurring issue in two separate places. || CONFIRMED: Both quoted phrases appear verbatim in their respective locations, and they do restate the same claim (stdout/stderr log-leakage being the most common bug) in two places. || CONFIRMED \u2014 both quotes appear verbatim in the document, and they do restate the same \"#1 bug\" claim (ANSI/log lines leaking into stdout) in two separate sections (Named operators stacks vs. Recurring fixes item 7)."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Negation [research] \u2014 a prohibition must stand paired with its positive target",
+        "target_quote": "no ANSI/emoji in errors (breaks non-TTY `grep`)",
+        "issue": "This leads with a ban and gives a reason but never states the positive target, contrary to the doctrine's requirement that even a justified prohibition be paired with what to do instead so attention lands on the desired behavior.",
+        "proposed_fix": "Rephrase as \"plain text only in errors (ANSI/emoji break non-TTY `grep`)\" so the positive instruction is stated directly.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but this is a niche stylistic prohibition within a longer anti-pattern list, not a genuine violation of a documented \"pairing\" rule (no such doctrine exists in this target document). || REFUTED \u2014 the quoted text appears verbatim, but it's one clause in a list of anti-patterns (\"no ANSI/emoji... no stack traces... never bare 'see --help'...\") whose positive target (plain-text, stderr-only, actionable errors) is already stated in the surrounding template and axioms, so the \"rule\" is an invented doctrine not actually violated here. || REFUTED \u2014 the quote appears verbatim but is one clause in a longer anti-patterns list (\"stderr only; 5\u201310 lines max\") that already frames the positive requirements; no genuine \"Negation\" doctrine is established or violated in this document.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md",
+        "findings_confirmed": 4,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

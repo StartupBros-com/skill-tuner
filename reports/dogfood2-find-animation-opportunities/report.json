@@ -1,0 +1,91 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.18568635000000003
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.14640104999999998
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood2-find-animation-opportunities",
+    "started_at": "2026-08-08T10:43:35Z",
+    "finished_at": "2026-08-08T10:46:04Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/find-animation-opportunities/SKILL.md",
+        "sha256": "sha256:bdfb8b83dc84c5bed0a5de1519e15e95df2f6a8ff475fc0359dab1604e36f5ad",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/find-animation-opportunities/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/find-animation-opportunities/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Completion criteria [craft] \u2014 two bounds that contradict (a general ceiling in one place, a specific range crossing it in another) are a completion defect: the agent cannot tell whether a value between them complies.",
+        "target_quote": "The suggestion must work within the standard budgets (UI under 300ms):\n\n| Element | Duration |\n| --- | --- |\n| Press feedback | 100\u2013160ms |\n| Tooltips, small popovers | 125\u2013200ms |\n| Dropdowns, selects | 150\u2013250ms |\n| Modals, drawers | 200\u2013500ms |\n| Marketing / explanatory | Can be longer |",
+        "issue": "The gate states a general ceiling of 'UI under 300ms', but the very table meant to operationalize that ceiling lists Modals/drawers at 200\u2013500ms, which crosses the stated ceiling by up to 200ms. An agent evaluating a 400ms modal animation cannot tell whether it passes (per the table) or fails (per the 300ms ceiling) \u2014 exactly the contradictory-bounds defect the doctrine describes.",
+        "proposed_fix": "Either raise the stated ceiling to cover the table's max (e.g. 'UI under 500ms, tighter for frequent elements') or cap the modal row at 300ms and move anything longer into the 'Marketing / explanatory' exception explicitly.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text is verbatim, and \"under 300ms\" genuinely contradicts the Modals/drawers row's 200\u2013500ms range, leaving a 400ms modal's compliance ambiguous. || CONFIRMED \u2014 the quoted text is verbatim, and the \"under 300ms\" ceiling genuinely contradicts the 200\u2013500ms modal/drawer row directly beneath it. || CONFIRMED \u2014 the quoted text appears verbatim, and the stated \"UI under 300ms\" ceiling genuinely conflicts with the table's Modals/drawers row of 200\u2013500ms, creating a real ambiguity for values 300\u2013500ms."
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 contradictory bounds between a general rule and a specific suggested value elsewhere in the document.",
+        "target_quote": "Destructive actions confirmed with a plain click where a hold-to-confirm fill would prevent slips \u2192 `clip-path: inset(0 100% 0 0)` overlay, 2s linear on press, 200ms ease-out snap-back on release",
+        "issue": "The Speed gate sets a general ceiling of 'UI under 300ms' for standard UI motion, but this recipe in 'Where to Hunt' prescribes a 2000ms (2s) press animation with no carve-out. Nothing in the Speed section exempts hold-to-confirm interactions, so an agent applying the gate literally would have to reject its own hunt-list recipe, or apply the recipe and silently violate the stated budget.",
+        "proposed_fix": "Add an explicit exception to the Speed table for intentional hold/press-and-hold interactions (distinct from the general UI budget), or note next to the hold-to-confirm recipe that its long duration is deliberate and exempt from the 300ms ceiling.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted 2s hold-to-confirm recipe appears verbatim, and it does conflict with the Speed gate's stated \"UI under 300ms\" ceiling with no listed exception category for hold/press-and-hold durations. || CONFIRMED \u2014 the quoted text is verbatim from \"Where to Hunt,\" and the Speed gate's \"UI under 300ms\" budget with its table (topping out at 200\u2013500ms for modals, or \"can be longer\" only for marketing/explanatory) has no listed exception for hold-to-confirm, so applying the gate literally to the 2s press recipe produces a genuine contradiction. || CONFIRMED \u2014 the quoted recipe (2s linear press + 200ms snap-back) appears verbatim in the Hunt list, and it genuinely conflicts with the Speed gate's stated \"UI under 300ms\" ceiling, which has no carve-out for hold-to-confirm interactions."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/find-animation-opportunities/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

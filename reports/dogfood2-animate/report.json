@@ -1,0 +1,93 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.2711217
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.18990914999999997
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood2-animate",
+    "started_at": "2026-08-08T10:46:04Z",
+    "finished_at": "2026-08-08T10:49:17Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/animate/SKILL.md",
+        "sha256": "sha256:a7960e3c584c6fc3a19c2ee0208a8d5934128fe2604128d22995f86dc0411113",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 0,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/animate/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/animate/SKILL.md"
+    ],
+    "confirmed_findings": [],
+    "refuted_findings": [
+      {
+        "rule": "Completion criteria [craft] \u2014 \"Two bounds that contradict \u2014 a general ceiling in one place, a specific range crossing it in another \u2014 are a completion defect... the agent cannot tell whether a value between them complies, whichever bound it obeys.\"",
+        "target_quote": "| Modals, drawers | 200\u2013500ms |\n| Marketing / explanatory | Can be longer |\n\n**UI animations stay under 300ms.** A 180ms dropdown feels more responsive than a 400ms one.",
+        "issue": "The duration table gives modals/drawers a range up to 500ms, and the very next line states a blanket ceiling of 300ms for \"UI animations\" with no qualifier. Within this section there is nothing telling the agent that modals/drawers (and marketing) are exempt from the 300ms ceiling \u2014 that exemption only appears later, in the separate Never Ship table (\"UI duration over 300ms outside modals/drawers or marketing\"). An agent reading only the Duration section cannot tell whether a 400ms modal transition complies.",
+        "proposed_fix": "Add the exemption directly to the ceiling sentence in the Duration section, e.g.: \"UI animations stay under 300ms, except modals/drawers (200\u2013500ms) and marketing (no ceiling).\" so the bound and its exception are co-located and unambiguous where first stated.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the \"UI animations stay under 300ms\" line is immediately preceded by the same table listing modals/drawers at 200\u2013500ms, so the exception is co-located, not contradictory or ambiguous in context. || REFUTED \u2014 the \"300ms\" ceiling line immediately follows the table listing modals/drawers up to 500ms and marketing \"can be longer,\" so the exception is co-located in context rather than only appearing in the later Never Ship table; a careful reader isn't left with a genuine contradiction. || REFUTED \u2014 the quoted text appears verbatim, but the contradiction is contrived: \"UI animations stay under 300ms\" is a general guideline directly beneath a table that already lists modals/drawers at 200\u2013500ms, so the exception is co-located (same section, adjacent lines) and a reader isn't left guessing.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth / Duplication [craft] \u2014 \"Duplication wears disguises, and the commonest is polarity: an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.\"",
+        "target_quote": "| `ease-in` on a UI element | `ease-out` or a strong custom curve |",
+        "issue": "The \"Never Ship\" table restates, in negated/paired form, rules the document already gives positively elsewhere: this row mirrors \"**Never `ease-in` on UI.** It starts slow, delaying the exact moment the user is watching\" in the Easing section. The same pattern repeats across most of the table \u2014 \"transform: scale(0) entrance\" mirrors the section 4 scale(0) rule, \"Animation on a keyboard shortcut or 100+/day action\" mirrors the step-1 frequency table, \"Ungated :hover motion\" mirrors step 7, \"Missing prefers-reduced-motion\" mirrors step 7, \"Keyframes on toasts...\" mirrors step 6, \"Animating width/height/margin/padding/top/left\" and \"Motion x/y/scale props under load\" mirror section 4. Each meaning now lives in two places, so a future change to one of these rules (e.g. loosening the scale-entrance floor from 0.9\u20130.97, which the table already independently states as a single value 0.95) requires editing both and risks the two drifting apart.",
+        "proposed_fix": "Trim the Never Ship table to items not already stated positively elsewhere (e.g. `transition: all`, the 30\u201380ms stagger rule), and replace the rest with a short pointer back to the rules it would otherwise restate, e.g. \"Also re-check every Hard Rule and Build Sequence step above.\" This keeps one authoritative statement per rule instead of two that can diverge.",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted table row appears verbatim, but the \"Never Ship\" table is explicitly framed as a \"Self-check before you finish\" summary/checklist, not a duplicate source of truth \u2014 this is a legitimate design pattern (quick-reference recap), not an unintentional duplication defect. || REFUTED \u2014 The quoted text appears verbatim, but the \"Never Ship\" table is an explicit self-check summary (\"Self-check before you finish\"), a deliberate design choice for scanability, not an accidental duplication defect; treating intentional summary tables as a duplication anti-pattern misapplies the rule. || REFUTED \u2014 The quoted text is verbatim, but the \"Never Ship\" table is explicitly framed as a pre-completion self-check (\"Self-check before you finish. Each of these is an automatic block in `review-animations`\") serving a distinct summary/checklist purpose, not an accidental duplication of a single source of truth; this is a stylistic/design critique dressed as a rule violation, not a genuine application of the cited anti-duplication rule.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/animate/SKILL.md",
+        "findings_confirmed": 0,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

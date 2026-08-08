@@ -1,0 +1,63 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "targets": [
+    {
+      "id": "agent-swarm",
+      "path": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+      "pruned_description": "Run a large or parallelizable task across many agents using the native stack \u2014\nparallel Claude Code subagents, the Workflow tool, Codex delegation, and worktree\nisolation \u2014 instead of a coordination protocol. Use when a task is too big for one\ncontext or has many independent units: whole-codebase campaigns and other\nN-independent-units work (refactor / audit / migration / dead-code sweep), or when\nyou need multiple independent perspectives (adversarial verification). The shared\nswarm/delegation layer other skills route through for scale."
+    },
+    {
+      "id": "apple-design",
+      "path": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+      "pruned_description": "Apple's approach to interface design and fluid, physical motion, translated for the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, momentum and interruptible transitions, translucent materials and depth, typography (optical sizing, tracking, leading), reduced-motion, or the design foundations (feedback, spatial consistency) behind Apple-style interfaces."
+    },
+    {
+      "id": "branch-harmonization",
+      "path": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+      "pruned_description": "Salvage and rationalize forgotten branches/worktrees left by parallel agents."
+    },
+    {
+      "id": "brand-voice-builder",
+      "path": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+      "pruned_description": "Define a brand voice from scratch (Build mode) OR extract one from existing content (Extract mode). Use when starting a new brand, sub-brand, product, persona, or author voice. Outputs a structured Voice Profile that can be encoded as a project-specific brand-voice skill afterward. Use when copy sounds generic or when the answer to \"how should this sound?\" is unclear. Does NOT apply existing voices -- for that, use the brand-specific voice skill (see \"When NOT to use this skill\" below)."
+    },
+    {
+      "id": "browser-console-setup",
+      "path": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+      "pruned_description": "Set up cloud consoles that block headless automation (Google OAuth consent,\\nStripe webhooks, GCP credentials) by opening the exact URL in the local\\nWindows Brave browser and handing paste-ready click steps, then wiring the\\nreported credentials into Supabase/Vault/Vercel/.env. Use when a console step\\ncannot be scripted: bot detection (Google's \"browser may not be secure\"), 2FA,\\nCAPTCHA, or OAuth consent screens."
+    },
+    {
+      "id": "cass-rerank-local",
+      "path": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+      "pruned_description": "Best-quality search over your prior agent sessions: cass lexical retrieval + semantic rerank. Use INSTEAD of bare `cass search` for top-1/top-few relevant-session results (past fixes, decisions, \"how did I do X\"); fall back to plain cass for broad scans."
+    },
+    {
+      "id": "curl-bash-installer",
+      "path": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+      "pruned_description": "Write a production-grade `curl | bash` installer for a CLI tool. Use when writing a\ncurl-pipe-bash install.sh one-liner for a CLI (Rust/TS/Go). Self-contained (real bash\ninline)."
+    },
+    {
+      "id": "de-monolithize-your-codebase-isomorphically-local",
+      "path": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+      "pruned_description": "Find monolith files, prove seams empirically, split isomorphically with zero API/perf/compile drift; hand off as GitHub issues. Use when a file or repo has grown into a monolith that needs splitting."
+    },
+    {
+      "id": "emil-design-eng",
+      "path": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+      "pruned_description": "Invoke by name during UI polish passes to apply Emil Kowalski's philosophy on UI polish, component design, and animation decisions (pairs with /ui-polish and /kill-ai-slop)."
+    },
+    {
+      "id": "find-animation-opportunities",
+      "path": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+      "pruned_description": "Search a codebase or UI for places that don't animate but should, and reject everything that shouldn't. Use when the user asks \"what could be animated here?\" or wants to \"make this feel more alive\". For fixing existing animations, use improve-animations or review-animations instead."
+    }
+  ],
+  "distractors": [
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/.claude/skills/de-slopify/SKILL.md",
+    "/home/will/.claude/skills/tdd/SKILL.md",
+    "/home/will/.claude/skills/ui-polish/SKILL.md"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.31599225
+    },
+    "verify": {
+      "trials": 15,
+      "total_cost_usd": 0.3607401
+    }
+  },
+  "total_trials": 16,
+  "manifest": {
+    "run_id": "dogfood2-automating-your-automations-local",
+    "started_at": "2026-08-08T09:57:16Z",
+    "finished_at": "2026-08-08T10:01:18Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "sha256": "sha256:d3c2e90ee9c1f4724a4a80c04b83e9aee1652fb49d1ab4ea00868ac4a300e5f6",
+        "source": "worktree",
+        "git_commit": "a0487393147b0facc15dcbd56758cb0fd2f79679",
+        "git_path": "claude/skills-local/automating-your-automations-local/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 3,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 15,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Completion criteria [craft]",
+        "target_quote": "frequency \u00d7 time_saved \u00d7 error_rate",
+        "issue": "The document states three different formulas for the same 'priority/score' concept: the principle table's 'Frequency \u00d7 Pain = Priority', the Loop's unweighted three-factor product 'frequency \u00d7 time_saved \u00d7 error_rate', and Step 2's normalized four-factor weighted sum 'Score = freq_norm\u00d70.4 + time_norm\u00d70.3 + fail_norm\u00d70.2 + simplicity_norm\u00d70.1'. The checkable bound 'Only automate if Score \u2265 0.3' only makes sense against the normalized version, so an agent following the Loop's raw multiplicative formula cannot tell whether a given pattern complies with the 0.3 threshold.",
+        "proposed_fix": "State the score formula once (the normalized weighted sum from Step 2) and have the Loop and principle table reference it rather than restating a different formula.",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 the quote is verbatim, but the issue is a formula-consistency problem, not a \"completion criteria\" issue (which would concern the Done-When checklist), so the cited rule doesn't genuinely apply to this text. || CONFIRMED: The quote \"frequency \u00d7 time_saved \u00d7 error_rate\" appears verbatim in the Loop (Step 3: SCORE), and it genuinely conflicts with Step 2's separately-defined normalized weighted formula and 0.3 threshold \u2014 the Loop gives no way to know if a raw multiplicative score meets that threshold, a real internal inconsistency. || CONFIRMED \u2014 the quoted text appears verbatim in Step 1's Loop, and it genuinely conflicts with the differently-weighted \"Score = freq_norm\u00d70.4 + ...\" formula in Step 2 that the \"\u2265 0.3\" threshold depends on."
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "History mined (atuin or bash) for all pattern types",
+        "issue": "'for all pattern types' is an uncheckable qualifier inside an otherwise checkable Done-When list \u2014 'pattern types' is never enumerated anywhere in the document, so the agent can satisfy this line impressionistically without a way to confirm 'all' were covered.",
+        "proposed_fix": "Replace with the concrete, checkable set already used elsewhere in the doc, e.g. 'History mined for repeated commands, multi-step workflows, high-failure commands, and per-repo repetition.'",
+        "reason": "panel 2/3 confirmed | CONFIRMED: The quote appears verbatim in the \"Done When\" checklist, and \"pattern types\" is never explicitly enumerated at that point, making \"all\" an unverifiable qualifier \u2014 a genuine craft/checkability issue. || CONFIRMED \u2014 the quote appears verbatim in the Done-When checklist, and \"all pattern types\" is indeed never used as a defined term anywhere else in the doc (only implicit query categories exist in Step 1), making it an ambiguous, self-referential qualifier in an otherwise concrete checklist. || REFUTED \u2014 the claim that pattern types are \"never enumerated anywhere in the document\" is false; they're explicitly listed in \"THE EXACT PROMPT\" section (\"repeated commands, multi-step workflows, high-failure commands, per-cwd (per-repo) repetition\"), giving a checkable reference for \"all pattern types.\""
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when\n  analyzing command patterns or finding automation opportunities.",
+        "issue": "The description lists two triggers \u2014 'analyzing command patterns' and 'finding automation opportunities' \u2014 but the skill body runs one mandatory, undifferentiated loop (mine\u2192cluster\u2192score\u2192propose\u2192build\u2192validate\u2192install) regardless of which phrase brought the agent here. A run reached through either phrase takes the identical path, so these are one branch written twice rather than two distinct branches, and the second phrase pays context load with no added routing signal.",
+        "proposed_fix": "Collapse to a single trigger, e.g. 'Use when finding automation opportunities in your command history.'",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the \"one trigger per branch\" rule concerns conditional branches (if/else logic), not description trigger phrases; the quoted text is a description clause, not a branch, so the rule doesn't genuinely apply as described. || REFUTED \u2014 \"One trigger per branch\" applies to branches (conditional paths) in skill body logic, not to description trigger phrases; the two phrases here are not mutually-exclusive branches but a single description with overlapping wording, so the rule is misapplied. || CONFIRMED \u2014 the quote appears verbatim in the description, and the body defines a single mandatory loop with no branching logic tied to either trigger phrase, so both phrases route to the identical undifferentiated path.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research]",
+        "target_quote": "**Never skip 1-3.** Intuition about what's repetitive is unreliable; data wins.",
+        "issue": "This rule leads with a ban ('Never skip') rather than naming the target behavior, and it is trivially phrasable positively, so it doesn't meet the doctrine's bar that a prohibition earns its place only when it cannot be phrased positively. It also doesn't pair the ban with an explicit positive instruction \u2014 'data wins' is a justification, not a statement of what to do.",
+        "proposed_fix": "Replace with a positive mandate: 'Always complete steps 1-3 (mine, cluster, score) before proposing an automation \u2014 intuition about what's repetitive is unreliable; data wins.'",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted text does appear verbatim, but it already pairs the negation with justification and the surrounding \"The Loop\" numbered steps (1-3) supply the positive instruction, so it doesn't violate the negation doctrine as claimed. || REFUTED \u2014 the quoted text does appear verbatim, but the \"positive mandate\" doctrine is subjective/unsupported and the text already implies the positive action (do steps 1-3) alongside the warning, so the rule doesn't genuinely apply. || REFUTED \u2014 the quoted text does appear verbatim, but the rule's premise is wrong: \"Never skip 1-3\" is paired with a positive rationale (\"data wins\") and the loop itself already states the positive instruction (steps 1-3: MINE, CLUSTER, SCORE), so this negation is reinforcing an already-stated positive workflow, not a bare unpaired prohibition.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Pruning and drift \u2014 environment as source of truth [craft]",
+        "target_quote": "You already keep ~40 aliases; find commands you type a lot but haven't shortcut",
+        "issue": "The alias count is a cheap, one-command lookup (the very grep shown two lines later) restated as a static fact, and it is duplicated in the source table (`~/.bashrc` (~40 aliases)). Per doctrine, one-command lookups should be left to the environment since a document restating them will go stale as the user's aliases change, and caching only earns its load when the lookup is expensive \u2014 this one isn't.",
+        "proposed_fix": "Drop the specific count from both the table and the prose; let the grep command in the same section be the live source, e.g. 'You keep a growing set of aliases; find commands you type a lot but haven't shortcut yet.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quoted text does appear verbatim, but \"~40 aliases\" is a specific, plausible fact about the user's environment (not a cheap always-current lookup value baked into prose) consistent with typical craft-doctrine scope, and the finding's premise that this duplication is harmful staleness is a stylistic judgment call rather than a clear rule violation. || REFUTED \u2014 the quoted text does appear verbatim, but \"~40 aliases\" is a plausible one-time observation about this user's setup, not a stale cached lookup result masquerading as documentation; it's a reasonable descriptive detail, not a violation of a \"leave cheap lookups to the environment\" doctrine. || REFUTED \u2014 the quote appears verbatim, but \"~40 aliases\" is scoping/context flavor text, not a claim being cached in place of a cheap lookup the doc actually needs elsewhere; the grep command right after it is the operative instruction, so this isn't a genuine drift/pruning violation.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}
