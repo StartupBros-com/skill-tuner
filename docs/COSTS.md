@@ -72,7 +72,10 @@ difference being measured.
 
 **Rule: adopt envelope-changing optimizations at a re-baseline boundary,
 never mid-experiment.** `compare` already refuses runs with different model
-pins for this reason; an adapter-shape field belongs in the same check.
+pins for this reason, and since 2026-08-08 the same check covers the
+envelope: every manifest records its `adapter_shape`, runs from before the
+field are read as the inline envelope they all used, and `compare` refuses
+to pair two different shapes.
 
 ## What to do meanwhile
 

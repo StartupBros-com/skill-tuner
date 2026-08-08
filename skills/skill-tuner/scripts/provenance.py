@@ -256,6 +256,15 @@ def _worktree_differs(path: Path, pinned_text: str) -> bool | None:
 # --------------------------------------------------------------------------
 
 
+# How the prompt reaches the model. Every run to date sends doctrine and
+# target inline in a `claude -p` user message; an optimization that moves the
+# doctrine into a system prompt, or a batch-API adapter, is a different
+# envelope, and the model reads the same document differently across
+# envelopes (measured in docs/COSTS.md). Recording the shape lets `compare`
+# refuse cross-envelope pairings instead of silently measuring the envelope.
+ADAPTER_SHAPE_USER_MESSAGE = "claude-p-user-message"
+
+
 def build_manifest(
     *,
     run_id: str,
@@ -266,6 +275,7 @@ def build_manifest(
     cli_version: str | None,
     resolved_models: Sequence[str] = (),
     tool_version: str | None = None,
+    adapter_shape: str = ADAPTER_SHAPE_USER_MESSAGE,
     extra: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Assemble the block that makes a report self-describing.
@@ -283,6 +293,7 @@ def build_manifest(
         "tool_version": tool_version,
         "model_pin": model_pin,
         "resolved_models": list(resolved_models),
+        "adapter_shape": adapter_shape,
         "inputs": [item.to_dict() for item in inputs],
     }
     if extra:

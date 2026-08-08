@@ -7,6 +7,15 @@ resolved `claude-sonnet-5`; claude CLI 2.1.224; every input pinned to
 
 ## Verdict: **WORSE — do not swap**
 
+> **Correction, 2026-08-08.** A statistics review found `compare`'s worse
+> verdict anchored at zero rather than −δ, so it fired on any confirmed
+> regression, even one inside the declared-tolerable band. Recomputed under
+> the corrected rule, this run's verdict is **inconclusive with regression
+> confirmed**: the interval [−1.19, −0.18] excludes zero (the regression is
+> real — the sign test agrees, p=0.039) but straddles −δ = −1.0, so its size
+> against the margin is unresolved. The do-not-swap decision stands either
+> way; the record below is preserved as originally published.
+
 Leg (a) probe, 16 shared documents, three independent skeptics per finding:
 
 | | incumbent | candidate |
