@@ -16,7 +16,7 @@ We know because it happened to us. One question — is this doctrine better than
 | --- | --- | --- |
 | 1 | **LOST** | noise (plus a markdown-blind quote guard) |
 | 6 | **WON** | noise — a lucky draw on three documents |
-| 16 | **WORSE** | 95% CI [−1.19, −0.18], excludes zero |
+| 16 | **LOST** | a regression is real — 95% CI [−1.19, −0.18] excludes zero — but its size against any stated margin stayed unresolved |
 
 Two of three were wrong. The same rule produced both. That cost ~$30 and a day to discover, and it is the single reason this project exists in its current form.
 
@@ -44,7 +44,7 @@ On that benchmark `with_skill` averages 0.550 against 0.533. A total comparison 
 
 Three things, none of which a first-party harness gives you:
 
-- **A verdict, not a delta** — paired by case, 95% interval, a non-inferiority margin *you* state, and four outcomes including `inconclusive`. It prints what a bare comparison would have concluded next to its own, so the difference is visible rather than argued.
+- **A verdict, not a delta** — paired by case, 95% interval, a non-inferiority margin *you* state, and four outcomes including `inconclusive`. A percentile bootstrap, an exact sign test, and a paired effect size print beside the t-interval, so a verdict leaning on a normality assumption is visible too. It prints what a bare comparison would have concluded next to its own, so the difference is visible rather than argued.
 - **Provenance** — every input content-hashed and git-pinned, model and CLI version recorded. `tune.py verify <run>` re-checks a finished run for **$0** and tells you what drifted. It caught a real input change within hours of being written.
 - **An adversarial probe** — applies an authoring doctrine to a document, judges each finding with an independent skeptic panel, and downgrades any finding whose quote is not actually in the target, regardless of how the panel voted.
 
@@ -69,6 +69,10 @@ python3 skills/skill-tuner/scripts/tune.py probe --target path/to/SKILL.md --yes
 skill-creator runs the experiment; skill-tuner decides what it means. Integration is at the **file** boundary — it reads `grading.json` / the benchmark tree and never imports their code, because their scripts have no API contract and the marketplace bumps plugin SHAs nightly.
 
 Use theirs for eval cases, grading, trigger tuning and benchmarking. Use this for the verdict.
+
+## What this does not measure
+
+Two axes are out of scope, and the ecosystem's loudest 2026 numbers live on them. Whether a skill makes an agent **better at its end task** is skill-creator's benchmark question (and SkillsBench's, at academic scale) — this tool reads those results, it does not produce them. Whether a skill is **safe to install** — prompt injection, exfiltration — is a scanner's question (Snyk's ToxicSkills audit found injection in 36% of 22,511 public skills). skill-tuner grades the authoring and gates the edit: point it at a document you already trust, beside a benchmark you already run.
 
 ## Receipts
 
@@ -107,15 +111,17 @@ Session-measured on the authors' harness (2026-08-08). Costs and what actually r
 
 ## The doctrine is the worked example, not the product
 
-`skills/skill-tuner/SKILL.md` is an authoring doctrine where every rule carries an evidence tag and a falsifier. It descends from [mattpocock/skills](https://github.com/mattpocock/skills)' `writing-for-agents` (MIT).
+`skills/skill-tuner/SKILL.md` is an authoring doctrine where every rule carries an evidence tag and a falsifier — and, new in v3, every `[research]` tag carries a fetched-and-verified citation in [`FALSIFIERS.md`](skills/skill-tuner/FALSIFIERS.md). It descends from [mattpocock/skills](https://github.com/mattpocock/skills)' `writing-for-agents` (MIT). Upstream renamed and restructured that skill on 2026-07-31; every comparison below is against the pinned pre-rename snapshot this doctrine actually forked from, and a re-baseline against the current upstream has not yet been run.
 
 **We have never shown it beats its ancestor.** Measured on 15 shared documents, three times:
 
 | version | confirmed | 95% CI | verdict |
 | --- | --- | --- | --- |
-| v1 | 18 vs 29 | [−1.27, −0.20] | **worse** |
+| v1 | 18 vs 29 | [−1.27, −0.20] | inconclusive — regression confirmed* |
 | v1, apparatus stripped | 22 vs 29 | [−1.30, +0.37] | inconclusive |
 | **v2** | **27 vs 29** | **[−0.76, +0.49]** | **not_worse** |
+
+\* v1 was originally published as **worse**. A 2026-08-08 statistics review found the worse verdict anchored at zero rather than −δ, so it fired on any confirmed regression even inside the declared-tolerable band; the corrected reading of the same interval is a confirmed regression of unresolved size against the margin. The data did not move — the label did, and the fix is in `compare.py` with a regression test.
 
 That is the honest state: *not worse*, never better. It is published because it is the point. Every other authoring guide asserts its rules work and has measured nothing; this one measured, lost, and shipped the data — and the harness refused its own doctrine twice on the way.
 
