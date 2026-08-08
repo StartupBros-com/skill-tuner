@@ -62,6 +62,33 @@ def t_critical_95(df: int) -> float:
     return _T95.get(df, _T95_LARGE)
 
 
+def n_to_resolve(
+    mean: float, sd: float, delta: float, *, max_n: int = 500
+) -> int | None:
+    """Smallest document count at which a non-inferiority claim would clear,
+    holding the observed mean and spread.
+
+    The bound is ``mean - t*sd/sqrt(n) > -delta``, so how much data it takes
+    depends on where the point estimate already sits, not on the spread
+    alone. Sizing from spread alone can return a number *below* the n already
+    collected -- which reads as "gather fewer documents" and is nonsense.
+    That is what the first version of this did: n=16, verdict inconclusive,
+    and it advised 12.
+
+    Returns None when ``mean`` is already at or past ``-delta``: no sample
+    size rescues a point estimate that is itself worse than the margin, and
+    printing a number would promise otherwise.
+    """
+    if mean <= -delta:
+        return None
+    if sd <= 0:
+        return 3
+    for candidate in range(3, max_n + 1):
+        if mean - t_critical_95(candidate - 1) * sd / math.sqrt(candidate) > -delta:
+            return candidate
+    return None
+
+
 def _per_target(report: Mapping[str, Any]) -> dict[str, int]:
     probe = report.get("probe")
     if not isinstance(probe, Mapping):
@@ -140,13 +167,7 @@ def compare_probe_reports(
     else:
         verdict = "inconclusive"
 
-    # How many documents would have settled it at this variance? Solving
-    # t*sd/sqrt(n) < delta for n, with the large-sample multiplier since the
-    # answer is only ever a planning figure.
-    if sd and verdict == "inconclusive":
-        n_for_delta = math.ceil((_T95_LARGE * sd / delta) ** 2)
-    else:
-        n_for_delta = n
+    n_for_delta = n_to_resolve(mean_diff, sd, delta) if verdict == "inconclusive" else n
 
     return {
         "verdict": verdict,
@@ -203,10 +224,18 @@ def render(result: Mapping[str, Any]) -> str:
         f"{'PASS' if result['passes_legacy_count_rule'] else 'FAIL'}",
     ]
     if result["verdict"] == "inconclusive":
-        lines.append(
-            f"- to resolve at this variance you would need about "
-            f"{result['n_for_delta']} documents"
-        )
+        needed = result["n_for_delta"]
+        if needed is None:
+            lines.append(
+                "- no sample size resolves this: the point estimate itself is "
+                "at or past the margin, so more documents would confirm a "
+                "regression rather than clear one"
+            )
+        else:
+            lines.append(
+                f"- to clear the margin at this mean and spread you would need "
+                f"about {needed} documents ({needed - result['n']:+d} on this run)"
+            )
     lines.append("")
     lines.append("| Document | baseline | candidate | diff |")
     lines.append("| --- | --- | --- | --- |")
