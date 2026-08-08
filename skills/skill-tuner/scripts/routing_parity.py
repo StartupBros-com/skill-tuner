@@ -43,6 +43,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+import probe as probe_module
 import provenance
 import tune
 
@@ -289,12 +290,15 @@ def _build_authoring_prompt(body: str) -> str:
 
 
 def _parse_authoring_response(text: str, target_id: str) -> list[dict[str, str]]:
-    try:
-        payload = json.loads(text)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"{target_id}: battery-authoring response was not valid JSON: {exc}") from exc
-    if not isinstance(payload, list):
-        raise ValueError(f"{target_id}: battery-authoring response must be a JSON array")
+    # Tolerant extraction through the probe's shared helper: a model that
+    # wraps its array in a code fence or a sentence of preamble has still
+    # answered. The strict json.loads this replaces failed on exactly that,
+    # live, on 2026-08-08 -- one meaning, one place, so the fix is a reuse.
+    payload = probe_module.extract_json_array(text)
+    if payload is None:
+        raise ValueError(
+            f"{target_id}: battery-authoring response was not valid JSON: {text!r:.200}"
+        )
 
     obvious = [item for item in payload if isinstance(item, dict) and item.get("kind") == "obvious"]
     paraphrase = [item for item in payload if isinstance(item, dict) and item.get("kind") == "paraphrase"]
@@ -345,8 +349,20 @@ def build_battery(
 
     for target in targets:
         body = extract_body(read(target.path, "target"))
-        result = adapter(_build_authoring_prompt(body), model)
-        authored = _parse_authoring_response(result.text, target.id)
+        # Malformed authoring responses retry through the same adapter path,
+        # bounded like the probe's own parse retries.
+        authored: list[dict[str, str]] | None = None
+        last_error: ValueError | None = None
+        for _ in range(probe_module.DEFAULT_RETRIES + 1):
+            result = adapter(_build_authoring_prompt(body), model)
+            try:
+                authored = _parse_authoring_response(result.text, target.id)
+                break
+            except ValueError as exc:
+                last_error = exc
+        if authored is None:
+            assert last_error is not None
+            raise last_error
 
         counts: dict[str, int] = {}
         for item in authored:
