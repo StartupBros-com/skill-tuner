@@ -60,6 +60,48 @@ class VerdictTest(unittest.TestCase):
         self.assertEqual("worse", result["verdict"])
         self.assertLess(result["ci_high"], 0)
 
+    def test_a_regression_within_the_declared_margin_is_not_worse(self):
+        # The margin is the claim under test: a confirmed 1-finding
+        # regression with delta=3 declared tolerable must pass the gate.
+        # The first version anchored `worse` at zero and failed it
+        # (2026-08-08 statistics review).
+        base = _report({"a": 5, "b": 5, "c": 5, "d": 5, "e": 5, "f": 5})
+        cand = _report({"a": 4, "b": 4, "c": 4, "d": 4, "e": 4, "f": 4})
+
+        result = compare.compare_probe_reports(base, cand, delta=3.0)
+
+        self.assertEqual("not_worse", result["verdict"])
+        self.assertTrue(result["regression_confirmed"])
+
+    def test_worse_requires_breaching_the_margin_not_just_zero(self):
+        # Interval entirely below zero but straddling -delta: some
+        # regression is confirmed, its size versus the margin is not.
+        base = _report({"a": 3, "b": 3, "c": 3, "d": 3, "e": 3, "f": 3})
+        cand = _report({"a": 2, "b": 2, "c": 1, "d": 2, "e": 1, "f": 2})
+
+        result = compare.compare_probe_reports(base, cand, delta=1.0)
+
+        self.assertEqual("inconclusive", result["verdict"])
+        self.assertTrue(result["regression_confirmed"])
+
+    def test_robustness_fields_are_reported(self):
+        base = _report({"a": 1, "b": 1, "c": 1, "d": 1, "e": 1, "f": 1})
+        cand = _report({"a": 3, "b": 3, "c": 3, "d": 3, "e": 3, "f": 3})
+
+        result = compare.compare_probe_reports(base, cand, delta=1.0)
+
+        # Zero-variance diffs: every resample is identical, dz undefined.
+        self.assertEqual(2.0, result["bootstrap_ci_low"])
+        self.assertEqual(2.0, result["bootstrap_ci_high"])
+        self.assertIsNone(result["effect_size_dz"])
+        # 6 wins, 0 losses: exact two-sided sign test p = 2 * 0.5^6.
+        self.assertAlmostEqual(0.03125, result["sign_test_p"])
+
+    def test_sign_test_matches_the_exact_binomial(self):
+        self.assertIsNone(compare.exact_sign_test_p(0, 0))
+        self.assertAlmostEqual(1.0, compare.exact_sign_test_p(6, 6))
+        self.assertAlmostEqual(2 * 0.5**13, compare.exact_sign_test_p(13, 0))
+
     def test_identical_scores_are_not_worse(self):
         counts = {"a": 2, "b": 1, "c": 3}
         result = compare.compare_probe_reports(
@@ -204,6 +246,29 @@ class ExcludeTest(unittest.TestCase):
 
 
 class ConfoundTest(unittest.TestCase):
+    def test_different_adapter_shapes_refuse(self):
+        # docs/COSTS.md's rule: envelope-changing optimizations land at a
+        # re-baseline boundary, never mid-comparison. A run made under a
+        # system-prompt envelope must not pair with an inline-envelope bank.
+        base = _report({"a": 1, "b": 2, "c": 3})
+        cand = _report({"a": 1, "b": 2, "c": 3})
+        cand["manifest"]["adapter_shape"] = "claude-p-system-prompt"
+
+        with self.assertRaises(compare.ComparisonError):
+            compare.compare_probe_reports(base, cand, delta=1.0)
+
+    def test_legacy_manifest_without_adapter_shape_compares_as_inline(self):
+        # Every run before the field existed used the inline user-message
+        # envelope, so legacy-vs-new pairs on the same shape must not refuse.
+        counts = {"a": 1, "b": 2, "c": 3}
+        base = _report(counts)  # legacy: no adapter_shape key
+        cand = _report(counts)
+        cand["manifest"]["adapter_shape"] = "claude-p-user-message"
+
+        result = compare.compare_probe_reports(base, cand, delta=1.0)
+
+        self.assertEqual("not_worse", result["verdict"])
+
     def test_different_model_pins_refuse(self):
         base = _report({"a": 1, "b": 1, "c": 1}, model="claude-opus-5")
         cand = _report({"a": 1, "b": 1, "c": 1}, model="claude-sonnet-5")

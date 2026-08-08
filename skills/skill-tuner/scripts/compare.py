@@ -12,11 +12,21 @@ controls for documents simply differing in how many defects they contain --
 and reports the difference with an interval around it. The verdict is one of:
 
 - ``better``        the 95% interval excludes zero on the high side
-- ``worse``         the interval excludes zero on the low side
+- ``worse``         the interval sits entirely past the margin: even its
+                    optimistic bound is a regression larger than delta
 - ``not_worse``     the interval's lower bound sits above -delta, i.e. any
                     regression is smaller than the margin you declared
                     tolerable (a non-inferiority claim, not an equality one)
 - ``inconclusive``  none of the above: the run does not license a claim
+
+A regression can be confirmed (the interval excludes zero) while still
+smaller than the declared margin; that case is ``not_worse`` with
+``regression_confirmed`` set, because the margin is the claim the caller
+asked to test. The first version anchored ``worse`` at zero instead of
+-delta, which failed the gate on regressions the caller had declared
+tolerable; a 2026-08-08 statistics review caught it, and the fix
+reclassifies one banked verdict (swapgate3: worse -> inconclusive with
+regression confirmed -- the data did not move, the label did).
 
 ``delta`` is the non-inferiority margin, in confirmed findings per document,
 and it is an argument rather than a constant because it is a judgment about
@@ -31,9 +41,12 @@ from __future__ import annotations
 
 import json
 import math
+import random
 import statistics
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+
+import provenance
 
 # Two-tailed 95% critical values. A t-table beats pulling in scipy for one
 # number, and beats pretending n=6 is normal: at 5 degrees of freedom the
@@ -89,6 +102,45 @@ def n_to_resolve(
     return None
 
 
+def exact_sign_test_p(won: int, lost: int) -> float | None:
+    """Two-sided exact binomial p-value on the win/loss record, ties dropped.
+
+    A distribution-free companion to the t-interval: it reads only the signs
+    of the diffs, so a single outlier document stretching the variance cannot
+    move it. Reported beside the interval, never instead of it -- when the
+    two disagree, the t-interval's normality assumption is doing the work,
+    and that is worth seeing. None when every document tied: signs carry no
+    information there."""
+    trials = won + lost
+    if trials == 0:
+        return None
+    tail = min(won, lost)
+    cumulative = sum(math.comb(trials, k) for k in range(tail + 1)) / 2**trials
+    return min(1.0, 2 * cumulative)
+
+
+# Percentile bootstrap on the paired diffs. The resample count is plenty for
+# a 95% interval; the seed is fixed because `compare` recomputes on every
+# invocation and a verdict that shifts between two reads of the same banked
+# runs would be indistinguishable from drift.
+_BOOTSTRAP_RESAMPLES = 2000
+_BOOTSTRAP_SEED = 20260808
+
+
+def bootstrap_ci_95(diffs: Sequence[float]) -> tuple[float, float]:
+    """Percentile bootstrap 95% interval for the mean paired diff. The
+    t-interval assumes the diffs are roughly normal; integer finding counts
+    at n<=16 often are not, and the bootstrap makes no such assumption."""
+    rng = random.Random(_BOOTSTRAP_SEED)
+    n = len(diffs)
+    means = sorted(
+        statistics.mean(rng.choices(diffs, k=n)) for _ in range(_BOOTSTRAP_RESAMPLES)
+    )
+    low = means[round(0.025 * (_BOOTSTRAP_RESAMPLES - 1))]
+    high = means[round(0.975 * (_BOOTSTRAP_RESAMPLES - 1))]
+    return low, high
+
+
 def _per_target(report: Mapping[str, Any]) -> dict[str, int]:
     probe = report.get("probe")
     if not isinstance(probe, Mapping):
@@ -130,6 +182,19 @@ def compare_probe_reports(
         raise ComparisonError(
             f"runs used different model pins ({base_model} vs {cand_model}); "
             "the difference would measure the models, not the doctrines"
+        )
+
+    # Runs from before the field existed all used the inline user-message
+    # envelope -- it was the only shape the runner had -- so a missing value
+    # reads as that, and the check fires exactly when a future envelope-
+    # changing optimization meets a banked baseline (docs/COSTS.md's rule).
+    base_shape = _manifest_field(baseline, "adapter_shape") or provenance.ADAPTER_SHAPE_USER_MESSAGE
+    cand_shape = _manifest_field(candidate, "adapter_shape") or provenance.ADAPTER_SHAPE_USER_MESSAGE
+    if base_shape != cand_shape:
+        raise ComparisonError(
+            f"runs used different adapter shapes ({base_shape} vs {cand_shape}); "
+            "the model reads the same doctrine differently across prompt "
+            "envelopes, so the difference would measure the envelope, not the doctrines"
         )
 
     base_cli = _manifest_field(baseline, "cli_version")
@@ -206,7 +271,7 @@ def compare_paired(
 
     if ci_low > 0:
         verdict = "better"
-    elif ci_high < 0:
+    elif ci_high < -delta:
         verdict = "worse"
     elif ci_low > -delta:
         verdict = "not_worse"
@@ -214,6 +279,11 @@ def compare_paired(
         verdict = "inconclusive"
 
     n_for_delta = n_to_resolve(mean_diff, sd, delta) if verdict == "inconclusive" else n
+
+    documents_won = sum(1 for d in diffs if d > 0)
+    documents_lost = sum(1 for d in diffs if d < 0)
+    documents_tied = sum(1 for d in diffs if d == 0)
+    boot_low, boot_high = bootstrap_ci_95(diffs)
 
     return {
         "verdict": verdict,
@@ -237,9 +307,20 @@ def compare_paired(
         "se": se,
         "ci_low": ci_low,
         "ci_high": ci_high,
-        "documents_won": sum(1 for d in diffs if d > 0),
-        "documents_lost": sum(1 for d in diffs if d < 0),
-        "documents_tied": sum(1 for d in diffs if d == 0),
+        # The interval excludes zero on the low side: some regression is
+        # real even when it is smaller than the margin. Kept as its own
+        # field so a not_worse verdict cannot silently absorb it.
+        "regression_confirmed": ci_high < 0,
+        # Robustness companions to the t-interval, reported beside it and
+        # never consulted by the verdict: when they disagree with the
+        # interval, the normality assumption is doing the work.
+        "bootstrap_ci_low": boot_low,
+        "bootstrap_ci_high": boot_high,
+        "sign_test_p": exact_sign_test_p(documents_won, documents_lost),
+        "effect_size_dz": (mean_diff / sd) if sd else None,
+        "documents_won": documents_won,
+        "documents_lost": documents_lost,
+        "documents_tied": documents_tied,
         # What the pre-U9 gate would have concluded, kept so a reader can see
         # exactly which claim the old rule was making.
         "passes_legacy_count_rule": sum(cand_counts.values()) >= sum(base_counts.values()),
@@ -263,6 +344,35 @@ def _num(value: float, integral: bool = True) -> str:
 
 def _signed(value: float, integral: bool = True) -> str:
     return f"{value:+g}" if integral else f"{value:+.3f}"
+
+
+def _robustness_lines(result: Mapping[str, Any]) -> list[str]:
+    """Render the distribution-free companions when the result carries them.
+    Older result dicts (pre-2026-08-08) do not, and render unchanged."""
+    lines: list[str] = []
+    if "bootstrap_ci_low" in result:
+        piece = (
+            f"- robustness: bootstrap 95% CI "
+            f"[{result['bootstrap_ci_low']:+.2f}, {result['bootstrap_ci_high']:+.2f}]"
+        )
+        sign_p = result.get("sign_test_p")
+        if sign_p is not None:
+            piece += f", exact sign test p={sign_p:.3f}"
+        dz = result.get("effect_size_dz")
+        if dz is not None:
+            piece += f", effect size dz {dz:+.2f}"
+        lines.append(piece)
+    if result.get("regression_confirmed") and result["verdict"] == "not_worse":
+        lines.append(
+            "- the interval excludes zero: a regression is confirmed, but it "
+            "is smaller than the declared margin"
+        )
+    if result.get("regression_confirmed") and result["verdict"] == "inconclusive":
+        lines.append(
+            "- the interval excludes zero: a regression is confirmed; whether "
+            "it clears the margin is unresolved"
+        )
+    return lines
 
 
 def render(result: Mapping[str, Any]) -> str:
@@ -289,6 +399,7 @@ def render(result: Mapping[str, Any]) -> str:
         f"- 95% CI: [{result['ci_low']:+.2f}, {result['ci_high']:+.2f}]",
         f"- {label} record: {result['documents_won']} won, "
         f"{result['documents_lost']} lost, {result['documents_tied']} tied",
+        *_robustness_lines(result),
         (
             "- a bare total comparison would say: " if source
             else "- the pre-U9 raw-count rule would say: "
