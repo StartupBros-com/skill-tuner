@@ -5,6 +5,8 @@ description: Evidence-tagged rules for writing documents agents consume. Use whe
 
 A reference for writing any document an agent consumes — a skill, an `AGENTS.md`, a `CLAUDE.md`, or a doc reached by a pointer from one of those. It descends from the `writing-for-agents` doctrine and keeps its shape.
 
+**If you landed here wanting a document improved rather than a reference to read: `/skill-tuner:tune <path>` is the loop.** It finds this doctrine's defects in a real document, adversarially verifies each one, and reports only what survived — which is a different job from the rules below, and the one most people arrive wanting. The rules below are what that loop fixes *toward*, and what to apply when writing something new.
+
 Every rule carries exactly one evidence tag: `[research]` (grounded in published findings about model behaviour), `[measured]` (grounded in an eval or red-team run against this harness), or `[craft]` (compositional advice with no direct experiment behind it yet). Read the tag as a confidence label, not decoration — a `[craft]` rule is worth following, not worth defending past the point a `[measured]` rule contradicts it. The falsifier for each rule, and the runs behind the `[measured]` ones, live in [`FALSIFIERS.md`](FALSIFIERS.md); they are what you consult when auditing this doctrine, not when applying it.
 
 ## Context pointers

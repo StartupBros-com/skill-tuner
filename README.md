@@ -50,7 +50,7 @@ Three things, none of which a first-party harness gives you:
 
 ## Using it
 
-**`/skill-tuner:skill-tune <path>`** — point it at a `SKILL.md`, `AGENTS.md` or `CLAUDE.md` and your agent will probe it, fix what the probe confirms, re-probe until those findings are gone, and prove the description still routes if it changed.
+**`/skill-tuner:tune <path>`** — point it at a `SKILL.md`, `AGENTS.md` or `CLAUDE.md` and your agent will probe it, fix what the probe confirms, re-probe until those findings are gone, and prove the description still routes if it changed.
 
 Findings arrive pre-verified — three independent skeptics in fresh contexts, plus a code-level check that the quoted text actually appears in the document — so the agent acts on them rather than re-litigating them. Refuted findings are shown too, labelled with what killed them.
 
