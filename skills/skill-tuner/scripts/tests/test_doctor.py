@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -48,15 +49,47 @@ class DoctorPreflightTest(unittest.TestCase):
         )
         self.assertIn("claude", (result.stdout + result.stderr).lower())
 
-    def test_normal_path_with_claude_present_exits_zero(self):
-        # Sanity control for the test above: with the real, unmodified PATH
-        # (claude present in this dev environment), the run must succeed.
-        result = subprocess.run([str(DOCTOR_SH)], capture_output=True, text=True)
+    def test_path_with_claude_present_exits_zero(self):
+        """Control for the test above: when claude *is* reachable, the same
+        run must succeed.
+
+        The claude on PATH is synthesized rather than borrowed from the
+        machine. This test previously used the ambient PATH and passed only
+        where the Claude CLI happened to be installed -- green on a
+        developer's box, red on any CI runner, which is exactly the coupling
+        a unit test should not have. A stub also pins what "present" means:
+        a claude whose --help advertises the two flags the adapter builds its
+        command from.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            stub_dir = Path(tmp)
+            stub = stub_dir / "claude"
+            stub.write_text(
+                "#!/bin/sh\n"
+                'if [ "$1" = "--help" ]; then\n'
+                '  echo "--setting-sources <sources>"\n'
+                '  echo "--output-format <format>"\n'
+                "  exit 0\n"
+                "fi\n"
+                "exit 0\n",
+                encoding="utf-8",
+            )
+            stub.chmod(0o755)
+
+            env = dict(os.environ)
+            env["PATH"] = os.pathsep.join([str(stub_dir), _path_without_claude()])
+
+            result = subprocess.run(
+                [str(DOCTOR_SH)], capture_output=True, text=True, env=env
+            )
+
         self.assertEqual(
             0,
             result.returncode,
-            f"doctor.sh unexpectedly failed with the real PATH\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}",
+            f"doctor.sh should exit zero when claude is on PATH\n"
+            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}",
         )
+        self.assertIn("--setting-sources", result.stdout)
 
 
 if __name__ == "__main__":
