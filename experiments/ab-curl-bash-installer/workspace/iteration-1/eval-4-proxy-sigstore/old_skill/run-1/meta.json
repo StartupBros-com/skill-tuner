@@ -1,0 +1,9 @@
+{
+  "case": "proxy-sigstore",
+  "condition": "old_skill",
+  "trial": 1,
+  "cost_usd": 0.7267909499999999,
+  "seconds": 371.9,
+  "model": "claude-sonnet-5",
+  "chars": 19374
+}

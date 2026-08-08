@@ -1,0 +1,9 @@
+{
+  "case": "go-daemon-service",
+  "condition": "old_skill",
+  "trial": 2,
+  "cost_usd": 0.5792085,
+  "seconds": 1537.9,
+  "model": "claude-sonnet-5",
+  "chars": 20393
+}
