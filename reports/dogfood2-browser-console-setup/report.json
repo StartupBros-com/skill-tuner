@@ -1,0 +1,108 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.18094485000000002
+    },
+    "verify": {
+      "trials": 12,
+      "total_cost_usd": 0.1564473
+    }
+  },
+  "total_trials": 13,
+  "manifest": {
+    "run_id": "dogfood2-browser-console-setup",
+    "started_at": "2026-08-08T10:09:24Z",
+    "finished_at": "2026-08-08T10:11:47Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+        "sha256": "sha256:65a8c2e84c7ce59a049fc6163e89ba93fedc6cc506315bbd5f01d25205fbfe08",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 12,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/browser-console-setup/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Set up cloud consoles that block headless automation (Google OAuth consent, Stripe webhooks, GCP credentials) by opening the exact URL in the local Windows Brave browser and handing paste-ready click steps, then wiring the reported credentials into Supabase/Vault/Vercel/.env.",
+        "issue": "The description restates, almost clause-for-clause, the mechanism already given in the body's 'Core pattern' blockquote ('Open the exact URL in Will's real Windows Brave, hand him precise paste-ready clicks, get the resulting IDs/secrets back, then wire them in programmatically'). This is identity ('what it is') duplicated in the always-loaded pointer, which should carry only the trigger condition ('when to reach'), not the mechanism the body already explains.",
+        "proposed_fix": "Trim the description to the trigger condition only, e.g.: 'Use when a console step cannot be scripted: bot detection, 2FA, CAPTCHA, or OAuth consent screens (Google OAuth, Stripe webhooks, GCP credentials).' Let the body's Core pattern block own the explanation of the handoff mechanism.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text is verbatim from the description, and it does duplicate the mechanism (\"open URL in Brave, hand paste-ready clicks, wire results in\") already stated in the body's Core pattern blockquote. || CONFIRMED \u2014 the quoted description text appears verbatim in the frontmatter, and it does closely mirror the body's \"Core pattern\" blockquote (both describe opening the exact URL in Windows Brave, handing paste-ready click steps, then wiring credentials/IDs in programmatically), supporting the duplication claim. || CONFIRMED \u2014 the quoted description text appears verbatim and does substantively duplicate the \"Core pattern\" blockquote's mechanism description, matching the identity-vs-trigger critique."
+      },
+      {
+        "rule": "Demand \u2014 mixed checkable and uncheckable terms [craft]",
+        "target_quote": "- [ ] Clear \"report back\" format",
+        "issue": "This checklist item's 'Clear' is a subjective, uncheckable qualifier sitting inside an otherwise precise, checkable list (full URLs, exact element text, identifiers included). The doctrine warns that a stray uncheckable qualifier inside a precise list lets the agent satisfy the whole item impressionistically, without a way to tell done from not-done.",
+        "proposed_fix": "Replace with the checkable version already stated in the Critical rules section: '- [ ] Report-back format specified exactly (e.g. `GOCSPX-...`, `whsec_...`)'.",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 the quote is verbatim but \"clear\" here is loosely checkable in context (a format is stated or it isn't; the Critical rules section already defines what \"format\" means precisely), so it's not a genuine impressionistic-checkability gap. || CONFIRMED \u2014 the quoted text appears verbatim, and \"Clear\" is indeed a subjective qualifier inconsistent with the otherwise checkable items in the same list. || CONFIRMED \u2014 the quoted checklist line appears verbatim, and \"Clear\" is indeed a subjective qualifier inconsistent with the otherwise checkable items in that list."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Pruning and drift \u2014 polarity duplication [craft]",
+        "target_quote": "| Playwright/xvfb for OAuth consent | Bot detection + cannot do 2FA | Real Brave handoff |",
+        "issue": "This anti-pattern row is the negated restatement of a rule the document already states positively: the Core pattern block ('do not fight it with Playwright... Open the exact URL in Will's real Windows Brave') and workflow step 2 ('Open the first URL in Brave for Will'). Per the doctrine, an anti-pattern list restating a positively-given rule in negated form is the same meaning written twice.",
+        "proposed_fix": "Drop this row from the Anti-patterns table since the Core pattern block already establishes it, or replace it with a genuinely distinct failure mode not covered elsewhere (e.g. a specific error users hit when they try Playwright anyway).",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quote appears verbatim, but the anti-pattern table serves a distinct quick-reference purpose and adds a specific detail (2FA) not in the Core pattern block; this is a stylistic nitpick, not a genuine duplication defect. || REFUTED \u2014 the quoted row does appear verbatim, but restating the core rule as a concrete anti-pattern example is standard, useful redundancy (reinforcing what not to do with the reason and remedy), not a meaningful drift/duplication defect worth flagging. || REFUTED \u2014 the quoted row does appear, but it's a standard anti-pattern table entry, not meaningful duplication; anti-pattern tables conventionally restate positive guidance in negated form for scanability, and this row adds the specific \"why\" (bot detection + cannot do 2FA) and \"do instead\" mapping not spelled out together elsewhere.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft]",
+        "target_quote": "6. Verify (re-read the config via API)",
+        "issue": "This step names the verification method but not the pass condition, so the agent cannot tell done from not-done without judgment \u2014 it can re-read the config and stop there without confirming the value matches what was written. This is the same gap the doctrine's own example calls out: 'Verify the config' is not checkable, but 're-read the config via the API and confirm the field equals the value you wrote' is.",
+        "proposed_fix": "Change to: '6. Verify (re-read the config via the API and confirm the field equals the value Will reported).'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote is verbatim but the doctrine's example bar is for formal completion-criteria specs, not a one-line workflow step summary in a skill file, so the \"not checkable\" criticism misapplies the rule's intended scope. || REFUTED \u2014 the quote appears verbatim, but it's a one-line workflow summary step, not a stated \"completion criteria\" doctrine being violated; the critique imports an external rubric not present in the target document. || REFUTED \u2014 the quote is verbatim, but this is a workflow checklist step, not a \"completion criteria\" doctrine violation; the surrounding steps are already terse imperatives, so this reads as a nitpick rather than a genuine rule violation.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

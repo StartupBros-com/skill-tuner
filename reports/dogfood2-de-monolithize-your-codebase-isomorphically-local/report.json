@@ -1,0 +1,100 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.3009309
+    },
+    "verify": {
+      "trials": 9,
+      "total_cost_usd": 0.3691044
+    }
+  },
+  "total_trials": 10,
+  "manifest": {
+    "run_id": "dogfood2-de-monolithize-your-codebase-isomorphically-local",
+    "started_at": "2026-08-08T10:16:58Z",
+    "finished_at": "2026-08-08T10:21:18Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "sha256": "sha256:7737730892f3d6cb53f7a8d6f03986a56ec0805d18705299672211954bc90bda",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 9,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when de-monolithize, split giant file, modularize repo, or file too big.",
+        "issue": "The description lists four triggers but they collapse onto only two distinct branches the document actually handles (whole-repo vs. single-file, per the Recipe Selector table). \"de-monolithize\" and \"modularize repo\" both route to the same repo-wide Standard-mode branch, and \"split giant file\" and \"file too big\" both route to the same single-file Quick-mode branch. Per the doctrine's test \u2014 'does a run reaching the document through this phrase take a different path than a run reaching it through the one beside it?' \u2014 these pairs don't, so they should collapse. Paying the always-loaded description budget four times to route to two paths is the exact 'three phrases for one branch' waste the rule warns against.",
+        "proposed_fix": "Collapse to one phrase per branch, e.g. \"Use when de-monolithizing a repo or splitting a single giant file.\"",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quoted description text appears verbatim, and the four listed triggers do map onto only two distinct execution paths per the document's own Recipe Selector table (\"de-monolithize\"/\"modularize repo\" \u2192 Standard repo-wide; \"split giant file\"/\"file too big\" \u2192 Quick single-file), supporting the redundancy claim. || REFUTED \u2014 quote is verbatim, but the \"branch\" mapping is wrong: the document's own smell-test table pairs \"de-monolithize\"/\"split giant file\" together (row 1) and \"modularize\"/\"file too big\" together (row 2) \u2014 the opposite pairing from what the finding claims \u2014 and the description field is for skill-discovery triggering, not for selecting the Quick/Standard mode branch (that's decided later, by file-vs-repo scope, not by which synonym was used). || CONFIRMED \u2014 the quoted description text appears verbatim in the frontmatter, and the four triggers do map to only two distinct execution branches per the Recipe Selector table (de-monolithize/modularize repo \u2192 Standard repo-wide; split giant file/file too big \u2192 Quick single-file), matching the \"one trigger per branch\" critique."
+      },
+      {
+        "rule": "Single source of truth (Pruning and drift) [craft]",
+        "target_quote": "Converged = two consecutive quiet rounds AND \u226510 total rounds AND zero unresolved hypotheses (DEFERRED requires written rationale plus `Deferred reviewed: yes`).",
+        "issue": "The exact same convergence rule (\u226510 rounds, <3 new findings for two consecutive rounds, zero unresolved hypotheses with the same 'Deferred reviewed: yes' marker) is independently restated earlier in the Quick-Start block: \"Convergence = \u226510 full rounds AND 2 consecutive rounds with <3 genuinely-new findings AND every hypothesis resolved (SEAM_CONFIRMED / SEAM_REFUTED /...\". Two independently-worded copies of the same numeric threshold mean changing the round floor or finding ceiling requires editing two places, risking silent drift between them.",
+        "proposed_fix": "State the convergence rule once (in the dedicated Convergence section) and replace the Quick-Start copy with a short pointer, e.g. \"Convergence: see the Convergence section for the exact gate.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and both the Quick-Start summary and the dedicated Convergence section independently restate the same numeric thresholds (\u226510 rounds, <3 new findings for two consecutive quiet rounds, zero unresolved hypotheses with \"Deferred reviewed: yes\"), creating genuine duplication risk. || CONFIRMED \u2014 the quoted text appears verbatim, and the same \u226510-round/quiet-round/zero-unresolved-hypotheses rule is indeed duplicated (with slightly different wording) in the Quick-Start block, creating a genuine dual-maintenance risk. || CONFIRMED \u2014 the quoted text appears verbatim in the Convergence section, and it genuinely duplicates the same \u226510-rounds/quiet-rounds/zero-unresolved-hypotheses rule already stated in Quick-Start, creating a two-places-to-edit drift risk."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Duplication (Pruning and drift \u2014 polarity) [craft]",
+        "target_quote": "Split along visual sections (\"types here, helpers there\")",
+        "issue": "This anti-pattern row restates, negated, a rule the document already states positively in The One Rule callout: \"Seams are discovered *empirically* (graphs, churn, probes), never aesthetically.\" Per the doctrine, 'an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice.' Several other Anti-Patterns rows have the same problem (e.g. the wc -l row duplicates the taxonomy's 'never line count alone' weighting rule; the re-export row duplicates the Isomorphism Contract's 'API diff must stay empty'), inflating this meaning's rank on the ladder and creating a two-place edit surface.",
+        "proposed_fix": "Remove the anti-pattern rows that only negate an already-stated positive rule, or replace their 'why' column with a pointer back to the authoritative section (e.g. \"see The One Rule\") instead of re-deriving the rationale.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the \"Why\" column (\"Aesthetic seams cut through call graphs and shared state; use \u25d0 CLUSTER evidence\") adds new operational guidance (pointing to the CLUSTER operator) rather than merely restating \"never aesthetically,\" so it's not redundant duplication warranting removal. || REFUTED \u2014 the anti-pattern row adds a concrete example and distinct rationale (\"cuts through call graphs and shared state; use \u25d0 CLUSTER evidence\"), not a mere negation duplicate; anti-pattern tables illustrating positively-stated rules with specific failure modes is a standard, non-redundant documentation pattern, not a genuine duplication defect. || REFUTED: Anti-pattern tables listing what not to do alongside a positive rule is a standard, non-duplicative documentation pattern (concrete negative examples aid recognition), not a genuine redundancy flaw warranting removal.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

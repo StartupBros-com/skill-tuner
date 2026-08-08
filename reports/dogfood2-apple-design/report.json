@@ -1,0 +1,109 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.38267625
+    },
+    "verify": {
+      "trials": 12,
+      "total_cost_usd": 0.34481565
+    }
+  },
+  "total_trials": 13,
+  "manifest": {
+    "run_id": "dogfood2-apple-design",
+    "started_at": "2026-08-08T10:01:18Z",
+    "finished_at": "2026-08-08T10:05:54Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/apple-design/SKILL.md",
+        "sha256": "sha256:ccd612736f52e7c47e97d629d0e0b61665b861593f9ec90a69590c7844e8ddb7",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 0,
+    "refuted_count": 4,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 12,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/apple-design/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/apple-design/SKILL.md"
+    ],
+    "confirmed_findings": [],
+    "refuted_findings": [
+      {
+        "rule": "Sprawl / Progressive disclosure",
+        "target_quote": "Apple's approach to interface design and fluid, physical motion, translated for the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, momentum and interruptible transitions, translucent materials and depth, typography (optical sizing, tracking, leading), reduced-motion, or the design foundations (feedback, spatial consistency) behind Apple-style interfaces.",
+        "issue": "The description names at least five clearly distinct branches (motion/gesture mechanics, translucent materials, typography, reduced-motion, and the eight design-foundation principles), each handled by its own section (\u00a71-11, \u00a712, \u00a715, \u00a714, \u00a716-17). Yet the body inlines all of them into one ~300-line monolithic file with no split or disclosed sub-document. A task that only needs \u00a715's typography rules still pulls in spring-physics formulas, gesture-recognition code, haptics, and the design-principles essay, diluting attention exactly as the Sprawl rule predicts, and none of the branch-only material is pushed behind its own pointer as Splitting recommends.",
+        "proposed_fix": "Split the skill by branch (e.g. a motion/gesture file, a materials file, a typography file, a design-foundations file) with a thin top-level SKILL.md that points to each, so a run needing only typography or only materials loads just that section instead of the whole document.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text (the frontmatter description) is verbatim, but the \"issue\" critiques the file's overall structure/length, not a defect in that quoted description itself, and \"sprawl/progressive disclosure\" is a stylistic judgment call, not a verifiable violation of a stated rule. || REFUTED \u2014 the quoted text appears verbatim as the frontmatter description, but the \"Sprawl/Progressive disclosure\" critique is a subjective style/structure opinion about file organization, not a verifiable factual claim that the quoted text violates a genuine, applicable rule; nothing in the target document itself establishes a rule requiring splitting, so the cited rule's applicability is asserted rather than demonstrated. || REFUTED \u2014 the quoted text (the frontmatter description) is verbatim, but the \"sprawl\" critique targets document structure/length, not the description text itself, so the cited rule doesn't genuinely apply to the quoted span; it's a generic organizational complaint about the whole file dressed up as a finding about the description.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Demand",
+        "target_quote": "Anything on the input path that isn't essential is a regression.",
+        "issue": "This sentence closes an otherwise checkable list (\"Audit debounces, artificial timers, transition waits, and the ~300ms tap delay\") with an uncheckable catch-all \u2014 \"isn't essential\" requires judgment the agent can satisfy impressionistically, letting it declare the audit complete without a verifiable basis for what counts as inessential.",
+        "proposed_fix": "Replace with a checkable bound, e.g.: \"List every timer, debounce, and artificial delay found on the input path, and justify each one that remains (e.g. the platform's ~300ms tap delay) or remove it.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 quoted text appears verbatim, but this is a subjective critique about vagueness/verifiability, not a factual claim about the document that can be verified as an applicable \"Demand\" rule violation in the target sense being checked. || REFUTED \u2014 the quote is verbatim but this is a subjective vagueness critique, not a genuine rule violation; the surrounding bullets already give concrete audit targets (debounces, timers, transition waits, tap delay), so the closing line is a summary principle, not a required standalone checkable criterion. || REFUTED \u2014 the quote is verbatim, but the \"Demand\" rule (vague/uncheckable catch-all) doesn't genuinely apply since the sentence follows a concrete checkable list and functions as a directive summarizing it, not a standalone unverifiable demand.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Co-location",
+        "target_quote": "| Decide reverse vs. commit | Use velocity **sign**, not position | at release |",
+        "issue": "This rule \u2014 that whether a gesture reverses or commits should be decided by the sign of velocity rather than position \u2014 appears only in the Quick Reference table. It is never stated, defined, or explained anywhere in the body, including \u00a73 (Interruptibility) and \u00a76 (Momentum projection), which are the natural homes for a reversal-decision rule. An agent applying this row correctly needs context the document never provides.",
+        "proposed_fix": "Add the velocity-sign decision rule (with its rationale) to \u00a73 or \u00a76, and either remove the standalone table row or have it reference that section.",
+        "reason": "panel 1/3 confirmed | CONFIRMED: The quoted table row appears verbatim, and the underlying rule (deciding reverse vs. commit by velocity sign) is indeed never explained in \u00a73 or \u00a76 or anywhere else in the body text. || REFUTED \u2014 the quoted text appears verbatim in the Quick Reference table, but \"Co-location\" isn't a rule defined or referenced anywhere in the document, and the finding's real claim (missing body explanation) is a legitimate observation mislabeled under a fabricated rule name. || REFUTED: The quoted text appears verbatim in the Quick Reference table, but this is a \"co-location\" style issue (undefined term used only in a summary table) rather than a factual/quote-accuracy claim \u2014 while plausible, the finding is a subjective critique about documentation completeness, not a verifiable factual error, and \u00a76's momentum-projection logic (using velocity to project the resting position) is closely related context that partially supports the row, making the \"never stated anywhere\" claim overstated.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Leading words",
+        "target_quote": "**Response** \u2014 how quickly the value reaches the target, in seconds.",
+        "issue": "\"Response\" is used as the section-1 leading word for interaction latency (\"## 1. Response \u2014 kill latency\") and then redefined in \u00a74 as an unrelated spring-timing parameter. Reusing one token for two different concepts undermines the anchoring the leading-word mechanism relies on \u2014 later mentions of \"response\" (e.g. in the defaults table and Quick Reference, \"response 0.3\u20130.4\") can't be disambiguated by the term alone, and the two meanings are semantically close enough (both concern speed/timing) to actively invite conflation rather than merely coexist.",
+        "proposed_fix": "Rename one of the two concepts \u2014 e.g. retitle \u00a71 \"Latency \u2014 kill the lag\" and keep \"Response\" exclusively for the spring parameter defined in \u00a74.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 \"Leading words\" is not an established rule in this document; the quoted text is real but the finding invents a naming-consistency rule not stated or implied by the target document itself. || REFUTED \u2014 \"Leading words\" is not an actual rule/mechanism referenced in the document; this is a stylistic critique invented by the finder, not a genuine rule violation. || REFUTED \u2014 the quoted text is accurate, but \"Leading words\" is not an actual rule/mechanism defined in this document; it's the finding's own invented framework applied to critique term reuse.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/apple-design/SKILL.md",
+        "findings_confirmed": 0,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}
