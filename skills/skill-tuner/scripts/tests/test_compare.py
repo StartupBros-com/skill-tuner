@@ -107,6 +107,27 @@ class VerdictTest(unittest.TestCase):
         # The raw-count rule the old gate used would have said yes.
         self.assertTrue(result["passes_legacy_count_rule"])
 
+    def test_n_to_resolve_accounts_for_the_observed_mean_not_just_spread(self):
+        # The non-inferiority bound is `mean - half > -delta`, so the sample
+        # size that would settle a run depends on how far the point estimate
+        # already sits from the margin. An estimate derived from the spread
+        # alone can return a number *below* the n you already have, which
+        # reads as "collect fewer documents" -- observed on the real ablation
+        # run (n=16, inconclusive, and the old formula said 12).
+        n = compare.n_to_resolve(mean=-0.250, sd=1.693, delta=1.0)
+        self.assertEqual(23, n)
+        self.assertGreater(n, 16)
+
+    def test_n_to_resolve_is_none_when_the_estimate_itself_breaches_the_margin(self):
+        # mean at or past -delta: no sample size rescues it, and reporting a
+        # number would promise that one does.
+        self.assertIsNone(compare.n_to_resolve(mean=-1.4, sd=1.0, delta=1.0))
+
+    def test_n_to_resolve_never_undercuts_an_already_sufficient_run(self):
+        n = compare.n_to_resolve(mean=-0.05, sd=0.4, delta=1.0)
+        self.assertIsNotNone(n)
+        self.assertGreaterEqual(n, 3)
+
     def test_underpowered_run_reports_the_n_it_would_need(self):
         base = _report({"a": 1, "b": 3, "c": 1, "d": 1, "e": 1, "f": 2})
         cand = _report({"a": 0, "b": 1, "c": 0, "d": 3, "e": 3, "f": 4})
