@@ -1,0 +1,91 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.20634494999999997
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.1557102
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood2-cass-rerank-local",
+    "started_at": "2026-08-08T10:49:18Z",
+    "finished_at": "2026-08-08T10:52:23Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "sha256": "sha256:39f309dee303c0fab68ba8649a0e5e3473b3204df1413b1912f07fd5732d951a",
+        "source": "worktree",
+        "git_commit": "ad275a5b37c696c65ee8980f0d2bd5f0e5038ed0",
+        "git_path": "claude/skills-local/cass-rerank-local/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Relevance and sediment [craft]",
+        "target_quote": "Model-choice history: the original \"granite-r2 is best\" result came from an eval with leaked synthetic queries and single-positive labels. The 2026-07 rebuild (pi-evals #891) reversed it \u2014 granite-r2 came LAST and was the only reranker that hurt vs baseline. The gateway lane exposes `local-rerank` only, which sidesteps that choice entirely.",
+        "issue": "This paragraph is loaded body content every time the skill fires, yet its own last sentence admits the debate it describes no longer applies to current operation (\"sidesteps that choice entirely\"). It's stale rationale about a superseded model-selection decision, not a gotcha or unwritten convention the agent needs to act on \u2014 exactly the sediment the doctrine warns accumulates when removing feels riskier than adding.",
+        "proposed_fix": "Remove the model-choice history paragraph from the skill body; move it to a changelog entry or commit message in the dotfiles repo where historical rationale belongs, and leave only the single current fact if it's load-bearing (\"the gateway lane exposes local-rerank only\").",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 quoted text matches verbatim (inside the file's HTML comment block, which is still loaded as raw content whenever the skill file is read), and the paragraph's own closing line (\"sidesteps that choice entirely\") shows the described model-choice debate no longer governs current behavior, making it stale rationale rather than an actionable convention. || CONFIRMED \u2014 the quoted text appears verbatim inside the file's HTML comment block, and the finding accurately identifies that the paragraph's own closing clause (\"sidesteps that choice entirely\") admits the historical debate is moot for current operation, making it stale rationale rather than actionable guidance. || CONFIRMED \u2014 the quoted text appears verbatim in the document's leading comment block, and the critique is accurate: the paragraph is historical eval rationale whose own final clause (\"sideseps that choice entirely\") admits it's moot for current operation, making it non-actionable sediment loaded on every skill invocation."
+      },
+      {
+        "rule": "Co-location [craft]",
+        "target_quote": "fall back to plain cass for broad scans",
+        "issue": "The always-loaded description tells the agent to fall back to \"plain cass\" for broad scans, but the critical caveat that plain cass must be run with `--robot` (never bare, per the body's \"NEVER run bare `cass`\" warning and the table's `cass search \"...\" --robot`) lives only in the skill body. In precisely the branch this description triggers \u2014 a broad scan, where the agent is routed away from this skill \u2014 the agent has no guarantee it ever reads that body section, so applying the fallback correctly depends on having read a different section it may never reach.",
+        "proposed_fix": "State the required flag in the description itself, e.g. \"fall back to `cass search ... --robot` for broad scans (never bare `cass`)\", so the safety-critical caveat travels with the instruction instead of depending on a section the fallback branch may skip.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text is verbatim in the always-loaded description, and the \"never run bare cass\" / `--robot` requirement lives only in the body, which the broad-scan fallback path may never load. || CONFIRMED \u2014 the quoted text matches the description verbatim, and the safety-critical \"--robot\" requirement (and \"NEVER run bare cass\" warning) lives only in the body, which the always-loaded description's fallback instruction doesn't carry with it. || CONFIRMED: The quoted text \"fall back to plain cass for broad scans\" appears verbatim in the always-loaded description, and it genuinely omits the `--robot` flag requirement that's only stated in the body's warning and table \u2014 creating a real co-location gap since the fallback branch routes the agent away from this skill's body."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

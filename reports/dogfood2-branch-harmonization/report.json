@@ -1,0 +1,84 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.31559760000000003
+    },
+    "verify": {
+      "trials": 3,
+      "total_cost_usd": 0.08455965
+    }
+  },
+  "total_trials": 4,
+  "manifest": {
+    "run_id": "dogfood2-branch-harmonization",
+    "started_at": "2026-08-08T10:05:54Z",
+    "finished_at": "2026-08-08T10:09:24Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/branch-harmonization/SKILL.md",
+        "sha256": "sha256:2d40bfb2ed8b6f32225ff08e9cf70a855976085067a1e4194f8ae096ef7a1078",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 3,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/branch-harmonization/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/branch-harmonization/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Demand [craft] \u2014 \"Watch for criteria that mix checkable and uncheckable terms \u2014 one stray uncheckable qualifier inside an otherwise precise list lets the agent satisfy the whole thing impressionistically.\"",
+        "target_quote": "Confidence < 0.7 \u21d2 don't auto-classify; surface to the user.",
+        "issue": "This numeric threshold gates a real decision (auto-classify a branch's verdict vs. escalate to the user) but \"confidence\" is never defined anywhere in the document. Every sibling metric that appears alongside it is given an explicit, checkable formula \u2014 fingerprint_coverage is defined as \"found-with-same-signature \u00f7 total,\" file_existence_coverage is likewise computed, and the same-signature sampling rule spells out \"\u226530% of sampled signatures diverge \u21d2 flip away from superseded.\" \"Confidence\" gets no such definition, yet it's also listed as a variant-matrix column in Phase C (\"columns for signatures, hunk intent, tests, proposed synthesis, confidence, risks\") as if it were an equally well-specified score. The precise-looking \"< 0.7\" threshold is therefore uncheckable in practice \u2014 the agent has no way to tell done (confident enough to auto-classify) from not-done, and can satisfy the gate impressionistically.",
+        "proposed_fix": "Define confidence explicitly as a function of the metrics already established in Phase A \u2014 e.g. \"confidence = 1 minus the fraction of ambiguous signals: empty vs. non-empty fingerprint, apply-probe clean/reject, and whether \u22653 signatures could be sampled\" \u2014 or replace the vague gate with an enumerated, checkable rule such as \"surface to the user if fewer than 3 symbols could be sampled for signature comparison, or if apply-probe and same-signature sampling disagree on direction.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim, and \"confidence\" is indeed never numerically defined despite being used with a precise \"< 0.7\" threshold and listed alongside genuinely-defined metrics (fingerprint_coverage, file_existence_coverage), making the gate uncheckable in practice. || CONFIRMED \u2014 the quote appears verbatim, and \"confidence\" is indeed never numerically defined anywhere in the document despite the precise \"< 0.7\" threshold and adjacent metrics that are explicitly formula-defined. || CONFIRMED \u2014 the quote appears verbatim, and \"confidence\" is indeed never defined with a formula unlike its sibling metrics (fingerprint_coverage, file_existence_coverage), making the \"< 0.7\" threshold uncheckable as described."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/branch-harmonization/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 3,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

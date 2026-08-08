@@ -1,0 +1,123 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.26580705
+    },
+    "verify": {
+      "trials": 18,
+      "total_cost_usd": 0.34324034999999997
+    }
+  },
+  "total_trials": 19,
+  "manifest": {
+    "run_id": "dogfood2-agent-swarm",
+    "started_at": "2026-08-08T10:21:18Z",
+    "finished_at": "2026-08-08T10:27:29Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/agent-swarm/SKILL.md",
+        "sha256": "sha256:aa50266051290e7b65ca8d871f8a413b257e95340e82042bdc6058e6a4ed4e95",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 3,
+    "refuted_count": 3,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 18,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/agent-swarm/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/agent-swarm/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "using the native stack \u2014\n  parallel Claude Code subagents, the Workflow tool, Codex delegation, and worktree\n  isolation \u2014 instead of a coordination protocol",
+        "issue": "This clause restates identity information \u2014 what the skill's mechanism is \u2014 that the body already covers in full under 'The core shift' and 'The primitive map' table. The pointer's job is to encode when to reach the document, not to re-explain what it contains; this spends permanent context load on every turn for zero additional routing signal.",
+        "proposed_fix": "Trim the description to the trigger conditions only, e.g. 'Run a large or parallelizable task across many agents instead of a coordination protocol. Use when...' and let the body's core-shift section carry the native-stack explanation.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text matches the description verbatim, and the same native-stack tool list (subagents, Workflow tool, Codex delegation, worktrees) is indeed re-explained in \"The core shift\" and \"The primitive map,\" making the description's detail redundant with body content as claimed. || CONFIRMED \u2014 the quote appears verbatim in the frontmatter description, and the four mechanisms named (subagents, Workflow tool, Codex delegation, worktree isolation) are indeed fully re-explained in \"The core shift\" and \"The primitive map\" table, making the description clause redundant with body content rather than added routing signal. || CONFIRMED \u2014 the quoted text appears verbatim in the description, and it does duplicate the native-stack breakdown (\"Claude Code subagents\", \"Workflow tool\", \"Codex delegation\", \"worktree isolation\") already spelled out in the \"core shift\" paragraph and \"primitive map\" table, supporting the redundancy critique."
+      },
+      {
+        "rule": "Relevance and sediment [craft]",
+        "target_quote": "<!-- New skill (not a jsm fork), 2026-07-04. Replaces the trashed jsm swarm mechanism\n     (ntm + agent-mail + beads) with the operator's native primitives. Skills that need\n     campaign-scale parallelism reference this instead of re-deriving swarm coordination. -->",
+        "issue": "This is historical creation metadata (when it was written, what it replaced) that never bears on how the agent should execute the task. It rides along as sediment rather than earning its place in the loaded body.",
+        "proposed_fix": "Delete the comment; if the migration history matters, keep it in the commit message or a CHANGELOG, not in the always-reachable skill body.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted HTML comment appears verbatim at the top of the document, and it is indeed pure creation/migration metadata (date, what it replaced) that doesn't inform task execution, fitting the \"sediment\" critique. || CONFIRMED \u2014 quoted comment appears verbatim and is pure historical/creation metadata (date, what it replaced) with no bearing on task execution, matching the sediment rule. || CONFIRMED \u2014 The quoted HTML comment appears verbatim at the top of the document, and it is indeed historical/changelog-style metadata (creation date, what it replaced) that doesn't inform how an agent should execute the swarm task described in the body."
+      },
+      {
+        "rule": "Single source of truth / Duplication [craft]",
+        "target_quote": "**Implementation batches** \u2192 Codex (`codex exec --cd`); **bulk grunt** \u2192 grok / token-eater.",
+        "issue": "This restates the same routing decision already given in full under 'Pick the lightest engine that fits' (Codex delegation bullet: implementation batches \u22655\u20137 units via `codex exec --cd`, bulk grunt via token-eater's grok launcher). Unlike the adjacent 'Mechanical' bullet in the same section, which cross-references back with '(see above)', this line duplicates the meaning outright, creating two places that must be kept in sync.",
+        "proposed_fix": "Replace with a cross-reference, matching the mechanical bullet's pattern: 'Implementation batches / bulk grunt \u2192 see \u201cPick the lightest engine that fits\u201d above.'",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quoted line appears verbatim under \"Cost routing\" and does restate the same Codex/bulk-grunt routing already given in full under \"Pick the lightest engine that fits,\" while the adjacent Mechanical bullet in the same list uses a \"(see above)\" cross-reference instead. || REFUTED \u2014 the quoted text is verbatim, but the \"genuinely applies\" test fails: this is a deliberate recap in the \"Cost routing\" section (paralleling the Judgment bullet, which also restates content without a \"see above\" cross-reference), not an out-of-sync duplication risk \u2014 the mechanical bullet's cross-reference is not an established pattern all bullets follow. || CONFIRMED \u2014 the quote appears verbatim under \"Cost routing,\" and it does restate the Codex-delegation routing already spelled out under \"Pick the lightest engine that fits,\" while the adjacent \"Mechanical\" bullet in the same section instead cross-references back with \"(see above),\" making the inconsistency real."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "whole-codebase campaigns (refactor / audit / migration / dead-code sweep), broad multi-file sweeps, N-independent-units work",
+        "issue": "These three phrases all route to the same branch \u2014 a large task decomposable into many independent units \u2014 and none of them sends the agent down a different path through the document than the others. This is the doctrine's own named failure: three phrases for one branch pay three times and route once.",
+        "proposed_fix": "Collapse to one phrase, e.g. 'whole-codebase campaigns (refactor / audit / migration / dead-code sweep) or other N-independent-units work', dropping 'broad multi-file sweeps' as a redundant synonym.",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted phrases sit in the frontmatter `description` field, a flat list of trigger scenarios for invoking the skill, not branches in the document's internal decision logic; \"one trigger per branch\" doesn't apply to an enumerated use-case list where no divergent path is actually described. || CONFIRMED \u2014 the quote appears verbatim in the description, and the three phrases (whole-codebase campaigns, broad multi-file sweeps, N-independent-units work) are indeed redundant near-synonyms for the same \"big decomposable task\" trigger, with no distinct downstream routing for each. || REFUTED \u2014 the quoted text is verbatim, but the three phrases don't route to one branch: \"broad multi-file sweeps\" maps to the parallel-subagents/read-only-fan-out branch while \"whole-codebase campaigns\" maps to the Workflow-tool/campaign-template branch, so collapsing them would lose a real distinction.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Co-location [craft]",
+        "target_quote": "fan-out-then-verify, loop-until-dry discovery, or scaling depth to a token budget",
+        "issue": "The coined term 'loop-until-dry' is used here, in the engine-selection bullet, before it is ever defined \u2014 its definition appears several sections later under 'The patterns worth knowing.' Applying this bullet correctly requires having already read a different, later section.",
+        "proposed_fix": "Either move the 'Loop-until-dry' definition up beside this first use, or add a forward reference here: 'loop-until-dry discovery (defined below in \u201cThe patterns worth knowing\u201d)'.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but forward references to a term defined later in the same document are normal technical writing, not a genuine co-location violation. || REFUTED \u2014 the quoted text does appear verbatim, but this is a coined-term forward-reference in a single cohesive skill doc, not a genuine co-location violation; the term is self-explanatory and defined shortly after in the same document, which is normal technical writing structure, not a craft defect. || REFUTED: The quoted text appears verbatim, but forward references to later-defined terms in a structured doc are normal and not a genuine co-location violation \u2014 the term is self-explanatory in context and defined shortly after in the same document.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "The subagent escape hatch has a cost ceiling [measured]",
+        "target_quote": "keep spawning finders until K consecutive rounds surface nothing new \u2014 dedup against everything seen, not just what's kept",
+        "issue": "This is data-driven fan-out (the number of rounds depends on what keeps turning up) with no stated hard cap on total rounds or total agents \u2014 only a dryness-based stopping condition. The doctrine requires every data-driven fan-out to be hard-capped, since a dryness condition alone can be satisfied slowly, letting the dispatch meant to buy legwork buy runaway spend instead.",
+        "proposed_fix": "Add an explicit ceiling, e.g. 'keep spawning finders until K consecutive rounds surface nothing new, hard-capped at N total rounds regardless of dryness.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the target document contains no stated \"doctrine\" requiring hard caps on data-driven fan-out; that rule is asserted by the candidate finding itself, not the document. || REFUTED \u2014 the quote is verbatim, but the target document contains no stated \"doctrine\" requiring hard caps on data-driven fan-out; that rule is fabricated and not found in the target document. || REFUTED \u2014 the quoted text appears verbatim, but the target document contains no stated \"doctrine\" requiring hard caps on data-driven fan-out; that rule is fabricated by the candidate, not cited from the document.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/agent-swarm/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 18,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

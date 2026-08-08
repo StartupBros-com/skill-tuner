@@ -1,0 +1,115 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.27202275
+    },
+    "verify": {
+      "trials": 15,
+      "total_cost_usd": 0.2610474
+    }
+  },
+  "total_trials": 16,
+  "manifest": {
+    "run_id": "dogfood2-brand-voice-builder",
+    "started_at": "2026-08-08T10:27:30Z",
+    "finished_at": "2026-08-08T10:31:11Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "sha256": "sha256:993984d44b2696062267147218b2827d680b3de8d60941c97f3bd9120cd8210a",
+        "source": "worktree",
+        "git_commit": "1ad1a4a67872972bdc839ba7a969da0ef7c80453",
+        "git_path": "claude/skills-local/brand-voice-builder/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 3,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 15,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Outputs a structured Voice Profile that can be encoded as a project-specific brand-voice skill afterward.",
+        "issue": "This is identity/output information, not a routing trigger, and it costs context on every turn the skill's description is loaded. The body already states the same thing twice: the intro (\"The output is a structured Voice Profile that future skills, agents, or humans can read and produce on-brand content from.\") and the dedicated \"After the Profile: Encoding It as a Skill\" section. The pointer's job is when to reach the material, not what it is.",
+        "proposed_fix": "Delete the sentence from the description and let the body (intro + encoding section) be the single place this is stated.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted sentence appears verbatim in the description, and its content is indeed restated in both the intro and the \"After the Profile\" section, supporting the redundancy claim. || CONFIRMED \u2014 the quoted sentence appears verbatim in the description, and the body redundantly restates it in both the intro and the \"Encoding It as a Skill\" section. || CONFIRMED \u2014 the quoted sentence appears verbatim in the description, and the body indeed restates the same fact twice, so the redundancy claim and craft rule genuinely apply."
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when starting a new brand, sub-brand, product, persona, or author voice.",
+        "issue": "Five nouns stack synonyms for a single branch (\"a new named thing needs a voice\") \u2014 reaching the skill via \"sub-brand\" vs. \"product\" vs. \"author voice\" doesn't change the path taken (the same Build/Extract determination runs regardless). This pays load five times for one route.",
+        "proposed_fix": "Collapse to one phrase covering the branch, e.g. \"Use when starting any new brand, product, or persona voice.\"",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and the critique (five near-synonymous nouns feeding into one Build/Extract branch decision) accurately describes the text. || REFUTED\nThe quoted text appears verbatim, but \"one trigger per branch\" is not violated \u2014 listing example nouns under a single \"when to use\" trigger is not multiple branches with duplicated logic; it's one condition with illustrative examples, a stylistic nitpick rather than a genuine rule violation. || CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and the critique (five near-synonymous nouns for a single trigger condition) is a legitimate application of a \"don't stack redundant triggers\" craft rule."
+      },
+      {
+        "rule": "Demand [craft]",
+        "target_quote": "**Authentic:** does it feel true to who they are or want to be?",
+        "issue": "The Quality Test is framed as a single gate (\"If any answer is no, the profile needs more specificity. Iterate before locking it in.\"), but it mixes checkable items (\"Mechanically clean: does it pass every Mechanical Rule above?\") with an uncheckable one (\"does it feel true to who they are or want to be?\"). The stray impressionistic qualifier lets the whole gate be satisfied on vibes rather than on the checkable items alone.",
+        "proposed_fix": "Either rewrite \"Authentic\" into a checkable form (e.g. \"the user can name a specific belief or story this reflects\") or pull it out of the pass/fail gate into a separate advisory note.",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 The quoted text appears verbatim as item 4 of the Quality Test, and the critique accurately describes how it sits alongside strictly checkable items like \"Mechanically clean\" within the same pass/fail gate (\"If any answer is no...\"). || REFUTED: The quoted text appears verbatim, but the finding's critique is a subjective style/quality judgment rather than a violation of a genuine, verifiable rule \u2014 mixing checkable and impressionistic criteria in a quality gate is a reasonable design choice, not a clear defect. || CONFIRMED: The quote appears verbatim in the Quality Test section, and the critique correctly identifies that it mixes a subjective, unverifiable criterion with checkable ones in a single pass/fail gate."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Single source of truth / duplication [craft]",
+        "target_quote": "**The Unenforceable Voice:** all vibes, no mechanical rules. Result: voice drifts within weeks.",
+        "issue": "This restates, negated, a rule the document already gives positively in three places: \"The mechanical rules from Q16 become the enforceability backbone,\" the Mechanical Rules section (\"These are bright-line rules. Violations should be auto-corrected\"), and Quality Test item 6 (\"Mechanically clean: does it pass every Mechanical Rule above?\"). Same meaning written a fourth time.",
+        "proposed_fix": "Drop this entry from Anti-Patterns, or replace it with a one-line cross-reference (\"see Mechanical Rules\") instead of restating the rule negated.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The Anti-Patterns entry serves a distinct purpose (a failure-mode warning in a checklist) rather than duplicating content; describing an emphasis rule's importance three times from different angles isn't the kind of \"single source of truth\" violation the rule targets (e.g., literal duplicated data/config), so the rule doesn't genuinely apply here. || REFUTED \u2014 The quoted text appears verbatim, but the \"duplication\" claim is a stretch: an anti-pattern description (what happens without mechanical rules) serves a distinct purpose from the positive instructions elsewhere, not redundant restatement warranting removal. || REFUTED: The quoted text does appear verbatim, but the \"single source of truth/duplication\" rule doesn't genuinely apply \u2014 the three cited passages instruct authors to *create* mechanical rules and check drafts against them, while the Anti-Patterns entry warns builders about the failure mode of *omitting* mechanical rules entirely; these serve distinct purposes (positive instruction vs. cautionary pattern-recognition), not redundant restatement of the same fact.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Splitting / Progressive disclosure [craft]",
+        "target_quote": "- \"Yes, I have content I'm proud of\" \u2192 Extract mode\n- \"No, I'm starting fresh\" \u2192 Build mode",
+        "issue": "Extract and Build are mutually exclusive per invocation, determined right here by a distinct trigger. Yet both full processes (six-lens analysis with sub-bullets, and 17 questions across 5 batches) stay fully inlined in the same always-loaded skill body, so the branch not taken still pays context load every time.",
+        "proposed_fix": "Move the Mode 1 and Mode 2 step-by-step sections into two separate disclosed files (e.g. EXTRACT.md, BUILD.md) referenced from \"How to choose\" once the mode is picked.",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the finding critiques overall skill structure/progressive-disclosure design rather than any issue genuinely localized to that quoted branching text itself. || REFUTED: The quoted text appears verbatim, but the finding misapplies progressive disclosure\u2014both modes are commonly needed in a single session (e.g. the \"not sure\" path or \"have content but want to evolve\" routes to Build after discussing extract-relevant content), and the skill explicitly states \"Both modes produce the same Voice Profile output format,\" so splitting them into separate files would just add lookup overhead without meaningfully reducing always-loaded context, since the whole SKILL.md is already loaded as one unit regardless of which mode is chosen. || CONFIRMED \u2014 the quoted branching text appears verbatim, and both full Extract/Build processes are indeed inlined in the single always-loaded SKILL.md body rather than split into separately disclosed files.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

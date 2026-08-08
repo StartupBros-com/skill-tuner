@@ -1,0 +1,100 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.25944405000000004
+    },
+    "verify": {
+      "trials": 9,
+      "total_cost_usd": 0.1927758
+    }
+  },
+  "total_trials": 10,
+  "manifest": {
+    "run_id": "dogfood2-cli-doctor-mode",
+    "started_at": "2026-08-08T10:31:11Z",
+    "finished_at": "2026-08-08T10:34:30Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:eb3c657960503f43df651f6c04878b67c8e9809a0875ec247f0d1995bb307ad4",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 9,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/cli-doctor-mode/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/cli-doctor-mode/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Completion criteria \u2014 \"a bound is checkable when the agent can tell done from not-done without judgment.\"",
+        "target_quote": "repeat until every FM clears the project's floor on each, then re-mine failure modes on the next material code change (no doctor is ever \"done\")",
+        "issue": "\"the project's floor\" is never defined anywhere in the document or in the DOCTOR-SPEC.md pointer (which is cited only for the 10 dimensions' descriptions, not for a threshold value). The loop's own exit condition is therefore unjudgeable \u2014 the agent cannot tell whether a given score clears the floor without inventing a number.",
+        "proposed_fix": "Either state a concrete floor (e.g. \"score \u2265 7/10 on every dimension\") or explicitly point to where the floor is set (e.g. \"the floor recorded in `.doctor/floor.json`, or 7/10 if none is set\").",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in step 10, and \"the project's floor\" is never defined or pointed to a threshold anywhere in the document (DOCTOR-SPEC.md is cited only for the 10 dimensions' descriptions), making the loop's exit condition unjudgeable as written. || CONFIRMED \u2014 the quoted text appears verbatim in step 10 of \"The build loop,\" and \"the project's floor\" is indeed never defined with a concrete threshold anywhere in the document (the DOCTOR-SPEC.md reference is only for the 10 dimensions' descriptions, not a floor value), making the loop's exit condition genuinely unjudgeable as described. || CONFIRMED \u2014 the quote is verbatim (step 10 of the build loop), and \"the project's floor\" is never defined with a concrete threshold anywhere in the document, making the loop's exit condition genuinely unjudgeable as described."
+      },
+      {
+        "rule": "Relevance and sediment \u2014 \"every line must still bear on what the document does... without a pruning discipline the default fate is sediment.\"",
+        "target_quote": "Distilled 2026-07-04 from the retired 166-file `world-class-doctor-mode-for-cli-tools` skill:\n     kept the One Rule + core axioms, the CLI surface, the mutate() chokepoint / safety envelope,\n     the (detector,fixer,fixture,test) tuple, the 10-dim rubric, and the portable cookbook. Dropped\n     the multi-model swarm tiers, session-mining, external issue-tracker plumbing, the per-run 0-1000\n     scoring machinery, 18 subagents, and 39 scripts.",
+        "issue": "This is a changelog about the document's own editing history (what was kept/dropped from a predecessor skill). It costs context load on every load of the file but does not bear on the task of adding or upgrading a doctor subcommand \u2014 it tells the agent nothing about how to do the work.",
+        "proposed_fix": "Move this provenance note to the commit message or a CHANGELOG, keeping only the still-live pointer (\"JSON shapes + rubric + cookbook: references/DOCTOR-SPEC.md\") in the file.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted changelog/provenance comment appears verbatim at the top of the document and, being pure editorial history rather than operational guidance, plausibly fits the \"relevance and sediment\" pruning concern. || CONFIRMED \u2014 the quoted HTML comment appears verbatim in the target and is a provenance/changelog note about the predecessor skill's edit history, not instructional content for performing the doctor-mode task, matching the sediment/relevance rule. || CONFIRMED \u2014 the quoted HTML comment appears verbatim in the target, and it's genuinely provenance/changelog content (what was kept/dropped from a predecessor skill) rather than actionable guidance for adding/upgrading a doctor subcommand."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Single source of truth / duplication (Pruning and drift) \u2014 \"an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.\"",
+        "target_quote": "- **Fix-then-detect**, or any disk write that bypasses `mutate()`. Grep the doctor module for writes not routed through it.\n- **Backups that reformat / \"tidy while fixing\"** \u2014 breaks byte-for-byte reversibility silently.\n- **Random/timestamp finding ids, ad-hoc exit codes, interactive prompts, calling home by default** \u2014 all break the agent contract.",
+        "issue": "These Anti-patterns bullets are the negated restatement of rules the document already states positively elsewhere: \"Detect-then-fix, never fix-then-detect\" and \"Detectors READ; fixers MUTATE only by calling `mutate()`\" (already given twice), \"Backups are verbatim. No reformatting, no 'clean up while I'm here'\" (safety envelope), and the content-derived-id / documented-exit-code-dictionary / `--online` opt-in rules stated earlier in their own sections. This is the exact disguised-duplication pattern the doctrine calls out \u2014 same meaning in more than one place, costing maintenance (a rule change now requires editing two places) and inflating the anti-pattern list's apparent importance.",
+        "proposed_fix": "Delete the anti-pattern bullets that only negate an already-stated positive rule; keep the anti-patterns list only for items with no positive statement elsewhere (e.g. the cross-FS-rename and DeletePath entries, which pair the ban with a concrete alternative).",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted bullets are a checklist-style summary of failure modes (standard for an \"Anti-patterns\" section), not a genuine duplication problem costing maintenance; this is a stylistic/subjective critique dressed up as a rule violation, and the \"already given twice\" claim about mutate() is itself inaccurate since one mention is a definition and the other a grep-target instruction. || REFUTED \u2014 the quoted bullets appear verbatim, but an \"anti-patterns\" checklist restating positive rules as negative checks is a standard, deliberate skimming/verification aid, not genuine duplication requiring pruning. || REFUTED: The quoted anti-pattern bullets serve as a distinct checklist/grep-audit function (\"Grep the doctor module for writes not routed through it\") rather than mere restatement, and this is a stylistic/redundancy judgment call, not a verifiable factual claim about the document's structure being erroneous.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/cli-doctor-mode/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

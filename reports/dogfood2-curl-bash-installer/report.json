@@ -1,0 +1,115 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.2696871
+    },
+    "verify": {
+      "trials": 15,
+      "total_cost_usd": 0.4243125
+    }
+  },
+  "total_trials": 16,
+  "manifest": {
+    "run_id": "dogfood2-curl-bash-installer",
+    "started_at": "2026-08-08T10:11:48Z",
+    "finished_at": "2026-08-08T10:16:57Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.2.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d4a02a81c20bb1125739bb506ae779e81912d4667ca0decd8bb698640e7bc07c",
+        "source": "worktree",
+        "git_commit": "eed4bf37a1f75d2b86f44ff5587729468f2a55b6",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:3d4b2a32605a67e79c76cbc85fc9ac8afded8c591d9094ba268638ba168f3a7c",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 3,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 15,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/curl-bash-installer/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Self-contained (real bash\n  inline).",
+        "issue": "The description spends its always-loaded routing budget on a statement of what the skill *is* (self-contained, real bash) rather than *when to reach* it. The body already establishes this identity in the header comment ('This version is self-contained: real snippets inline, no external line-refs') and in the 'Core snippets (real, self-contained)' heading, so the description adds zero routing signal for permanent per-turn cost.",
+        "proposed_fix": "Drop 'Self-contained (real bash inline)' from the description; keep identity claims in the body only.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the description, and the body independently states the same \"self-contained/real bash inline\" identity in the header comment and the \"Core snippets (real, self-contained)\" heading, so the critique's premise holds. || CONFIRMED \u2014 the quoted text appears verbatim in the description, and the body does redundantly restate \"self-contained\" identity (both in the header comment and the \"Core snippets (real, self-contained)\" heading), making the description's inclusion of that phrase non-additive routing signal. || CONFIRMED \u2014 the quoted phrase appears verbatim in the description, and the body indeed restates the same \"self-contained/real snippets inline\" identity claim in the header comment and the \"Core snippets (real, self-contained)\" heading, supporting the redundancy critique."
+      },
+      {
+        "rule": "Relevance and sediment [craft]",
+        "target_quote": "<!-- Distilled 2026-07-04 from the retired 30-file `installer-workmanship` skill, whose method was to\n     study-and-emulate two upstream install.sh exemplars that don't exist on this machine. This version\n     is self-contained: real snippets inline, no external line-refs. Locking + OS-detection re-anchored\n     on the operator's own production exemplar (see Core principle below).\n     Agent auto-config + optional service: references/PATTERNS.md -->",
+        "issue": "This is always-loaded provenance narration about a retired predecessor skill \u2014 it never bears on how to write the installer and doesn't change based on the task. It's exactly the sediment the doctrine warns accumulates when removal feels riskier than addition; it also duplicates the PATTERNS.md pointer that the body states properly in its own section.",
+        "proposed_fix": "Delete the comment, or move the provenance note to the commit message / changelog and keep only the PATTERNS.md pointer, stated once, in the body section that already names it.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted comment appears verbatim as an HTML comment header, is pure provenance narration about the retired predecessor skill with no bearing on installer craft, and duplicates the PATTERNS.md pointer already stated properly in the body. || CONFIRMED \u2014 The comment appears verbatim at the top of the document, and the finding accurately identifies it as historical/provenance narration (referencing a retired skill and \"exemplars that don't exist on this machine\") that doesn't inform how to write the installer, plus it duplicates the PATTERNS.md pointer that's already properly stated in the \"Agent auto-config + optional service\" body section. || CONFIRMED \u2014 the comment appears verbatim as the file's opening HTML comment, is always loaded with the skill, narrates retired-predecessor provenance irrelevant to writing an installer, and duplicates the PATTERNS.md pointer already stated properly in the \"Agent auto-config\" body section."
+      },
+      {
+        "rule": "Single source of truth [craft]",
+        "target_quote": "Reference exemplar for real cross-platform locking/OS-detection:\n> `~/SITES/pro-gate/lib/pro-gate-lib.sh`.",
+        "issue": "The document already inlines complete, real locking and OS-detection code in the 'Core snippets' section (detect_platform, acquire_lock) and its own header comment boasts of being self-contained with 'no external line-refs' specifically to fix the predecessor skill's flaw of pointing at 'exemplars that don't exist on this machine.' This pointer reintroduces that exact flaw: it names a second, unreachable authority for the same behavior and contradicts the document's own self-containment claim.",
+        "proposed_fix": "Remove the pointer to `~/SITES/pro-gate/lib/pro-gate-lib.sh` and let the inline detect_platform/acquire_lock snippets be the sole authority for locking and OS-detection.",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quote is verbatim from the Core principle line, and the header explicitly claims \"self-contained... no external line-refs\" while the Core principle still points to an external, on-this-operator's-machine-only file (`~/SITES/pro-gate/lib/pro-gate-lib.sh`) as the \"reference exemplar\" for the very logic (locking/OS-detection) that's already fully inlined \u2014 a genuine tension with the stated self-containment goal. || CONFIRMED \u2014 the quote appears verbatim, and it genuinely contradicts the document's own self-containment claim (\"no external line-refs\") stated two paragraphs earlier, creating a second unreachable authority for locking/OS-detection. || REFUTED \u2014 The quote is verbatim, but the document explicitly distinguishes this from the retired skill's flaw: the header comment states snippets are \"re-anchored on the operator's own production exemplar\" (implying it's real, unlike the old \"exemplars that don't exist on this machine\"), and the actual locking/OS-detection code is fully inlined in Core snippets. The pointer is a citation/attribution, not the operative source of truth, so no single-source-of-truth violation occurs."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Write a production-grade `curl | bash` installer for a CLI tool. Use when writing a\n  curl-pipe-bash install.sh one-liner for a CLI (Rust/TS/Go).",
+        "issue": "The lead clause and the 'Use when' clause name the same single branch (writing a curl|bash install.sh for a CLI) in two different phrasings. A run reaching the skill through 'production-grade curl|bash installer' takes the identical path as one reaching it through 'curl-pipe-bash install.sh one-liner' \u2014 no distinct branch is added, so per the doctrine's test these should collapse.",
+        "proposed_fix": "Collapse to a single clause, e.g. 'Write a production-grade curl | bash installer for a CLI (Rust/TS/Go).'",
+        "reason": "panel 0/3 confirmed | REFUTED\nThe quoted text appears verbatim, but \"Use when\" restates the same trigger rather than naming a second distinct branch, so there's no actual violation of \"one trigger per branch\" \u2014 this is a redundancy/wording issue, not a multi-branch-collapse case. || REFUTED\nThe description is a single sentence pair (lead statement + \"Use when\" trigger clause), which is standard skill-description format, not two separate branches describing different code paths \u2014 there's no \"one trigger per branch\" violation since only one trigger/branch is described. || REFUTED\nThe quoted text appears verbatim but is a description field with a lead clause + \"Use when\" clause, not multiple triggers/branches \u2014 this is standard single-purpose skill description formatting, not a violation of \"one trigger per branch.\"",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication / polarity restatement in anti-pattern lists [craft]",
+        "target_quote": "- **Skipping checksum verification** \u2014 supply-chain risk; always verify SHA256.\n- **`gnu` target on Linux** \u2014 not portable; use `musl` (static).\n- **Hard-failing on optional features** (missing cosign/gum) \u2014 warn and continue.\n- **`flock` as your only lock** \u2014 absent on macOS; flock-first + mkdir-fallback.\n- **Ignoring proxy env** \u2014 `PROXY_ARGS` on every curl call.",
+        "issue": "These anti-pattern bullets are the same meanings already given positively in the '14 non-negotiables' list (#7 Checksum, #4 musl-preferred platform detection, #8 soft-skip/hard-fail signature, #6 flock-first with mkdir fallback, #3 proxy on every call), just negated. The doctrine names exactly this pattern as duplication wearing polarity as a disguise, inflating the anti-pattern list's rank on the ladder for no new meaning.",
+        "proposed_fix": "Remove anti-pattern bullets that only negate a non-negotiable already stated; keep the anti-patterns list only for items with no positive counterpart elsewhere (e.g. the timeout and unstyled-output entries).",
+        "reason": "downgraded: quoted text not found verbatim in target document",
+        "refutation_mode": "quote_not_found"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}
