@@ -1,5 +1,5 @@
 ---
-description: Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes. Adversarially verified — every defect is confirmed by independent skeptics before you act on it.
+description: Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes.
 argument-hint: <path to SKILL.md / AGENTS.md / CLAUDE.md>
 ---
 
@@ -31,7 +31,8 @@ Read the run's `report.md` for each finding's quote and proposed fix.
 
 Refuted findings are listed too, with the mode that killed them
 (`verifier` = the rule did not apply; `quote_not_found` = the probe invented
-its evidence). Do not act on those, and do not re-litigate them.
+its evidence). Treat refuted findings as closed: their one remaining job is
+the report's refuted line, where the human sees what the probe got wrong.
 
 ## 3. Fix what it found
 

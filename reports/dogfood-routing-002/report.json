@@ -1,0 +1,122 @@
+{
+  "conditions": {
+    "original": {
+      "trials": 20,
+      "total_cost_usd": 0.1651056
+    },
+    "pruned": {
+      "trials": 20,
+      "total_cost_usd": 0.21318810000000002
+    }
+  },
+  "total_trials": 40,
+  "manifest": {
+    "run_id": "dogfood-routing-002",
+    "started_at": "2026-08-08T08:16:10Z",
+    "finished_at": "2026-08-08T08:17:36Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [],
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:970bcba28e0d58ddcbcbe1d4cb99045afdb0bd3172bf665f1836d6e6555dce17",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/commands/tune.md",
+        "sha256": "sha256:e8c70a8306f1558ed03024ab0dbb803593262de669dc3bafad39f8b6203b33d6",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "commands/tune.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/writing-for-agents/SKILL.md",
+        "sha256": "sha256:a61475f4549b4bbbe2c8609a822181cef243e7377ca36403d1506c291416f883",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:a14d423610c4d96c910995196c4b0893f4328a1137e740d1f6dcc677b9b5547c",
+        "source": "worktree",
+        "git_commit": "77e155f9b4fffd1d7d074c954461e158df3a9981",
+        "git_path": "claude/skills-local/cli-doctor-mode/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+        "sha256": "sha256:277645e3ec2e17f3645474fd2334a8866c9254dc26ce5143de6a9ec77e071b32",
+        "source": "worktree",
+        "git_commit": "77e155f9b4fffd1d7d074c954461e158df3a9981",
+        "git_path": "claude/skills-local/repo-junk-triage/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "sha256": "sha256:291233457df4b48ec1e4afdc99312446c0f9dfe48f013bd09f60f2c310c4e7f4",
+        "source": "worktree",
+        "git_commit": "77e155f9b4fffd1d7d074c954461e158df3a9981",
+        "git_path": "claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/de-slopify/SKILL.md",
+        "sha256": "sha256:3cac571ed3cc93c7369c46d3cf122b4a827f8db67789e821f9119fae824acc93",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "routing-parity",
+    "pin": null
+  },
+  "routing_parity": {
+    "verdict": "land",
+    "failing_case_ids": [],
+    "scores": {
+      "original": {
+        "condition": "original",
+        "total": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      },
+      "pruned": {
+        "condition": "pruned",
+        "total": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      }
+    }
+  }
+}

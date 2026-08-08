@@ -1,0 +1,90 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.30376800000000004
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.14763585
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood-run-skill",
+    "started_at": "2026-08-08T07:44:02Z",
+    "finished_at": "2026-08-08T07:48:00Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d3c66d4e8af3953bfe2a7e2ae100da07d6d44fe65688a14797ab4bf3870d46f2",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:970bcba28e0d58ddcbcbe1d4cb99045afdb0bd3172bf665f1836d6e6555dce17",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "One trigger per branch (Context pointers)",
+        "target_quote": "Use when asked to run skill-tuner, start or test the eval runner, probe a document, compare two runs, verify a banked run, or check that the CLI still works after a change.",
+        "issue": "\"start or test the eval runner\" duplicates two branches that already have their own dedicated trigger phrases: \"start...the eval runner\" routes to the same probe/spend-money section as \"probe a document\", and \"test...the eval runner\" routes to the same smoke.sh section as \"check that the CLI still works after a change\". Applying the doctrine's own test \u2014 does reaching the doc through this phrase take a different path than the phrase beside it? \u2014 no, both halves collapse onto branches already covered, paying context load three times for what routes to two places.",
+        "proposed_fix": "Drop \"start or test the eval runner\" and let the existing \"probe a document\" and \"check that the CLI still works after a change\" cover those branches: \"Use when asked to run skill-tuner, probe a document, compare two runs, verify a banked run, or check that the CLI still works after a change.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the description line, and \"start or test the eval runner\" does plausibly collapse onto the same two sections (\"probe a document\" \u2192 Spending money on purpose; \"check CLI works after a change\" \u2192 smoke.sh) already covered by adjacent trigger phrases. || CONFIRMED: The quoted description text appears verbatim, and the redundancy claim holds \u2014 \"start...the eval runner\" and \"probe a document\" both point to the money-spending `probe` section, while \"test...the eval runner\" and \"check that the CLI still works\" both point to the smoke.sh section, so the phrase adds no distinct branch. || CONFIRMED: The quoted description text appears verbatim, and the redundancy claim holds \u2014 \"start...the eval runner\" and \"probe a document\" both point to the same probe/spend-money section, while \"test...the eval runner\" and \"check that the CLI still works\" both point to smoke.sh, making two of the six trigger phrases genuinely redundant with adjacent ones."
+      },
+      {
+        "rule": "Single source of truth (Pruning and drift)",
+        "target_quote": "cd skills/skill-tuner/scripts && python3 -m unittest discover tests   # 119 tests\npython3 scripts/check_stdlib_only.py                                  # R7 guard\npython3 scripts/validate_skillcreator_reader.py                       # vs skill-creator",
+        "issue": "The unit-test invocation `cd skills/skill-tuner/scripts && python3 -m unittest discover tests` is already given verbatim earlier under \"Direct invocation\" with its expected output (`# Ran 119 tests ... OK`). Repeating it in the \"Test\" section makes the same meaning live in two places; if the invocation ever changes (a flag added, a working-directory change), both copies must be updated in lockstep or they drift apart.",
+        "proposed_fix": "Remove the unittest line from the \"Test\" section and keep only the two commands not stated elsewhere (check_stdlib_only.py, validate_skillcreator_reader.py), with a short pointer back to \"Direct invocation\" for the unit-test command.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the unittest command appears verbatim in both \"Direct invocation\" and \"Test\" sections, a genuine duplication that could drift. || CONFIRMED \u2014 the exact command appears verbatim in both \"Direct invocation\" and \"Test\" sections, a genuine duplication risk if the invocation changes. || CONFIRMED \u2014 the exact command `cd skills/skill-tuner/scripts && python3 -m unittest discover tests` appears verbatim in both the \"Direct invocation\" section and the \"Test\" section, a genuine duplication that could drift out of sync."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

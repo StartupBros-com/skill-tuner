@@ -1,0 +1,90 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.31005075000000004
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.1830564
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood-run-skill-5",
+    "started_at": "2026-08-08T08:06:37Z",
+    "finished_at": "2026-08-08T08:10:00Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d3c66d4e8af3953bfe2a7e2ae100da07d6d44fe65688a14797ab4bf3870d46f2",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "sha256": "sha256:74a1a6fbdad9dc2ce06e4087b562fb34b73f260548cfa57378ced591e6a84b4c",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": ".claude/skills/run-skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition should be paired with its positive target; a rule that leads with the ban and never says what to do instead is the tell.",
+        "target_quote": "| `ModuleNotFoundError` running the tests | You are not in `skills/skill-tuner/scripts`. |",
+        "issue": "Every other row in the Troubleshooting table pairs its diagnosis with an explicit positive action (\"Pass --budget-usd N\", \"Add --yes\", \"Pick a directory that contains report.json\", \"re-run it\", \"clear them with find ...\"). This row states only the negative condition (\"You are not in X\") and never gives the actual fix, leaving the agent to infer the `cd` step itself.",
+        "proposed_fix": "Change the Fix cell to state the action directly, e.g. \"Run `cd skills/skill-tuner/scripts` before invoking the tests.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted row matches the document verbatim, and unlike every other row in the table it states only a negative diagnosis (\"You are not in X\") without the corresponding positive action (e.g., `cd skills/skill-tuner/scripts`), consistent with the cited rule. || CONFIRMED \u2014 the quoted table row appears verbatim, and it genuinely fits the pattern: it states a negative diagnosis (\"you are not in X\") without the positive corrective action, unlike every other row in the same table. || CONFIRMED \u2014 the quoted row appears verbatim in the Troubleshooting table, and unlike every other row it states only the negative diagnosis (\"You are not in X\") without an explicit corrective action, matching the negation-without-positive-target pattern described."
+      },
+      {
+        "rule": "Relevance and sediment [craft] \u2014 a line loses relevance by going stale as the behaviour it describes changes; without a pruning discipline this becomes sediment.",
+        "target_quote": "The banked `swapgate5-probe-doctrine-v2` currently *does* report DRIFTED, because a dotfiles input moved after the run.",
+        "issue": "This asserts the live, present-tense status of one specific banked run as a fact in a document meant to persist across time. Once that run is re-banked or the drifted input is fixed, this sentence (and the matching \"-> DRIFTED (exit 1)\" line in the Verified output block above) becomes false, misleading a future reader who sees a passing verify and assumes the doc or the tool is broken.",
+        "proposed_fix": "State the mechanism generically instead of asserting a specific run's current status, e.g. \"verify reports DRIFTED whenever an input recorded in a run's manifest (such as a dotfile) changes after the run was banked \u2014 this is expected, not a bug.\" Drop the named-run claim, or mark it explicitly as a point-in-time example that may no longer hold.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and it genuinely asserts a time-bound fact about a specific banked run's live state, which is a real staleness risk in a persistent doc as described. || CONFIRMED \u2014 the quoted text appears verbatim, and it genuinely is a point-in-time factual claim about a specific run's status that will go stale once that run is re-banked or fixed. || CONFIRMED \u2014 the quoted text appears verbatim, and it genuinely asserts a time-bound fact about a specific banked run's live status, which will go stale once that run is re-banked or fixed."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/.claude/skills/run-skill-tuner/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

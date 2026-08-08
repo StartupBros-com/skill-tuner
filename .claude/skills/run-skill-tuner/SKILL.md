@@ -1,6 +1,6 @@
 ---
 name: run-skill-tuner
-description: Run, drive, smoke-test and debug skill-tuner. Use when asked to run skill-tuner, start or test the eval runner, probe a document, compare two runs, verify a banked run, or check that the CLI still works after a change.
+description: Run, smoke-test and debug skill-tuner. Use when asked to run skill-tuner, probe a document, compare two runs, or verify a banked run.
 ---
 
 skill-tuner is a **CLI**, not a server or a GUI — `skills/skill-tuner/scripts/tune.py`
@@ -25,7 +25,8 @@ unit suite, the stdlib-only guard, all three spend guards, `verify`, `compare`,
 the too-few-cases refusal, and the differential check against skill-creator's
 own reader. Exits non-zero if any check fails.
 
-Verified output:
+Output from a verified run (verdict lines such as `DRIFTED` are
+point-in-time — they depend on the banked runs' current state):
 
 ```
 environment
@@ -84,6 +85,12 @@ python3 skills/skill-tuner/scripts/tune.py compare \
 python3 skills/skill-tuner/scripts/tune.py verify swapgate5-probe-doctrine-v2
 ```
 
+`verify` exits 1 when the run has drifted. That is a verdict, not a failure —
+the tool worked; it reports DRIFTED whenever an input recorded in the run's
+manifest changed after banking, which is expected for inputs in a moving
+repo. A wrapper (or `set -e`) must treat "produced a verdict" as success, or
+it will report a healthy tool as broken.
+
 ## Spending money on purpose
 
 ```bash
@@ -97,18 +104,13 @@ reproducible alternative. Reports land in `reports/<run-id>/`
 
 ## Gotchas
 
-- **`verify` exits 1 when a run has drifted.** That is a verdict, not a
-  failure — the tool worked. Any wrapper must treat "produced a verdict" as
-  success, or it will report a healthy tool as broken. The banked
-  `swapgate5-probe-doctrine-v2` currently *does* report DRIFTED, because a
-  dotfiles input moved after the run.
 - **`set -o pipefail` breaks `tune.py … | grep -q`.** The CLI exits non-zero
   by design when it refuses to spend, and a pipeline inherits any stage's
   failure — so grep matches and the check still reports false. Capture into a
   variable, then match with `<<<`.
-- **Never `tail` the test output.** The suite prints cost estimates to stdout
-  while unittest writes its verdict to stderr; the last few interleaved lines
-  are usually noise. Grep the whole capture for `^OK$`.
+- **Grep the whole test capture for `^OK$`.** The suite prints cost estimates
+  to stdout while unittest writes its verdict to stderr, so tailing the output
+  shows interleaved noise instead of the verdict.
 - **`claude -p` takes the prompt as `-p`'s argument.** Flags go *after* it.
   `claude -p --output-format json "text"` silently makes `--output-format`
   the prompt.
@@ -133,14 +135,17 @@ reproducible alternative. Reports land in `reports/<run-id>/`
 | `RuntimeError: API-key auth reports dollar cost; refusing to run without --budget-usd` | Working as intended. Pass `--budget-usd N`, or `--allow-unmetered` if you mean it. |
 | `RuntimeError: Pre-flight confirmation required for a non-interactive run; pass --yes` | Add `--yes`. Non-interactive runs must not spend on an unattended prompt. |
 | `FileNotFoundError: no report.json in reports/<id>` | That run never wrote anything. Pick a directory that contains `report.json`. |
-| `ModuleNotFoundError` running the tests | You are not in `skills/skill-tuner/scripts`. |
+| `ModuleNotFoundError` running the tests | Run `cd skills/skill-tuner/scripts` first; the tests import sibling modules by bare name. |
 | `no manifest — this run predates provenance recording` from `verify` | Correct for any run made before U9. It cannot be verified; re-run it. |
-| Empty `reports/<id>/` directories piling up | Fixed — resolving a run dir no longer creates it. Any you still see predate that fix; clear them with `find reports -maxdepth 1 -type d -empty -exec rmdir {} \;`. Use that form, not `find`'s delete action, which dcg-guarded shells refuse. |
+| Empty `reports/<id>/` directories piling up | Fixed — resolving a run dir no longer creates it. Any you still see predate that fix; clear them with `find reports -maxdepth 1 -type d -empty -exec rmdir {} \;`. Use that form, not `find`'s delete action, which some shells block as a destructive-command guard. |
 
 ## Test
 
+The unit suite runs from `skills/skill-tuner/scripts` as shown under "Direct
+invocation". Two guards live in the repo root's own `scripts/` — a different
+directory from `skills/skill-tuner/scripts` — and run from the repo root:
+
 ```bash
-cd skills/skill-tuner/scripts && python3 -m unittest discover tests   # 119 tests
 python3 scripts/check_stdlib_only.py                                  # R7 guard
 python3 scripts/validate_skillcreator_reader.py                       # vs skill-creator
 ```

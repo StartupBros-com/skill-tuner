@@ -1,0 +1,84 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.2193363
+    },
+    "verify": {
+      "trials": 3,
+      "total_cost_usd": 0.07037085
+    }
+  },
+  "total_trials": 4,
+  "manifest": {
+    "run_id": "dogfood-tune-cmd-2",
+    "started_at": "2026-08-08T07:57:43Z",
+    "finished_at": "2026-08-08T08:00:07Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.1.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:d3c66d4e8af3953bfe2a7e2ae100da07d6d44fe65688a14797ab4bf3870d46f2",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md",
+        "sha256": "sha256:8b47d78dcf8efdfb63b2c0e737ec7d6957394bc8dbde8356b9cf0164902a0106",
+        "source": "worktree",
+        "git_commit": "5d080cf37eb6e9597e33092a3af126e77823e791",
+        "git_path": "commands/tune.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 0,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 3,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md",
+    "target_files": [
+      "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md"
+    ],
+    "confirmed_findings": [],
+    "refuted_findings": [
+      {
+        "rule": "Single source of truth [craft]",
+        "target_quote": "The doctrine's rules are the target shape \u2014 positive phrasing over prohibition, one trigger per branch, checkable completion bounds, one meaning in one place.",
+        "issue": "Step 1 already directs the agent to read the full doctrine at SKILL.md, so by Step 3 the doctrine's rule names are already in context. Restating a subset of them here creates a second place that must be kept in sync if the doctrine renames or adds rules (e.g. this list would silently omit 'co-location' or 'demand' after an update). The doctrine's own caching rule says restating a lookup 'earns its load only when the lookup is expensive' \u2014 here the lookup was already paid for one step earlier, so the restatement earns nothing.",
+        "proposed_fix": "Replace the enumerated list with a pointer back to the already-loaded doctrine, e.g. 'Apply each confirmed finding against the doctrine you read in step 1 \u2014 the fix must match its target shape, not just silence the finding.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote is a summary reminder, not a duplicated definition; restating a few doctrine terms inline to guide the fix doesn't create a second authoritative source that could drift out of sync in a meaningful way, so \"single source of truth\" doesn't genuinely apply here. || REFUTED \u2014 the quoted text is a summary reminder of doctrine content already read, not a duplicated \"single source of truth\" (e.g., a definition or config value stated twice); restating a few example rule names as orientation is not the kind of drift-prone duplication that rule targets. || REFUTED \u2014 the quoted text is a summary reminder of already-read doctrine, not a duplicated independent definition; restating a brief gist inline (rather than a full canonical rule set) doesn't create a second source of truth requiring sync, so the \"single source of truth\" rule doesn't genuinely apply here.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/commands/tune.md",
+        "findings_confirmed": 0,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 3,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}
