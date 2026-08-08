@@ -1,0 +1,9 @@
+{
+  "case": "ts-bun-cli",
+  "condition": "old_skill",
+  "trial": 2,
+  "cost_usd": 0.7455659999999998,
+  "seconds": 1637.9,
+  "model": "claude-sonnet-5",
+  "chars": 18244
+}

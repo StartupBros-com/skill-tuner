@@ -1,0 +1,27 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "conditions": ["old_skill", "new_skill"],
+  "cases": [
+    {
+      "id": "rust-musl-cli",
+      "prompt": "I need an install.sh for my Rust CLI `redlens` (github.com/hovlabs/redlens). Releases ship tarballs redlens-<version>-<target>.tar.gz for x86_64-unknown-linux-musl, aarch64-unknown-linux-musl, x86_64-apple-darwin and aarch64-apple-darwin, each with a .sha256 file next to it. Users should be able to run one curl|bash line from the README. Bash and zsh completions are inside the tarball under completions/."
+    },
+    {
+      "id": "ts-bun-cli",
+      "prompt": "Write install.sh for `tapwire`, a TypeScript CLI we compile to standalone binaries with bun build --compile (github.com/hovlabs/tapwire, releases: tapwire-linux-x64, tapwire-linux-arm64, tapwire-darwin-arm64, plus SHA256SUMS). No node or bun required on the target machine. Some users are on minimal Debian containers, so keep dependencies to curl and coreutils."
+    },
+    {
+      "id": "go-daemon-service",
+      "prompt": "Our Go agent `moorhen` (github.com/hovlabs/moorhen) runs as a background daemon. The installer should install the binary from the release tarball and set it up as a systemd user service on Linux or a launchd agent on macOS, started immediately and on login. Release assets: moorhen_<version>_<os>_<arch>.tar.gz with a checksums.txt."
+    },
+    {
+      "id": "no-service-minimal",
+      "prompt": "Give me install.sh for `quill` (github.com/hovlabs/quill), a small Rust markdown formatter. Plain binary install only — absolutely no services, no daemons, nothing running in the background. It must also work in our airgapped CI: if QUILL_LOCAL_TARBALL is set, install from that local file instead of downloading."
+    },
+    {
+      "id": "proxy-sigstore",
+      "prompt": "install.sh for `pgshim` (github.com/hovlabs/pgshim), a Postgres connection shim binary. Half our users sit behind a corporate proxy, so every download must respect HTTPS_PROXY/HTTP_PROXY. Security team requires SHA256 verification and, when cosign is available, Sigstore bundle verification of the binary against our GitHub Actions OIDC identity. Releases: pgshim-<target>.tar.gz + .sha256 + .sigstore.json."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "pass_rate": 0.9230769230769231,
+  "pass_rate_static": 1.0,
+  "expectations": [
+    {
+      "text": "A1 bash -n parses",
+      "passed": true,
+      "evidence": "parsed"
+    },
+    {
+      "text": "A2 set -euo pipefail",
+      "passed": true,
+      "evidence": "found"
+    },
+    {
+      "text": "A3 trap cleanup on EXIT",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A4 proxy honored",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A5 sha256 verification",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A6 umask set",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A7 uninstall path present",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A8 final summary box",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A9 documented one-liner with cache-buster",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A10 atomic lock",
+      "passed": true,
+      "evidence": "regex"
+    },
+    {
+      "text": "A11 no unguarded undefined helper call",
+      "passed": true,
+      "evidence": "clean"
+    },
+    {
+      "text": "A12 shellcheck no errors",
+      "passed": true,
+      "evidence": "0 error(s)"
+    },
+    {
+      "text": "E1 fails loudly and atomically (sandboxed run)",
+      "passed": false,
+      "evidence": "exit=1 output=yes leftover_binaries=['/tmp/cbi-e1-2sfjolqm/.cargo/bin/cargo-clippy', '/tmp/cbi-e1-2sfjolqm/.cargo/bin/cargo', '/tmp/cbi-e1-2sfjolqm/.cargo/bin/rust-analyzer']"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "case": "rust-musl-cli",
+  "condition": "new_skill",
+  "trial": 1,
+  "cost_usd": 0.8738962499999999,
+  "seconds": 411.4,
+  "model": "claude-sonnet-5",
+  "chars": 19208
+}

@@ -1,0 +1,9 @@
+{
+  "case": "no-service-minimal",
+  "condition": "old_skill",
+  "trial": 1,
+  "cost_usd": 0.46373490000000006,
+  "seconds": 993.0,
+  "model": "claude-sonnet-5",
+  "chars": 14518
+}
