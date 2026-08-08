@@ -794,16 +794,42 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     """
     import compare as compare_mod
 
-    baseline = compare_mod.load_report(_resolve_run_path(args, args.baseline))
-    candidate = compare_mod.load_report(_resolve_run_path(args, args.candidate))
+    if args.skill_creator is not None:
+        import skillcreator
 
-    try:
-        result = compare_mod.compare_probe_reports(
-            baseline, candidate, delta=args.delta, exclude=args.exclude or ()
-        )
-    except compare_mod.ComparisonError as exc:
-        print(f"cannot compare: {exc}")
-        return 2
+        if args.delta is None:
+            print(
+                "--delta is required with --skill-creator: the default of 1.0 is a "
+                "margin in confirmed findings per document, which on a 0..1 pass "
+                "rate would wave through every regression there is. Pick the "
+                "smallest change that would matter to you (e.g. 0.05)."
+            )
+            return 2
+        try:
+            result = skillcreator.compare_benchmark(
+                args.skill_creator,
+                baseline=args.baseline,
+                candidate=args.candidate,
+                delta=args.delta,
+                metric=args.metric,
+                exclude=args.exclude or (),
+            )
+        except (skillcreator.BenchmarkError, compare_mod.ComparisonError) as exc:
+            print(f"cannot compare: {exc}")
+            return 2
+    else:
+        baseline = compare_mod.load_report(_resolve_run_path(args, args.baseline))
+        candidate = compare_mod.load_report(_resolve_run_path(args, args.candidate))
+
+        try:
+            result = compare_mod.compare_probe_reports(
+                baseline, candidate,
+                delta=1.0 if args.delta is None else args.delta,
+                exclude=args.exclude or (),
+            )
+        except compare_mod.ComparisonError as exc:
+            print(f"cannot compare: {exc}")
+            return 2
 
     if args.json:
         print(json.dumps(result, indent=2))
@@ -854,13 +880,29 @@ def build_parser() -> argparse.ArgumentParser:
     compare_cmd.add_argument("--baseline", required=True, metavar="RUN")
     compare_cmd.add_argument("--candidate", required=True, metavar="RUN")
     compare_cmd.add_argument(
+        "--skill-creator",
+        type=Path,
+        default=None,
+        metavar="BENCHMARK_DIR",
+        help=(
+            "Read a skill-creator benchmark tree instead of this repo's probe "
+            "reports. --baseline/--candidate then name config directories "
+            "(e.g. without_skill / with_skill)."
+        ),
+    )
+    compare_cmd.add_argument(
+        "--metric", default="pass_rate",
+        help="Metric to pair on inside grading.json (skill-creator source only)",
+    )
+    compare_cmd.add_argument(
         "--delta",
         type=float,
-        default=1.0,
+        default=None,
         metavar="FINDINGS",
         help=(
             "Non-inferiority margin in confirmed findings per document: the "
-            "largest regression you would still call acceptable (default 1.0)"
+            "largest regression you would still call acceptable (probe reports "
+            "default to 1.0; required with --skill-creator)"
         ),
     )
     compare_cmd.add_argument(
