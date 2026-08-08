@@ -33,7 +33,7 @@ import json
 import math
 import statistics
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 # Two-tailed 95% critical values. A t-table beats pulling in scipy for one
 # number, and beats pretending n=6 is normal: at 5 degrees of freedom the
@@ -109,10 +109,28 @@ def compare_probe_reports(
     candidate: Mapping[str, Any],
     *,
     delta: float = 1.0,
+    exclude: Sequence[str] = (),
 ) -> dict[str, Any]:
-    """Pair two probe reports by document and judge the difference."""
+    """Pair two probe reports by document and judge the difference.
+
+    ``exclude`` drops documents from **both** sides, matched on path suffix.
+    Its purpose is a banked baseline whose input has since drifted: excluding
+    the one document that moved keeps every other pair honest for the price of
+    one document, where re-measuring the baseline costs a whole leg. It
+    applies symmetrically by construction, because an exclusion that could hit
+    one side would be a way to delete losing documents.
+    """
     base_counts = _per_target(baseline)
     cand_counts = _per_target(candidate)
+
+    excluded: list[str] = []
+    if exclude:
+        def dropped(name: str) -> bool:
+            return any(pattern and pattern in name for pattern in exclude)
+
+        excluded = sorted({n for n in {**base_counts, **cand_counts} if dropped(n)})
+        base_counts = {k: v for k, v in base_counts.items() if not dropped(k)}
+        cand_counts = {k: v for k, v in cand_counts.items() if not dropped(k)}
 
     if set(base_counts) != set(cand_counts):
         only_base = sorted(set(base_counts) - set(cand_counts))
@@ -130,6 +148,10 @@ def compare_probe_reports(
         )
 
     warnings: list[str] = []
+    if excluded:
+        warnings.append(
+            f"excluded from both sides: {', '.join(excluded)}"
+        )
     base_model = _manifest_field(baseline, "model_pin")
     cand_model = _manifest_field(candidate, "model_pin")
     if base_model and cand_model and base_model != cand_model:
@@ -173,6 +195,7 @@ def compare_probe_reports(
         "verdict": verdict,
         "delta": delta,
         "documents": documents,
+        "excluded": excluded,
         "n": n,
         "baseline_total": sum(base_counts.values()),
         "candidate_total": sum(cand_counts.values()),

@@ -153,6 +153,56 @@ class PairingTest(unittest.TestCase):
             )
 
 
+class ExcludeTest(unittest.TestCase):
+    """Dropping a document from both sides.
+
+    The case this exists for: an input drifts after a baseline is banked.
+    Re-measuring the whole baseline to regain a valid comparison costs a full
+    leg; excluding the one document that moved costs nothing and keeps every
+    other pair honest. Excluding must apply to *both* sides or it becomes a
+    way to delete losing documents.
+    """
+
+    def test_excluded_document_is_dropped_from_both_sides(self):
+        base = _report({"a": 1, "b": 2, "c": 3, "drifted": 9})
+        cand = _report({"a": 1, "b": 2, "c": 3, "drifted": 0})
+
+        result = compare.compare_probe_reports(base, cand, delta=1.0, exclude=["drifted"])
+
+        self.assertEqual(3, result["n"])
+        self.assertNotIn("drifted", result["documents"])
+        self.assertEqual(6, result["baseline_total"])
+        self.assertEqual(6, result["candidate_total"])
+        self.assertEqual(["drifted"], result["excluded"])
+
+    def test_exclusion_is_recorded_as_a_warning(self):
+        base = _report({"a": 1, "b": 2, "c": 3, "drifted": 9})
+        cand = _report({"a": 1, "b": 2, "c": 3, "drifted": 0})
+
+        result = compare.compare_probe_reports(base, cand, delta=1.0, exclude=["drifted"])
+
+        self.assertTrue(any("drifted" in w for w in result["warnings"]))
+
+    def test_exclude_matches_on_path_suffix(self):
+        docs = {"/x/design-drift/SKILL.md": 1, "/x/b/SKILL.md": 2,
+                "/x/c/SKILL.md": 3, "/x/d/SKILL.md": 1}
+        base = _report(docs)
+        cand = _report({**docs, "/x/design-drift/SKILL.md": 4})
+
+        result = compare.compare_probe_reports(base, cand, delta=1.0, exclude=["design-drift"])
+
+        # Matched on suffix, so a full path need not be spelled out.
+        self.assertEqual(3, result["n"])
+        self.assertEqual(["/x/design-drift/SKILL.md"], result["excluded"])
+
+    def test_excluding_everything_refuses(self):
+        base = _report({"a": 1, "b": 2, "c": 3})
+        cand = _report({"a": 1, "b": 2, "c": 3})
+
+        with self.assertRaises(compare.ComparisonError):
+            compare.compare_probe_reports(base, cand, delta=1.0, exclude=["a", "b", "c"])
+
+
 class ConfoundTest(unittest.TestCase):
     def test_different_model_pins_refuse(self):
         base = _report({"a": 1, "b": 1, "c": 1}, model="claude-opus-5")

@@ -798,7 +798,9 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     candidate = compare_mod.load_report(_resolve_run_path(args, args.candidate))
 
     try:
-        result = compare_mod.compare_probe_reports(baseline, candidate, delta=args.delta)
+        result = compare_mod.compare_probe_reports(
+            baseline, candidate, delta=args.delta, exclude=args.exclude or ()
+        )
     except compare_mod.ComparisonError as exc:
         print(f"cannot compare: {exc}")
         return 2
@@ -859,6 +861,18 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Non-inferiority margin in confirmed findings per document: the "
             "largest regression you would still call acceptable (default 1.0)"
+        ),
+    )
+    compare_cmd.add_argument(
+        "--exclude",
+        action="append",
+        default=None,
+        metavar="SUBSTRING",
+        help=(
+            "Drop documents matching this substring from BOTH sides. For a "
+            "banked baseline whose input has since drifted: excluding the one "
+            "document that moved keeps every other pair honest for the price "
+            "of one document. Repeatable."
         ),
     )
     compare_cmd.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
