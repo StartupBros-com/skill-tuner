@@ -61,7 +61,7 @@ Confirmed findings by rule bucket, v2 → v3, incumbent for reference:
 | negation | 2 | 0 | **3** |
 | cut identity | 1 | 5 | 5 |
 | demand | 0 | 8 | 4 |
-| one trigger per branch | 4 | 3 | 7 |
+| one trigger per branch | 4 | 4 | 7 |
 
 The recovered categories are exactly the targeted ones. Demand gave back
 half its yield — consistent with the finding-budget substitution hypothesis
@@ -85,7 +85,7 @@ recorded in the forensics — and the net is +15.
 ## Totals
 
 - 180 calls (15 probe + 165 verify), **$8.2975**, 15/15 targets, no budget
-  halt, overflow: 4 findings past the per-document cap, unverified
+  halt, overflow: 3 findings past the per-document cap, unverified
 - One leg, not two: the incumbent baseline re-used after `verify` confirmed
   every shared target unchanged; `--exclude design-drift` carried over
 - Cumulative across the doctrine investigation: swapgate3 $14.81 +
