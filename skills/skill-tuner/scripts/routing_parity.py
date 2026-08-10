@@ -39,10 +39,11 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+import compare as compare_module
 import probe as probe_module
 import provenance
 import tune
@@ -509,6 +510,10 @@ class ScoreResult:
     near_miss_correct: int
     near_miss_accuracy: float
     failing_case_ids: list[str]
+    # Per-(case_id, trial) correctness, kept so the verdict can count
+    # discordant trials between conditions. Not serialized: to_dict stays
+    # the stable report payload.
+    trial_correct: dict[str, bool] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -536,6 +541,7 @@ def score_condition(
     target_id_set = set(target_ids)
     total = correct = near_miss_total = near_miss_correct = 0
     failing: set[str] = set()
+    trial_correct: dict[str, bool] = {}
 
     for row in rows:
         case = battery_by_id[row["case_id"]]
@@ -543,6 +549,7 @@ def score_condition(
         is_reject_case = case.kind in _REJECT_KINDS
         is_correct = (answer not in target_id_set) if is_reject_case else (answer == case.target_id)
 
+        trial_correct[f"{row['case_id']}|{row.get('trial')}"] = is_correct
         total += 1
         if is_correct:
             correct += 1
@@ -563,17 +570,40 @@ def score_condition(
         near_miss_correct=near_miss_correct,
         near_miss_accuracy=(near_miss_correct / near_miss_total) if near_miss_total else 1.0,
         failing_case_ids=sorted(failing),
+        trial_correct=trial_correct,
     )
 
 
 def determine_verdict(original: ScoreResult, pruned: ScoreResult) -> dict[str, Any]:
     """The parity gate (AE1/AE2): land only if pruned is >= original both
-    overall and on near-miss rejection specifically."""
+    overall and on near-miss rejection specifically.
+
+    The verdict stays this conservative point rule on purpose -- a
+    noise-refuse costs only a kept original, a noise-land costs a live
+    routing regression -- but it now carries a noise annotation: discordant
+    (case, trial) counts between the conditions and the exact two-sided
+    binomial p on them. A refuse at near-identical aggregate accuracy with
+    p near 1 is indistinguishable from routing noise at this trial count,
+    and the reader deciding whether to re-run deserves to see that (the
+    2026-08-08 batch-2 battery refused at 57 vs 56 of 68, which begged
+    exactly this question)."""
     overall_ok = pruned.accuracy >= original.accuracy
     near_miss_ok = pruned.near_miss_accuracy >= original.near_miss_accuracy
+
+    shared = set(original.trial_correct) & set(pruned.trial_correct)
+    lost = sum(1 for k in shared
+               if original.trial_correct[k] and not pruned.trial_correct[k])
+    gained = sum(1 for k in shared
+                 if not original.trial_correct[k] and pruned.trial_correct[k])
+    annotation = {
+        "discordant_lost": lost,
+        "discordant_gained": gained,
+        "discordant_p": compare_module.exact_sign_test_p(gained, lost),
+    }
     if overall_ok and near_miss_ok:
-        return {"verdict": "land", "failing_case_ids": []}
-    return {"verdict": "refuse", "failing_case_ids": sorted(pruned.failing_case_ids)}
+        return {"verdict": "land", "failing_case_ids": [], **annotation}
+    return {"verdict": "refuse",
+            "failing_case_ids": sorted(pruned.failing_case_ids), **annotation}
 
 
 # --------------------------------------------------------------------------
@@ -606,6 +636,13 @@ def write_routing_parity_report(
             f"- {condition}: accuracy {score.correct}/{score.total} ({score.accuracy:.1%}), "
             f"near-miss rejection {score.near_miss_correct}/{score.near_miss_total} "
             f"({score.near_miss_accuracy:.1%})"
+        )
+    if verdict_payload.get("discordant_p") is not None:
+        lines.append(
+            f"- discordant trials: pruned lost {verdict_payload['discordant_lost']}, "
+            f"gained {verdict_payload['discordant_gained']}; exact two-sided "
+            f"p={verdict_payload['discordant_p']:.3f} — a refuse with p near 1 is "
+            f"indistinguishable from routing noise at this trial count"
         )
     if verdict_payload["failing_case_ids"]:
         lines.append("")
@@ -710,8 +747,7 @@ def run_routing_parity_eval(
 
     return {
         "run_dir": str(run_dir),
-        "verdict": verdict_payload["verdict"],
-        "failing_case_ids": verdict_payload["failing_case_ids"],
+        **{k: v for k, v in verdict_payload.items()},
         "scores": {condition: score.to_dict() for condition, score in scores.items()},
         "report_json": str(json_path),
         "report_md": str(md_path),
