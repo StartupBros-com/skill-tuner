@@ -44,7 +44,17 @@ The 8362 read tokens are Claude Code's own system prompt. Our content is
 cache-*written* every call and never read. So the doctrine, constant across
 all 16 probe calls, buys nothing where it currently sits.
 
-## What would work: the doctrine as a system prompt
+## The system-prompt envelope, adopted opt-in — and humbler than projected
+
+Shipped v0.6.0 as `--doctrine-system` on `probe` and `gate` (adapter_shape
+`claude-p-doctrine-system-prompt`; `compare` refuses cross-shape pairs).
+The re-baseline legs measured the real saving at **~6–11% per leg**, not
+the ~25–30% the microbenchmark below projected: the prompt-cache TTL
+(~5 min) expires between probe calls because each target's verify batch
+takes minutes, so most probe calls re-write the doctrine prefix anyway.
+The microbenchmark ran back-to-back calls; real legs do not. Kept opt-in.
+
+## What would work: the doctrine as a system prompt (microbenchmark)
 
 Moving the constant doctrine into `--append-system-prompt` makes it part of
 the cached prefix. Same three calls, varying targets:

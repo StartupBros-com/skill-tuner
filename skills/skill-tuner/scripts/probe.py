@@ -279,7 +279,29 @@ def quote_present(quote: str, target_text: str) -> bool:
 # --------------------------------------------------------------------------
 
 
-def build_probe_prompt(doctrine_text: str, target_text: str) -> str:
+def build_probe_prompt(
+    doctrine_text: str, target_text: str, *, doctrine_in_system: bool = False
+) -> str:
+    if doctrine_in_system:
+        # The doctrine rides the system prompt (cached prefix); the user
+        # message carries only the varying material. Same instructions,
+        # different envelope -- runs record ADAPTER_SHAPE_DOCTRINE_SYSTEM
+        # and are only comparable to runs of the same shape.
+        return (
+            "You are auditing a target document against the doctrine "
+            "provided in your system prompt. Report only genuine defects -- "
+            "places where the target document violates a specific rule from "
+            "that doctrine.\n\n"
+            "=== TARGET DOCUMENT ===\n"
+            f"{target_text}\n\n"
+            "Return ONLY a JSON array. Each element is an object with keys "
+            '"rule" (the doctrine rule violated), "target_quote" (the exact, '
+            "verbatim text from the target document that shows the defect), "
+            '"issue" (why it violates the rule), and "proposed_fix" (a concrete '
+            "fix). An empty array `[]` is a legitimate, expected answer when the "
+            "target document has no genuine defects under the doctrine -- do "
+            "not manufacture findings just to fill the list. No other text."
+        )
     return (
         "You are auditing a target document against a doctrine's checks. "
         "Read the doctrine below, then the target document, and report only "
@@ -332,12 +354,16 @@ def run_probe_call(
     rows: list[dict[str, Any]],
     case_id: str = "probe",
     trials_path: Path | None = None,
+    doctrine_in_system: bool = False,
 ) -> list[dict[str, Any]]:
-    """One adapter call carrying the doctrine + target document inline.
-    Malformed JSON is retried through the same adapter path -- never
-    subprocess -- up to ``retries`` additional bounded attempts. Every
-    attempt is recorded in ``rows`` regardless of outcome."""
-    prompt = build_probe_prompt(doctrine_text, target_text)
+    """One adapter call carrying the doctrine + target document (inline, or
+    with the doctrine in the adapter's system prompt when
+    ``doctrine_in_system``). Malformed JSON is retried through the same
+    adapter path -- never subprocess -- up to ``retries`` additional bounded
+    attempts. Every attempt is recorded in ``rows`` regardless of outcome."""
+    prompt = build_probe_prompt(
+        doctrine_text, target_text, doctrine_in_system=doctrine_in_system
+    )
     last_error: Exception | None = None
 
     for attempt in range(retries + 1):
@@ -634,16 +660,21 @@ def probe_one_target(
     trials_path: Path | None,
     retries: int = DEFAULT_RETRIES,
     prefix: str = "",
+    probe_adapter: AdapterFn | None = None,
+    doctrine_in_system: bool = False,
 ) -> tuple[list[VerifiedFinding], int]:
     """Probe one target and verify every capped finding: the per-target unit
-    both the fixed-n probe and the sequential gate run. Returns (verified
-    findings, overflow). Budget exhaustion propagates as _BudgetExhausted for
-    the caller's policy -- the fixed-n probe flags a partial run, the gate
-    treats it as an undecided stop."""
+    both the fixed-n probe and the sequential gate run. ``probe_adapter``
+    (default: ``adapter``) carries the probe call -- when the doctrine rides
+    a system prompt, it is bound to the probe adapter ONLY, so verify
+    skeptics never see the doctrine and stay blind. Returns (verified
+    findings, overflow). Budget exhaustion propagates as _BudgetExhausted
+    for the caller's policy."""
     raw_findings = run_probe_call(
         doctrine_text,
         target_text,
-        adapter=adapter,
+        adapter=probe_adapter if probe_adapter is not None else adapter,
+        doctrine_in_system=doctrine_in_system,
         model=probe_config.model,
         retries=retries,
         rows=rows,
@@ -668,6 +699,9 @@ def probe_one_target(
     return verified, overflow
 
 
+SystemAdapterFn = Callable[[str, str, str], "tune.AdapterResult"]
+
+
 def run_probe(
     config: Mapping[str, Any],
     adapter: AdapterFn,
@@ -677,6 +711,8 @@ def run_probe(
     retries: int = DEFAULT_RETRIES,
     budget_usd: float | None = None,
     run_id: str | None = None,
+    doctrine_in_system: bool = False,
+    system_adapter: SystemAdapterFn | None = None,
 ) -> dict[str, Any]:
     """Run the full marginal-value probe pipeline: one probe call (doctrine
     + target inline), cap findings, one fresh self-contained verify call per
@@ -705,8 +741,14 @@ def run_probe(
     per_target: list[dict[str, Any]] = []
     overflow = 0
     halted_on_budget = False
+    if doctrine_in_system and system_adapter is None:
+        raise ValueError("doctrine_in_system requires a system_adapter")
     spend_state = {"spent": 0.0}
     guarded_adapter = _budget_guarded(adapter, budget_usd, spend_state)
+    guarded_probe_adapter = guarded_adapter
+    if doctrine_in_system:
+        bound = lambda prompt, model: system_adapter(prompt, model, doctrine_text)  # noqa: E731
+        guarded_probe_adapter = _budget_guarded(bound, budget_usd, spend_state)
 
     # Created up front so every trial row is durable the moment it completes.
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -735,6 +777,8 @@ def run_probe(
                 trials_path=trials_path,
                 retries=retries,
                 prefix=prefix,
+                probe_adapter=guarded_probe_adapter,
+                doctrine_in_system=doctrine_in_system,
             )
             for entry in probed:
                 if multi_target:
@@ -785,6 +829,9 @@ def run_probe(
         finished_at=provenance.utc_now(),
         cli_version=provenance.cli_version(),
         tool_version=provenance.tool_version(),
+        adapter_shape=(provenance.ADAPTER_SHAPE_DOCTRINE_SYSTEM
+                       if doctrine_in_system
+                       else provenance.ADAPTER_SHAPE_USER_MESSAGE),
         extra={"eval": "probe", "pin": pin},
     )
 
