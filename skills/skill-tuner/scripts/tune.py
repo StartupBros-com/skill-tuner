@@ -957,6 +957,55 @@ def _gate_exit_code(result: Mapping[str, Any]) -> int:
     return 0 if (sequential_ok and fixed_ok) else 1
 
 
+def _cmd_endtask(args: argparse.Namespace) -> int:
+    """End-task A/B: same briefs under two skill versions, deterministic
+    grader, paired verdict. Same guards as every spending path."""
+    import endtask
+
+    config = _load_json_config(args.config)
+    base_dir = args.config.resolve().parent
+    content_parts = ["endtask", str(args.config), str(args.grader),
+                     json.dumps(config, sort_keys=True), f"delta={args.delta}"]
+    run_dir, run_id = resolve_run_dir(
+        args.reports_dir, "endtask", content_parts, run_id=args.run_id,
+        resume_id=args.resume,
+    )
+    auth_mode = detect_auth_mode()
+    enforce_budget_preflight(auth_mode, args.budget_usd, args.allow_unmetered)
+    try:
+        spec = endtask.load_config(config, base_dir=base_dir)
+    except endtask.EndtaskError as exc:
+        print(f"cannot run: {exc}")
+        return 2
+    planned = len(spec["cases"]) * 2 * spec["trials"]
+    confirm_or_abort(
+        f"Planned endtask calls: {planned} ({len(spec['cases'])} case(s) x 2 "
+        f"conditions x {spec['trials']} trial(s)) | estimated cost: "
+        f"${planned * args.est_cost_per_call:.2f} "
+        f"(${args.est_cost_per_call:.4f}/call, model={spec['model']})",
+        yes=args.yes,
+        isatty=sys.stdin.isatty(),
+    )
+
+    def adapter(prompt: str, model: str) -> AdapterResult:
+        return call_adapter(prompt, model, retries=args.retries)
+
+    try:
+        result = endtask.run_endtask(
+            config, adapter, run_dir, Path(args.grader),
+            delta=args.delta, base_dir=base_dir,
+            budget_usd=args.budget_usd, run_id=run_id,
+        )
+    except endtask.EndtaskError as exc:
+        print(f"cannot run: {exc}")
+        return 2
+    print(
+        f"Run {run_id}: verdict={result['verdict']} "
+        f"cases={result['cases_scored']} spent=${result['spent_usd']:.4f}"
+    )
+    return 0 if result["verdict"] in ("better", "not_worse") else 1
+
+
 def _cmd_compare(args: argparse.Namespace) -> int:
     """Judge one probe run against another, paired by document.
 
@@ -1143,6 +1192,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Send the doctrine via a cached system prompt (new adapter shape)",
     )
     gate_cmd.set_defaults(handler=_cmd_gate)
+
+    endtask_cmd = subparsers.add_parser(
+        "endtask",
+        help="End-task A/B: same briefs under two skill versions, "
+             "deterministic grader, paired verdict",
+    )
+    _add_eval_arguments(endtask_cmd)
+    endtask_cmd.add_argument(
+        "--grader", required=True,
+        help="Grader script: invoked as `python3 GRADER <output_file> "
+             "<case_id> <condition>`, must print JSON with pass_rate in [0,1]",
+    )
+    endtask_cmd.add_argument(
+        "--delta", type=float, required=True,
+        help="Non-inferiority margin in pass_rate per case — always yours to state",
+    )
+    endtask_cmd.set_defaults(handler=_cmd_endtask)
 
     report = subparsers.add_parser("report", help="Rebuild report.json/report.md for a run")
     report.add_argument("run_id")
