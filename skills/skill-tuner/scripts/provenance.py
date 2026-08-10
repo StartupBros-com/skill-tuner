@@ -263,6 +263,10 @@ def _worktree_differs(path: Path, pinned_text: str) -> bool | None:
 # envelopes (measured in docs/COSTS.md). Recording the shape lets `compare`
 # refuse cross-envelope pairings instead of silently measuring the envelope.
 ADAPTER_SHAPE_USER_MESSAGE = "claude-p-user-message"
+# The doctrine rides --append-system-prompt (cached prefix); target and
+# instructions stay in the user message. Adopted at the v0.6.0 re-baseline
+# boundary per docs/COSTS.md's rule.
+ADAPTER_SHAPE_DOCTRINE_SYSTEM = "claude-p-doctrine-system-prompt"
 
 
 def build_manifest(

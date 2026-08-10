@@ -114,8 +114,10 @@ def detect_auth_mode(env: Mapping[str, str] | None = None) -> str:
 # --------------------------------------------------------------------------
 
 
-def build_adapter_command(prompt: str, model: str) -> list[str]:
-    return [
+def build_adapter_command(
+    prompt: str, model: str, system_prompt: str | None = None
+) -> list[str]:
+    command = [
         "claude",
         "-p",
         prompt,
@@ -130,12 +132,21 @@ def build_adapter_command(prompt: str, model: str) -> list[str]:
         "--model",
         model,
     ]
+    if system_prompt:
+        # Constant material (a doctrine repeated across every probe call of
+        # a leg) rides the cached system-prompt prefix instead of being
+        # cache-written per call -- the envelope optimization measured in
+        # docs/COSTS.md (break-even ~6 calls). Runs using it record a
+        # different adapter_shape, and compare refuses cross-shape pairs.
+        command += ["--append-system-prompt", system_prompt]
+    return command
 
 
 def call_adapter(
     prompt: str,
     model: str,
     *,
+    system_prompt: str | None = None,
     retries: int = DEFAULT_RETRIES,
     backoff: Callable[[float], None] = time.sleep,
     run: Callable[..., subprocess.CompletedProcess] = subprocess.run,
@@ -145,7 +156,7 @@ def call_adapter(
     backoff cover both subprocess failure (nonzero exit) and malformed JSON
     output.
     """
-    command = build_adapter_command(prompt, model)
+    command = build_adapter_command(prompt, model, system_prompt)
     last_error: Exception | None = None
 
     for attempt in range(retries + 1):
@@ -711,6 +722,9 @@ def _run_probe_config(
     def adapter(prompt: str, model: str) -> AdapterResult:
         return call_adapter(prompt, model, retries=args.retries)
 
+    def system_adapter(prompt: str, model: str, system: str) -> AdapterResult:
+        return call_adapter(prompt, model, retries=args.retries, system_prompt=system)
+
     result = probe.run_probe(
         config,
         adapter,
@@ -719,6 +733,8 @@ def _run_probe_config(
         retries=args.retries,
         budget_usd=args.budget_usd,
         run_id=run_id,
+        doctrine_in_system=bool(getattr(args, "doctrine_system", False)),
+        system_adapter=system_adapter,
     )
     doctrine_hash = str(result.get("doctrine_sha256", ""))[:8]
     print(
@@ -882,6 +898,9 @@ def _cmd_gate(args: argparse.Namespace) -> int:
     def adapter(prompt: str, model: str) -> AdapterResult:
         return call_adapter(prompt, model, retries=args.retries)
 
+    def system_adapter(prompt: str, model: str, system: str) -> AdapterResult:
+        return call_adapter(prompt, model, retries=args.retries, system_prompt=system)
+
     try:
         result = gate.run_gate(
             config,
@@ -895,6 +914,8 @@ def _cmd_gate(args: argparse.Namespace) -> int:
             retries=args.retries,
             budget_usd=args.budget_usd,
             run_id=run_id,
+            doctrine_in_system=bool(getattr(args, "doctrine_system", False)),
+            system_adapter=system_adapter,
         )
     except gate.GateError as exc:
         print(f"cannot gate: {exc}")
@@ -1090,6 +1111,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     probe.add_argument("--max-findings", type=int, default=8)
     probe.add_argument("--verify-trials", type=int, default=1)
+    probe.add_argument(
+        "--doctrine-system", action="store_true",
+        help="Send the doctrine via a cached system prompt (new adapter "
+             "shape; ~45%% cheaper probe calls, only comparable to "
+             "same-shape runs)",
+    )
     probe.set_defaults(handler=_cmd_probe)
 
     gate_cmd = subparsers.add_parser(
@@ -1110,6 +1137,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--sigma0", type=float, default=None,
         help="Pre-registered sd bound for the mSPRT (default: compare.SEQUENTIAL_SIGMA0; "
              "overstating it delays stopping, never hastens it)",
+    )
+    gate_cmd.add_argument(
+        "--doctrine-system", action="store_true",
+        help="Send the doctrine via a cached system prompt (new adapter shape)",
     )
     gate_cmd.set_defaults(handler=_cmd_gate)
 

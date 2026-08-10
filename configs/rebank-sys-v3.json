@@ -1,0 +1,23 @@
+{
+  "model": "claude-sonnet-5",
+  "doctrine_file": "../skills/skill-tuner/SKILL.md",
+  "max_findings": 5,
+  "verify_trials": 3,
+  "target_files": [
+    "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md"
+  ]
+}

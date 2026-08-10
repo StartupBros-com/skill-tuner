@@ -59,7 +59,11 @@ def run_gate(
     retries: int = probe_module.DEFAULT_RETRIES,
     budget_usd: float | None = None,
     run_id: str | None = None,
+    doctrine_in_system: bool = False,
+    system_adapter: "probe_module.SystemAdapterFn | None" = None,
 ) -> dict[str, Any]:
+    if doctrine_in_system and system_adapter is None:
+        raise GateError("doctrine_in_system requires a system_adapter")
     resolved_base_dir = base_dir if base_dir is not None else Path(".")
     probe_config = probe_module.load_config(config, base_dir=resolved_base_dir)
     started_at = provenance.utc_now()
@@ -98,6 +102,10 @@ def run_gate(
     )
     spend_state = {"spent": 0.0}
     guarded = probe_module.budget_guarded(adapter, budget_usd, spend_state)
+    guarded_probe = guarded
+    if doctrine_in_system:
+        bound = lambda prompt, model: system_adapter(prompt, model, doctrine_input.text)  # noqa: E731
+        guarded_probe = probe_module.budget_guarded(bound, budget_usd, spend_state)
 
     run_dir.mkdir(parents=True, exist_ok=True)
     trials_path = run_dir / "trials.jsonl"
@@ -115,6 +123,8 @@ def run_gate(
                 trials_path=trials_path,
                 retries=retries,
                 prefix=f"t{index}-",
+                probe_adapter=guarded_probe,
+                doctrine_in_system=doctrine_in_system,
             )
         except probe_module.BudgetExhausted:
             halted_on_budget = True
@@ -185,6 +195,9 @@ def run_gate(
         finished_at=provenance.utc_now(),
         cli_version=provenance.cli_version(),
         tool_version=provenance.tool_version(),
+        adapter_shape=(provenance.ADAPTER_SHAPE_DOCTRINE_SYSTEM
+                       if doctrine_in_system
+                       else provenance.ADAPTER_SHAPE_USER_MESSAGE),
         extra={"eval": "gate", "pin": probe_config.pin},
     )
 
