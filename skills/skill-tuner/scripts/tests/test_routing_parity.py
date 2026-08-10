@@ -188,6 +188,55 @@ class ParityGateEqualOrBetterTest(unittest.TestCase):
             self.assertIn("pruned", report["routing_parity"]["scores"])
 
 
+class DiscordantAnnotationTest(unittest.TestCase):
+    """The verdict carries a noise annotation: discordant (case, trial)
+    counts and the exact two-sided binomial p on them. The verdict itself
+    stays the conservative point rule; the annotation tells the reader
+    whether a refuse is distinguishable from routing noise."""
+
+    @staticmethod
+    def _score(condition, trial_correct):
+        correct = sum(1 for v in trial_correct.values() if v)
+        total = len(trial_correct)
+        return routing_parity.ScoreResult(
+            condition=condition, total=total, correct=correct,
+            accuracy=correct / total, near_miss_total=0, near_miss_correct=0,
+            near_miss_accuracy=1.0,
+            failing_case_ids=sorted(k.split("|")[0] for k, v in trial_correct.items() if not v),
+            trial_correct=trial_correct,
+        )
+
+    def test_one_lost_one_gained_annotates_as_pure_noise(self):
+        original = self._score("original", {"a|1": True, "b|1": False, "c|1": True})
+        pruned = self._score("pruned", {"a|1": False, "b|1": True, "c|1": True})
+
+        verdict = routing_parity.determine_verdict(original, pruned)
+
+        self.assertEqual(1, verdict["discordant_lost"])
+        self.assertEqual(1, verdict["discordant_gained"])
+        self.assertEqual(1.0, verdict["discordant_p"])
+
+    def test_consistent_losses_annotate_as_signal(self):
+        original = self._score("original", {k: True for k in ("a|1", "b|1", "c|1", "d|1")})
+        pruned = self._score("pruned", {"a|1": False, "b|1": False, "c|1": False, "d|1": True})
+
+        verdict = routing_parity.determine_verdict(original, pruned)
+
+        self.assertEqual("refuse", verdict["verdict"])
+        self.assertEqual(3, verdict["discordant_lost"])
+        self.assertEqual(0, verdict["discordant_gained"])
+        # exact two-sided binomial on 0 of 3: 2 * 0.5**3
+        self.assertAlmostEqual(0.25, verdict["discordant_p"])
+
+    def test_all_concordant_yields_none_p(self):
+        same = {"a|1": True, "b|1": True}
+        verdict = routing_parity.determine_verdict(
+            self._score("original", dict(same)), self._score("pruned", dict(same))
+        )
+        self.assertEqual("land", verdict["verdict"])
+        self.assertIsNone(verdict["discordant_p"])
+
+
 # --------------------------------------------------------------------------
 # Scenario 2 (AE2): pruned worse -> refuse verdict naming failing prompt ids.
 # --------------------------------------------------------------------------
@@ -215,6 +264,9 @@ class ParityGateWorseTest(unittest.TestCase):
             self.assertIn("alpha__obvious__1", result["failing_case_ids"])
             self.assertEqual(1.0, result["scores"]["original"]["accuracy"])
             self.assertLess(result["scores"]["pruned"]["accuracy"], 1.0)
+            # The noise annotation rides the verdict end to end.
+            self.assertGreaterEqual(result["discordant_lost"], 1)
+            self.assertIsNotNone(result["discordant_p"])
 
             report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
             self.assertEqual("refuse", report["routing_parity"]["verdict"])

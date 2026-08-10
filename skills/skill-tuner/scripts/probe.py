@@ -766,6 +766,11 @@ def run_probe(
 
     return {
         "run_dir": str(run_dir),
+        # Which doctrine text actually ran, so two probe yields are never
+        # informally compared across silently different doctrine versions
+        # (the dogfood3 batch was, and the caveat cost a re-run's worth of
+        # comparability).
+        "doctrine_sha256": doctrine_input.sha256,
         "halted_on_budget": halted_on_budget,
         "spent_usd": round(spend_state["spent"], 6),
         "findings_confirmed": len(confirmed),

@@ -97,6 +97,43 @@ class VerdictTest(unittest.TestCase):
         # 6 wins, 0 losses: exact two-sided sign test p = 2 * 0.5^6.
         self.assertAlmostEqual(0.03125, result["sign_test_p"])
 
+    def test_compare_invocations_are_logged_and_repeat_pairs_flagged(self):
+        # Verdict-shopping guard: every compare invocation lands in
+        # reports/compare_log.jsonl, and a repeated baseline/candidate pair
+        # is surfaced with its variant count.
+        import argparse
+        import contextlib
+        import io
+        import tempfile
+        from pathlib import Path
+
+        import tune
+
+        with tempfile.TemporaryDirectory() as tmp:
+            reports = Path(tmp)
+            def ns(delta, exclude):
+                return argparse.Namespace(
+                    reports_dir=reports, baseline="base-run", candidate="cand-run",
+                    delta=delta, metric=None, exclude=exclude,
+                    paired_json=False, skill_creator=None,
+                )
+
+            first = io.StringIO()
+            with contextlib.redirect_stdout(first):
+                tune._log_compare_invocation(ns(1.0, []), {"verdict": "not_worse"})
+            self.assertNotIn("prior", first.getvalue())
+
+            second = io.StringIO()
+            with contextlib.redirect_stdout(second):
+                tune._log_compare_invocation(ns(2.0, ["drifted"]), {"verdict": "better"})
+            self.assertIn("1 prior comparison(s)", second.getvalue())
+
+            lines = (reports / "compare_log.jsonl").read_text().splitlines()
+            self.assertEqual(2, len(lines))
+            import json as json_mod
+            entries = [json_mod.loads(line) for line in lines]
+            self.assertEqual(["not_worse", "better"], [e["verdict"] for e in entries])
+
     def test_sign_test_matches_the_exact_binomial(self):
         self.assertIsNone(compare.exact_sign_test_p(0, 0))
         self.assertAlmostEqual(1.0, compare.exact_sign_test_p(6, 6))

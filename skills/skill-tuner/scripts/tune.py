@@ -648,7 +648,16 @@ def _run_routing_parity_config(args: argparse.Namespace) -> int:
         yes=args.yes,
         run_id=run_id,
     )
-    print(f"Run {run_id}: verdict={result['verdict']} failing_case_ids={result['failing_case_ids']}")
+    discordant = ""
+    if result.get("discordant_p") is not None:
+        discordant = (
+            f" discordant(lost={result['discordant_lost']}, "
+            f"gained={result['discordant_gained']}, p={result['discordant_p']:.3f})"
+        )
+    print(
+        f"Run {run_id}: verdict={result['verdict']} "
+        f"failing_case_ids={result['failing_case_ids']}{discordant}"
+    )
     return 0
 
 
@@ -711,9 +720,11 @@ def _run_probe_config(
         budget_usd=args.budget_usd,
         run_id=run_id,
     )
+    doctrine_hash = str(result.get("doctrine_sha256", ""))[:8]
     print(
         f"Run {run_id}: findings_confirmed={result['findings_confirmed']} "
-        f"refuted_count={result['refuted_count']} spent=${result['spent_usd']:.4f}"
+        f"refuted_count={result['refuted_count']} spent=${result['spent_usd']:.4f} "
+        f"doctrine={doctrine_hash}"
     )
     if result["halted_on_budget"]:
         print(
@@ -903,7 +914,52 @@ def _cmd_compare(args: argparse.Namespace) -> int:
         print(json.dumps(result, indent=2))
     else:
         print(compare_mod.render(result))
+    _log_compare_invocation(args, result)
     return 0 if result["verdict"] in ("better", "not_worse") else 1
+
+
+def _log_compare_invocation(args: argparse.Namespace, result: Mapping[str, Any]) -> None:
+    """Append this invocation to reports/compare_log.jsonl and surface how
+    often this baseline/candidate pair has been judged before.
+
+    Re-running a comparison with a different delta or exclusion list until a
+    favorable verdict appears is the one laundering path the verdict engine
+    itself cannot see, because each invocation is stateless. The log does not
+    prevent it -- the margin is legitimately the caller's judgment -- it makes
+    the shopping visible, which is what an auditor needs."""
+    import provenance
+
+    log_path = args.reports_dir / "compare_log.jsonl"
+    pair = (str(args.baseline), str(args.candidate))
+    prior = 0
+    variants: set[tuple[Any, ...]] = set()
+    if log_path.exists():
+        for line in log_path.read_text(encoding="utf-8").splitlines():
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if (entry.get("baseline"), entry.get("candidate")) == pair:
+                prior += 1
+                variants.add((entry.get("delta"), tuple(entry.get("exclude") or ())))
+    append_jsonl(log_path, {
+        "at": provenance.utc_now(),
+        "baseline": pair[0],
+        "candidate": pair[1],
+        "delta": args.delta,
+        "metric": getattr(args, "metric", None),
+        "exclude": list(args.exclude or ()),
+        "source": ("paired-json" if getattr(args, "paired_json", False)
+                   else "skill-creator" if getattr(args, "skill_creator", None)
+                   else "probe"),
+        "verdict": result["verdict"],
+    })
+    if prior:
+        print(
+            f"note: this baseline/candidate pair has {prior} prior "
+            f"comparison(s) across {len(variants)} delta/exclude variant(s) — "
+            f"see {log_path}"
+        )
 
 
 def _resolve_run_path(args: argparse.Namespace, value: str) -> Path:

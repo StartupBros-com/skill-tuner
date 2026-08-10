@@ -44,13 +44,27 @@ Fix the defect, not the sentence containing it. A finding about a vague
 completion bound is asking for a bound that can be checked, not for the word
 "clearly" to be deleted.
 
+One check before acting: the skeptic panel verifies text against text — it
+cannot see the filesystem. A finding that asserts an environment fact (a
+path resolves, a file exists, a config value holds) needs that fact checked
+on disk first. When the claim turns out false, the ambiguity that made the
+text read as wrong is usually still real: fix that, not the false claim.
+
 ## 4. Re-probe
 
 Run step 2 again against the edited file.
 
-Done when: **every finding from step 2 is absent from the new report, and the
-new report introduces no confirmed finding you have not addressed.** A fix that
-trades one confirmed defect for another has not landed.
+Done when **either** the re-probe confirms nothing, **or** it confirms only
+findings disjoint from every earlier pass. A finding that overlaps an earlier
+fix means that fix has not landed — address it and re-probe again; a fix that
+trades one confirmed defect for another has not landed either.
+
+Disjoint fresh findings at that point are the instrument's floor, not your
+failure: the probe surfaces ~2 genuine defects per pass on almost any
+document, including already-audited ones (its measured marginal-value
+property), so a rich document never re-probes to zero — one loop here ran
+eight passes before that was accepted. Apply the fresh ones that are cheap
+and clearly right, and report the rest as residuals.
 
 ## 5. If you changed the description, prove it still routes
 
