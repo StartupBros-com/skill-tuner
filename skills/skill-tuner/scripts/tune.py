@@ -835,6 +835,107 @@ def _cmd_verify(args: argparse.Namespace) -> int:
     return 1 if result["drifted"] else 0
 
 
+def _cmd_gate(args: argparse.Namespace) -> int:
+    """Sequential gate: probe targets one at a time against a banked
+    baseline, stopping the moment the mSPRT establishes not_worse / worse /
+    better at the declared margin. Same pre-flight guards as the probe; the
+    planned count is the worst case, and every early stop spends less."""
+    import compare as compare_mod
+    import gate
+    import probe
+
+    if args.config is None:
+        print("gate requires --config (a probe-shaped eval config naming target_files)")
+        return 2
+    if args.sigma0 is None:
+        args.sigma0 = compare_mod.SEQUENTIAL_SIGMA0
+
+    config = _load_json_config(args.config)
+    if getattr(args, "pin", None):
+        config = {**config, "pin": args.pin}
+    base_dir = args.config.resolve().parent
+
+    baseline = compare_mod.load_report(_resolve_run_path(args, args.baseline))
+
+    content_parts = ["gate", str(args.config), args.baseline,
+                     json.dumps(config, sort_keys=True), f"delta={args.delta}"]
+    run_dir, run_id = resolve_run_dir(
+        args.reports_dir, "gate", content_parts, run_id=args.run_id, resume_id=args.resume
+    )
+
+    auth_mode = detect_auth_mode()
+    enforce_budget_preflight(auth_mode, args.budget_usd, args.allow_unmetered)
+
+    probe_config = probe.load_config(config, base_dir=base_dir)
+    per_target = 1 + probe_config.max_findings * probe_config.verify_trials
+    planned = len(probe_config.target_paths) * per_target
+    confirm_or_abort(
+        f"Planned gate calls: WORST CASE {planned} "
+        f"({len(probe_config.target_paths)} target(s), sequential — an early "
+        f"stop spends less) | estimated cost cap: "
+        f"${planned * args.est_cost_per_call:.2f} "
+        f"(${args.est_cost_per_call:.4f}/call, model={config.get('model')})",
+        yes=args.yes,
+        isatty=sys.stdin.isatty(),
+    )
+
+    def adapter(prompt: str, model: str) -> AdapterResult:
+        return call_adapter(prompt, model, retries=args.retries)
+
+    try:
+        result = gate.run_gate(
+            config,
+            adapter,
+            run_dir,
+            baseline,
+            delta=args.delta,
+            alpha=args.alpha,
+            sigma0=args.sigma0,
+            base_dir=base_dir,
+            retries=args.retries,
+            budget_usd=args.budget_usd,
+            run_id=run_id,
+        )
+    except gate.GateError as exc:
+        print(f"cannot gate: {exc}")
+        return 2
+
+    fixed = result.get("fixed_n") or {}
+    print(
+        f"Run {run_id}: sequential={result['sequential_verdict']} after "
+        f"{result['targets_probed']}/{result['targets_total']} targets "
+        f"(fixed-n of record: {fixed.get('verdict', 'n/a')}) "
+        f"spent=${result['spent_usd']:.4f} "
+        f"doctrine={str(result.get('doctrine_sha256', ''))[:8]}"
+    )
+    if result["stopped_early"]:
+        print(
+            f"stopped early: {result['targets_skipped']} target(s) skipped — "
+            f"roughly ${result['targets_skipped'] * per_target * args.est_cost_per_call:.2f} "
+            f"not spent"
+        )
+    return _gate_exit_code(result)
+
+
+def _gate_exit_code(result: Mapping[str, Any]) -> int:
+    """Pass/fail policy for the sequential gate.
+
+    An early stop passes on the sequential verdict, corroborated by the
+    fixed-n verdict on the collected pairs (both always exist together now
+    that stops respect MIN_DOCUMENTS). A full leg that ends undecided
+    degrades to exactly the plain-compare rule: the fixed-n verdict of
+    record decides alone — the 2026-08-10 review reproduced the old AND
+    policy failing an undecided leg whose fixed-n verdict passed."""
+    fixed = result.get("fixed_n") or {}
+    fixed_ok = fixed.get("verdict") in ("better", "not_worse")
+    if result.get("halted_on_budget"):
+        return 1
+    if result["sequential_verdict"] == "undecided":
+        return 0 if fixed_ok else 1
+    sequential_ok = result["sequential_verdict"] in ("better", "not_worse")
+    return 0 if (sequential_ok and fixed_ok) else 1
+
+
 def _cmd_compare(args: argparse.Namespace) -> int:
     """Judge one probe run against another, paired by document.
 
@@ -990,6 +1091,27 @@ def build_parser() -> argparse.ArgumentParser:
     probe.add_argument("--max-findings", type=int, default=8)
     probe.add_argument("--verify-trials", type=int, default=1)
     probe.set_defaults(handler=_cmd_probe)
+
+    gate_cmd = subparsers.add_parser(
+        "gate",
+        help="Sequential gate: probe until the mSPRT decides vs a banked baseline",
+    )
+    _add_eval_arguments(gate_cmd)
+    gate_cmd.add_argument(
+        "--baseline", required=True,
+        help="Banked run id (or path) whose per-target counts to pair against",
+    )
+    gate_cmd.add_argument(
+        "--delta", type=float, required=True,
+        help="Non-inferiority margin in findings per document — always yours to state",
+    )
+    gate_cmd.add_argument("--alpha", type=float, default=0.05)
+    gate_cmd.add_argument(
+        "--sigma0", type=float, default=None,
+        help="Pre-registered sd bound for the mSPRT (default: compare.SEQUENTIAL_SIGMA0; "
+             "overstating it delays stopping, never hastens it)",
+    )
+    gate_cmd.set_defaults(handler=_cmd_gate)
 
     report = subparsers.add_parser("report", help="Rebuild report.json/report.md for a run")
     report.add_argument("run_id")

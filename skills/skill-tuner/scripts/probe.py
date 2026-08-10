@@ -73,9 +73,20 @@ class ProbeParseError(ValueError):
 
 
 class _BudgetExhausted(Exception):
-    """Internal signal: the run has spent its cap. Raised by the budget
-    wrapper before a call is made, never surfaced to callers -- run_probe
-    catches it, stops cleanly, and reports the partial result as halted."""
+    """Signal: the run has spent its cap. Raised by the budget wrapper
+    before a call is made; run_probe and the sequential gate catch it, stop
+    cleanly, and report the partial result as halted. Public alias:
+    ``BudgetExhausted``."""
+
+
+BudgetExhausted = _BudgetExhausted
+
+
+# Public seam for callers outside this module (the sequential gate): the
+# budget wrapper and its stop signal are part of the probe's contract now,
+# not internals.
+def budget_guarded(adapter, budget_usd, state):
+    return _budget_guarded(adapter, budget_usd, state)
 
 
 def _record(
@@ -613,6 +624,50 @@ def write_probe_report(
 # --------------------------------------------------------------------------
 
 
+def probe_one_target(
+    target_text: str,
+    doctrine_text: str,
+    *,
+    adapter: AdapterFn,
+    probe_config: ProbeConfig,
+    rows: list[dict[str, Any]],
+    trials_path: Path | None,
+    retries: int = DEFAULT_RETRIES,
+    prefix: str = "",
+) -> tuple[list[VerifiedFinding], int]:
+    """Probe one target and verify every capped finding: the per-target unit
+    both the fixed-n probe and the sequential gate run. Returns (verified
+    findings, overflow). Budget exhaustion propagates as _BudgetExhausted for
+    the caller's policy -- the fixed-n probe flags a partial run, the gate
+    treats it as an undecided stop."""
+    raw_findings = run_probe_call(
+        doctrine_text,
+        target_text,
+        adapter=adapter,
+        model=probe_config.model,
+        retries=retries,
+        rows=rows,
+        case_id=f"{prefix}probe",
+        trials_path=trials_path,
+    )
+    capped, overflow = cap_findings(raw_findings, probe_config.max_findings)
+    verified: list[VerifiedFinding] = []
+    for index, finding in enumerate(capped, start=1):
+        verified.append(
+            verify_finding(
+                finding,
+                target_text=target_text,
+                adapter=adapter,
+                model=probe_config.model,
+                case_id=f"{prefix}finding-{index}",
+                rows=rows,
+                verify_trials=probe_config.verify_trials,
+                trials_path=trials_path,
+            )
+        )
+    return verified, overflow
+
+
 def run_probe(
     config: Mapping[str, Any],
     adapter: AdapterFn,
@@ -671,30 +726,17 @@ def run_probe(
         target_halted = False
 
         try:
-            raw_findings = run_probe_call(
-                doctrine_text,
+            probed, target_overflow = probe_one_target(
                 target_text,
+                doctrine_text,
                 adapter=guarded_adapter,
-                model=probe_config.model,
-                retries=retries,
+                probe_config=probe_config,
                 rows=rows,
-                case_id=f"{prefix}probe",
                 trials_path=trials_path,
+                retries=retries,
+                prefix=prefix,
             )
-
-            capped, target_overflow = cap_findings(raw_findings, probe_config.max_findings)
-
-            for index, finding in enumerate(capped, start=1):
-                entry = verify_finding(
-                    finding,
-                    target_text=target_text,
-                    adapter=guarded_adapter,
-                    model=probe_config.model,
-                    case_id=f"{prefix}finding-{index}",
-                    rows=rows,
-                    verify_trials=probe_config.verify_trials,
-                    trials_path=trials_path,
-                )
+            for entry in probed:
                 if multi_target:
                     entry = replace(entry, target_file=str(target_path))
                 target_verified.append(entry)

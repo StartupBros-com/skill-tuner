@@ -77,6 +77,24 @@ envelope: every manifest records its `adapter_shape`, runs from before the
 field are read as the inline envelope they all used, and `compare` refuses
 to pair two different shapes.
 
+## Sequential gating: pay for the answer, not the leg
+
+`tune.py gate --config X --baseline RUN --delta D` probes targets one at a
+time and stops the moment two mixture SPRTs establish not_worse / worse /
+better at your margin (anytime-valid under the pre-registered sd bound
+`SEQUENTIAL_SIGMA0 = 2.0`; every banked gate's observed sd sat below it).
+Replayed over the five banked gates ($0, `scripts/replay_sequential.py`):
+the decisive one (v3) stops at n=7/15 and saves **$4.10 of $8.30 (49%)**;
+the four non-decisive gates never stop and cost exactly what fixed-n cost.
+The mode saves money when the answer is clear and never conjures an answer
+when it is not — and it never disagreed with a full leg on pass/fail.
+
+The trade it does make: an early stop can land a weaker verdict (v3
+sequential says not_worse at n=7 where the full leg earned **better**).
+When the headline claim matters, run the full leg; the gate's fixed-n
+verdict on collected pairs is always printed beside the sequential one and
+remains the verdict of record.
+
 ## What to do meanwhile
 
 - Keep `verify_trials: 3`. Caching makes the panel nearly free and it is the

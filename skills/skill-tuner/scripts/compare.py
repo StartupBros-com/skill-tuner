@@ -141,6 +141,102 @@ def bootstrap_ci_95(diffs: Sequence[float]) -> tuple[float, float]:
     return low, high
 
 
+# --------------------------------------------------------------------------
+# Sequential gating (opt-in): mixture SPRT over the paired diffs
+# --------------------------------------------------------------------------
+
+# Pre-registered standard-deviation bound for the mSPRT's normal likelihood.
+# The five banked doctrine gates observed paired-diff sds between 0.95 and
+# 1.82; 2.0 is deliberately above all of them, and OVERSTATING sigma makes
+# the test stop later, never earlier -- the safe direction for a gate. The
+# value is a registered constant, not estimated from the data mid-run,
+# because a variance estimated from the same stream it monitors forfeits the
+# anytime guarantee.
+SEQUENTIAL_SIGMA0 = 2.0
+
+
+def msprt_lambda(
+    diffs: Sequence[float], mu0: float, *, sigma0: float = SEQUENTIAL_SIGMA0,
+    tau: float | None = None,
+) -> float:
+    """Mixture SPRT statistic for H0: mu = mu0 against a N(mu0, tau^2)
+    mixture of alternatives, observations modelled N(mu, sigma0^2).
+
+    Lambda_n = sqrt(sigma0^2 / (sigma0^2 + n tau^2))
+               * exp( n^2 tau^2 (mean - mu0)^2
+                      / (2 sigma0^2 (sigma0^2 + n tau^2)) )
+
+    Under H0 this is a nonnegative martingale with expectation 1, so by
+    Ville's inequality P(sup_n Lambda_n >= 1/alpha) <= alpha: the test may
+    be consulted after every observation with no peeking penalty. The
+    guarantee is exact for normal data with sd <= sigma0 and degrades
+    gracefully for the near-normal integer diffs this gate sees; the fixed-n
+    verdict on whatever was collected is still computed and reported as the
+    verdict of record."""
+    n = len(diffs)
+    if n == 0:
+        return 1.0
+    tau_sq = (sigma0 if tau is None else tau) ** 2
+    sigma_sq = sigma0 ** 2
+    mean = statistics.mean(diffs)
+    denom = sigma_sq + n * tau_sq
+    return math.sqrt(sigma_sq / denom) * math.exp(
+        (n ** 2) * tau_sq * (mean - mu0) ** 2 / (2 * sigma_sq * denom)
+    )
+
+
+def sequential_decision(
+    diffs: Sequence[float], *, delta: float, alpha: float = 0.05,
+    sigma0: float = SEQUENTIAL_SIGMA0,
+) -> dict[str, Any]:
+    """Consult the two mixture SPRTs the gate cares about and say whether
+    the run may stop now.
+
+    - ``lambda_margin`` tests H0: mu = -delta. Crossing 1/alpha with the
+      observed mean above -delta establishes non-inferiority (stop:
+      ``not_worse``); crossing with the mean below -delta establishes a
+      regression past the margin (stop: ``worse``).
+    - ``lambda_zero`` tests H0: mu = 0. Crossing with a positive mean
+      establishes superiority (upgrades a stop to ``better``).
+
+    Returns the statistics and a ``stop`` field of ``better`` /
+    ``not_worse`` / ``worse`` / None (keep probing). Direction is read from
+    the observed mean; the caller reports the final fixed-n interval beside
+    whatever this decides."""
+    threshold = 1.0 / alpha
+    lam_margin = msprt_lambda(diffs, -delta, sigma0=sigma0)
+    lam_zero = msprt_lambda(diffs, 0.0, sigma0=sigma0)
+    mean = statistics.mean(diffs) if diffs else 0.0
+    sd = statistics.stdev(diffs) if len(diffs) >= 2 else None
+
+    stop: str | None = None
+    if lam_margin >= threshold:
+        stop = "not_worse" if mean > -delta else "worse"
+    if stop == "not_worse" and lam_zero >= threshold and mean > 0:
+        stop = "better"
+    return {
+        "n": len(diffs),
+        "mean": mean,
+        "sd": sd,
+        # The anytime guarantee assumes the true sd sits under the
+        # pre-registered sigma0; when the RUNNING sd breaches it, a stop
+        # decided under the violated assumption must be visibly flagged.
+        "sigma0_exceeded": bool(sd is not None and sd > sigma0),
+        "lambda_margin": lam_margin,
+        "lambda_zero": lam_zero,
+        "threshold": threshold,
+        "sigma0": sigma0,
+        "alpha": alpha,
+        "stop": stop,
+    }
+
+
+def per_target_counts(report: Mapping[str, Any]) -> dict[str, int]:
+    """Public accessor for a probe report's per-document confirmed counts,
+    keyed by target path -- what the sequential gate pairs against."""
+    return _per_target(report)
+
+
 def _per_target(report: Mapping[str, Any]) -> dict[str, int]:
     probe = report.get("probe")
     if not isinstance(probe, Mapping):

@@ -4,12 +4,12 @@ description: Run, smoke-test and debug skill-tuner. Use when asked to run skill-
 ---
 
 skill-tuner is a **CLI**, not a server or a GUI — `skills/skill-tuner/scripts/tune.py`
-with five subcommands. There is nothing to click and no window to screenshot.
+with six subcommands. There is nothing to click and no window to screenshot.
 
 The thing that shapes how you drive it: **the eval subcommands spend real
 money.** Every one shells out to `claude -p`. But most of the surface is
 reachable for free — `verify` and `compare` make zero model calls by design,
-the 127-test suite runs on a fake adapter, and the refuse-to-spend guards are
+the 155-test suite runs on a fake adapter, and the refuse-to-spend guards are
 observable precisely because they fire *before* the first call.
 
 All paths below are relative to the repo root.
@@ -33,7 +33,7 @@ environment
   ok   doctor.sh: environment ready
 
 unit suite (fake adapter — never calls a model)
-  ok   Ran 127 tests
+  ok   Ran 155 tests
   ok   shipped runner imports stdlib only (R7)
 
 refuse-to-spend guards (observable because they fire before the call)
@@ -70,7 +70,7 @@ directly. No model, no cost:
 
 ```bash
 cd skills/skill-tuner/scripts && python3 -m unittest discover tests
-# Ran 127 tests ... OK
+# Ran 155 tests ... OK
 ```
 
 Run **from that directory** — the tests import sibling modules by bare name.
@@ -101,6 +101,12 @@ python3 skills/skill-tuner/scripts/tune.py probe \
 `--target` builds the config in memory; `--config <file>` is the committed,
 reproducible alternative. Reports land in `reports/<run-id>/`
 (`report.json`, `report.md`, `trials.jsonl`).
+
+`gate` is the sequential variant: same config shape plus `--baseline
+<banked-run>` and a required `--delta`; it probes targets one at a time and
+stops when the mSPRT decides, printing the sequential verdict beside the
+fixed-n verdict of record. Worst-case cost equals a full probe leg; a
+decisive run stops early and spends less.
 
 ## Gotchas
 
