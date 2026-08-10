@@ -1,0 +1,10 @@
+{
+  "brief": "weekly-metrics-digest",
+  "condition": "ours",
+  "trial": 2,
+  "cost_usd": 0.09230085000000002,
+  "seconds": 62.6,
+  "model": "claude-sonnet-5",
+  "model_resolved": "claude-sonnet-5",
+  "chars": 2775
+}

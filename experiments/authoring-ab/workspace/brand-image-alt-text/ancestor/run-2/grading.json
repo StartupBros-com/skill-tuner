@@ -1,0 +1,45 @@
+{
+  "pass_rate": 0.75,
+  "expectations": [
+    {
+      "text": "A1 frontmatter with name and description",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "text": "A2 kebab-case name <=64 chars",
+      "passed": true,
+      "evidence": "alt-text-writer"
+    },
+    {
+      "text": "A3 description states when to trigger",
+      "passed": false,
+      "evidence": "Writing alt text for marketing site images \u2014 when adding new images or reviewing"
+    },
+    {
+      "text": "A4 description within spec length",
+      "passed": true,
+      "evidence": "248 chars"
+    },
+    {
+      "text": "A5 body under 500 lines",
+      "passed": true,
+      "evidence": "27 lines"
+    },
+    {
+      "text": "A6 contains a concrete example or command block",
+      "passed": false,
+      "evidence": ""
+    },
+    {
+      "text": "A7 no placeholder debris",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "text": "A8 brief fidelity (load-bearing facts carried)",
+      "passed": true,
+      "evidence": "all present"
+    }
+  ]
+}

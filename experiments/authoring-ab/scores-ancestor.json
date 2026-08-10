@@ -1,0 +1,8 @@
+{
+  "brand-image-alt-text": 0.8125,
+  "incident-triage": 0.875,
+  "pdf-invoice-extractor": 0.875,
+  "sql-migration-review": 0.8125,
+  "staging-deploy": 0.875,
+  "weekly-metrics-digest": 1.0
+}

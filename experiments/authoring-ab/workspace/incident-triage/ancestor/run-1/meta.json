@@ -1,0 +1,10 @@
+{
+  "brief": "incident-triage",
+  "condition": "ancestor",
+  "trial": 1,
+  "cost_usd": 0.06022335,
+  "seconds": 35.9,
+  "model": "claude-sonnet-5",
+  "model_resolved": "claude-sonnet-5",
+  "chars": 1920
+}

@@ -1,0 +1,10 @@
+{
+  "brief": "brand-image-alt-text",
+  "condition": "ours",
+  "trial": 2,
+  "cost_usd": 0.04533585,
+  "seconds": 27.3,
+  "model": "claude-sonnet-5",
+  "model_resolved": "claude-sonnet-5",
+  "chars": 2285
+}
