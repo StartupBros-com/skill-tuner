@@ -1,16 +1,23 @@
 ---
-description: Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes.
+name: tune
+description: Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes. Runs the bundled token-spending runner, so it starts only on the human's explicit instruction.
 argument-hint: <path to SKILL.md / AGENTS.md / CLAUDE.md>
+disable-model-invocation: true
 ---
 
-Tune the document at `$1`.
+Tune the document at `$ARGUMENTS`.
 
 You are running the loop the human just asked for, so the runner may spend
 tokens. Report the estimate before the first call and the actual after.
 
+`${CLAUDE_PLUGIN_ROOT}` below is Claude Code's expansion for the plugin's
+install root. In a client that does not expand it, resolve it yourself: the
+plugin root is the directory two levels up from this SKILL.md, the one
+containing `skills/`.
+
 ## 1. Read it
 
-Read `$1` in full, and the bundled doctrine at
+Read `$ARGUMENTS` in full, and the bundled doctrine at
 `${CLAUDE_PLUGIN_ROOT}/skills/skill-tuner/SKILL.md`. You need both: the probe
 tells you *what* is wrong, the doctrine tells you *what good looks like* when
 you fix it.
@@ -19,7 +26,7 @@ you fix it.
 
 ```
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/skill-tuner/scripts/tune.py probe \
-  --target "$1" --run-id tune-$(date +%s) --yes --budget-usd 3 --verify-trials 3
+  --target "$ARGUMENTS" --run-id tune-$(date +%s) --yes --budget-usd 3 --verify-trials 3
 ```
 
 Every finding it reports has already survived three independent skeptics in
@@ -70,7 +77,7 @@ and clearly right, and report the rest as residuals.
 
 A reworded description is a routing change, and routing is the one thing here
 that can be measured properly on a single document. Build a battery config
-following `configs/receipts-routing-001.json`, with the original description
+following `${CLAUDE_PLUGIN_ROOT}/configs/receipts-routing-001.json`, with the original description
 as `original` and yours as `pruned`, then:
 
 ```
