@@ -1,0 +1,14 @@
+{
+  "date-picker-frontend": 94.31,
+  "color-picker-frontend": 91.99,
+  "file-dropzone-frontend": 62.15,
+  "multi-step-wizard-frontend": 45.36,
+  "star-rating-frontend": 32.04,
+  "command-palette-frontend": 13.06,
+  "archive-item-backend": 33.71,
+  "search-items-backend": 0.0,
+  "export-csv-backend": 8.33,
+  "bulk-delete-backend": 21.21,
+  "duplicate-item-backend": 4.17,
+  "count-items-backend": 19.05
+}
