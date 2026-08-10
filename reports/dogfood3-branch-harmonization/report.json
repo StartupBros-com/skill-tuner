@@ -1,0 +1,100 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.30619275
+    },
+    "verify": {
+      "trials": 9,
+      "total_cost_usd": 0.21159914999999999
+    }
+  },
+  "total_trials": 10,
+  "manifest": {
+    "run_id": "dogfood3-branch-harmonization",
+    "started_at": "2026-08-10T06:21:26Z",
+    "finished_at": "2026-08-10T06:26:20Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/branch-harmonization/SKILL.md",
+        "sha256": "sha256:2d40bfb2ed8b6f32225ff08e9cf70a855976085067a1e4194f8ae096ef7a1078",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 9,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/branch-harmonization/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/branch-harmonization/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Single source of truth [craft] (Pruning and drift)",
+        "target_quote": "Don't re-implement their funnel here; start from what they couldn't resolve.",
+        "issue": "The Pipeline section defines RESIDUE as branches the mechanical funnel (branch-triage.sh's PROTECTED/MERGED/SYNCED/TREE-SAME/PR-SHIPPED/CHERRY categories) couldn't resolve, and explicitly says not to re-implement that funnel. But Phase A step 1 (\"Already landed? `git cherry -v <canonical> <branch>` ... Verdict `already-merged`; skip.\") re-runs exactly the CHERRY check the funnel already performs, and Phase B's verdict table repeats `already-merged` again. This is the same meaning (already-landed detection via `git cherry -v`) computed in two places, contradicting the document's own instruction and the definition of RESIDUE.",
+        "proposed_fix": "Drop the already-landed re-check from Phase A step 1 and the `already-merged` row from Phase B, since branch-triage.sh's CHERRY funnel already disposes of these before handing off RESIDUE. If a defensive re-check is genuinely wanted (e.g., in case triage was skipped or is stale), say so explicitly rather than presenting it as step 1 of the normal per-branch chain.",
+        "reason": "panel 3/3 confirmed | CONFIRMED: Quote is verbatim, and Phase A step 1's `git cherry -v` \"already-merged\" check duplicates branch-triage.sh's CHERRY funnel step (also listed in the Pipeline diagram and Phase B verdict table), directly at odds with the \"Don't re-implement their funnel here\" instruction. || CONFIRMED \u2014 quote appears verbatim in the Pipeline section, and Phase A step 1 / Phase B's `already-merged` row do re-run the same `git cherry -v` CHERRY check that branch-triage.sh's mechanical funnel already performs, genuinely duplicating logic the document says not to re-implement. || CONFIRMED: The quote appears verbatim, and Phase A step 1 does re-implement the exact `git cherry -v` \"already-merged\" check that branch-triage.sh's CHERRY category already performs before handing off RESIDUE, directly contradicting the \"don't re-implement their funnel\" instruction."
+      },
+      {
+        "rule": "Completion criteria / Demand [craft] (mixing checkable and uncheckable terms)",
+        "target_quote": "Confidence < 0.7 \u21d2 don't auto-classify; surface to the user.",
+        "issue": "The numeric threshold (0.7) makes this look checkable, but \"confidence\" is never operationalized anywhere in the document \u2014 unlike `fingerprint_coverage` (explicitly defined as found-with-same-signature \u00f7 total) or `file_existence_coverage`. The agent must impressionistically self-assess a confidence score to compare against the bound, which is exactly the doctrine's warning about a stray uncheckable qualifier inside an otherwise precise-looking rule.",
+        "proposed_fix": "Define confidence as a function of the already-defined metrics, e.g., \"confidence = min(fingerprint_coverage agreement, file_existence_coverage) \u2014 below 0.7, surface to the user instead of auto-classifying,\" or otherwise specify how the score is computed.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim, and \"confidence\" is indeed never operationalized despite being compared to a precise-looking numeric threshold, matching the described issue. || CONFIRMED \u2014 the quoted text appears verbatim, and \"confidence\" is indeed never operationalized as a formula elsewhere in the document despite the defined metrics fingerprint_coverage/file_existence_coverage sitting right next to it. || CONFIRMED. The quoted text appears verbatim, and \"confidence\" is indeed never numerically defined elsewhere in the document (only fingerprint_coverage and file_existence_coverage are), so the 0.7 threshold is uncheckable as written."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Completion criteria [craft] (Steps, completion, and demand)",
+        "target_quote": "Run this chain per branch, cheapest check first. Stop as soon as a verdict is certain.",
+        "issue": "\"a verdict is certain\" gives the agent no checkable bound for when to stop running checks \u2014 it requires the same kind of judgment call the doctrine flags with \"Verify the config\" as an example of an uncheckable criterion. Nothing in the chain ties \"certain\" to a specific, inspectable condition (e.g., which table row matched).",
+        "proposed_fix": "Replace with a checkable stopping rule, e.g., \"Stop as soon as one row of the signals table matches unambiguously; only run further checks in the chain when no row matches.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted sentence is verbatim, but the claim that nothing ties \"certain\" to an inspectable condition is false: each numbered step in the same chain gives an explicit checkable trigger (e.g., \"all `-` lines\" from `cherry -v`, \"empty fingerprint,\" `fingerprint_coverage \u2264 0.05`, \"\u226530% of sampled signatures diverge\"), so \"certain\" is defined by those conditions, not left as an unbounded judgment call. || REFUTED \u2014 the quote appears verbatim, but the claim that \"nothing ties 'certain' to a specific, inspectable condition\" is false: each numbered step in the chain gives an explicit verdict condition (e.g., \"all `-` lines \u21d2 ... Verdict `already-merged`\", \"Empty fingerprint ... \u21d2 near-certain `garbage`\", \"Confidence < 0.7 \u21d2 don't auto-classify\"), so \"certain\" already resolves to checkable per-step criteria. || REFUTED \u2014 the quoted text is verbatim, but \"certain\" isn't undefined judgment: each numbered step in the same chain gives an explicit verdict trigger (e.g., \"all `-` lines \u21d2 ... Verdict `already-merged`\", \"Empty fingerprint \u21d2 near-certain `garbage`\", \"Confidence < 0.7 \u21d2 don't auto-classify\"), so the stopping condition is already checkable in context.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/branch-harmonization/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

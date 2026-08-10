@@ -1,0 +1,123 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.2906625
+    },
+    "verify": {
+      "trials": 18,
+      "total_cost_usd": 0.41105625
+    }
+  },
+  "total_trials": 19,
+  "manifest": {
+    "run_id": "dogfood3-brand-voice-builder",
+    "started_at": "2026-08-10T06:26:20Z",
+    "finished_at": "2026-08-10T06:30:27Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "sha256": "sha256:f86cf23af688bc4ff38de111ce54e011e3774e51d133c51da605dc5cc07f1dcd",
+        "source": "worktree",
+        "git_commit": "0eff27fb00ae6c211a11f32a1d0a53e8ed9d118f",
+        "git_path": "claude/skills-local/brand-voice-builder/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 3,
+    "refuted_count": 3,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 18,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Outputs a structured Voice Profile that can be encoded as a project-specific brand-voice skill afterward.",
+        "issue": "The always-loaded description restates what the body already says about itself ('The output is a structured Voice Profile that future skills, agents, or humans can read and produce on-brand content from.', plus the whole 'After the Profile: Encoding It as a Skill' section). This is identity, not a routing trigger, so it spends permanent context load with no help deciding when to reach the skill.",
+        "proposed_fix": "Drop the output-description clause from the description field; keep only the trigger conditions (Build/Extract, generic-copy signal, does-not-apply-existing-voices) and let the body state what it produces.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 The quoted text appears verbatim in the description field, and it does restate content covered in the body (the \"output\" line and the full \"Encoding It as a Skill\" section), which is a legitimate instance of description-level identity redundancy rather than a routing trigger. || CONFIRMED \u2014 the quoted clause appears verbatim in the description, and it does duplicate content covered in the body (the \"output is a structured Voice Profile...\" line and the full \"After the Profile: Encoding It as a Skill\" section), supporting the redundancy claim. || CONFIRMED \u2014 the quoted clause appears verbatim in the frontmatter description, and it does restate content covered in the body (the \"Voice Profile\" output statement and the \"Encoding It as a Skill\" section), supporting the identity-not-trigger critique."
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when starting a new brand, sub-brand, product, persona, or author voice.",
+        "issue": "Brand, sub-brand, product, persona, and author voice do not route to different processing paths inside this document -- every one of them lands on the same Build-vs-Extract decision. These are five synonyms for a single branch ('something new needs a voice') written out in full on every turn the description is loaded.",
+        "proposed_fix": "Collapse to one phrase covering the branch, e.g. 'Use when a brand, product, or persona needs a voice defined,' and let the body's 'When to use this skill' list carry the enumerated examples.",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description, and the critique accurately reflects that all five listed entities route to the same Build-vs-Extract decision with no differentiated processing path. || REFUTED \u2014 the quoted text is a list of examples for a single \"when to use\" trigger, not multiple branches each requiring separate routing logic, so the \"one trigger per branch\" rule doesn't genuinely apply. || CONFIRMED \u2014 the quoted text appears verbatim in the description, and the critique accurately observes that brand/sub-brand/product/persona/author voice all funnel into the same Build-vs-Extract decision rather than distinct processing paths."
+      },
+      {
+        "rule": "Progressive disclosure [craft] / Splitting [craft]",
+        "target_quote": "Ask the user: \"Do you have existing content that represents how you want to sound?\"\n\n- \"Yes, I have content I'm proud of\" \u2192 Extract mode\n- \"No, I'm starting fresh\" \u2192 Build mode",
+        "issue": "This is a genuine invocation-level branch -- a run only ever needs one mode's material. Yet the full six-lens Extract analysis and the full 17-question, 5-batch Build sequence are both inlined in the same always-loaded SKILL.md, so every invocation carries the other mode's steps as dead weight the agent must read past to find its own path.",
+        "proposed_fix": "Split Mode 1 and Mode 2 into separate disclosed files (e.g. EXTRACT.md, BUILD.md) referenced by pointer from 'How to choose,' loading only the chosen mode's steps.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted branch text appears verbatim, and both full mode sections (Extract's six lenses, Build's 17 questions) are indeed inlined in one always-loaded SKILL.md despite being mutually exclusive per invocation, matching the progressive disclosure/splitting critique. || CONFIRMED \u2014 the quoted text appears verbatim, and both full mode sections are indeed inlined in the single always-loaded SKILL.md, making progressive disclosure/splitting a valid applicable suggestion. || CONFIRMED \u2014 the quoted branching logic appears verbatim, and both full modes are indeed inlined in the single always-loaded SKILL.md, making the progressive-disclosure/splitting critique valid."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Duplication / polarity restatement (Pruning and drift) [craft]",
+        "target_quote": "**The Unenforceable Voice:** all vibes, no mechanical rules. Result: voice drifts within weeks.",
+        "issue": "This anti-pattern is the negated restatement of a rule the document already gives positively: 'These are bright-line rules. Violations should be auto-corrected.' and 'The mechanical rules from Q16 become the enforceability backbone.' It is the same meaning written twice under a different name.",
+        "proposed_fix": "Delete this anti-pattern entry; the Mechanical Rules section and its 'always enforceable' framing already carry the requirement.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but it's not duplicative restatement; the Mechanical Rules section defines the tool while this anti-pattern warns against a specific failure mode of building a profile without that tool, serving a distinct cautionary purpose in a different section. || REFUTED \u2014 the quoted text appears verbatim, but the two passages serve different purposes (one prescribes a section format, the other warns against a specific failure mode when building profiles); this isn't genuine duplication/polarity restatement, just related content in different contexts. || REFUTED \u2014 the quoted anti-pattern is a distinct guardrail (warns against omitting mechanical rules) rather than a duplicate restatement of the earlier instructions defining what mechanical rules are and how to use them; removing it wouldn't eliminate redundant meaning, just a genuinely different caution.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication / polarity restatement (Pruning and drift) [craft]",
+        "target_quote": "**The Single-Channel Voice:** profile only works for one format (e.g. emails) and breaks on social or long-form. Test across channels.",
+        "issue": "This restates, negated, the Quality Test's already-stated positive rule: '**Consistent:** can it be applied across formats (social, email, long-form, ad)?' Same meaning duplicated across two lists under different names.",
+        "proposed_fix": "Remove this anti-pattern entry and let the Quality Test's 'Consistent' criterion be the single authoritative statement of the cross-channel requirement.",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 both quotes appear verbatim, but they serve different purposes (a quality checklist item vs. a named failure-mode warning with cause), not true duplication warranting removal. || REFUTED: Both quoted texts appear verbatim, but they serve distinct purposes (a Quality Test checklist item vs. a named failure-mode pattern to watch for during building), not a redundant restatement warranting removal. || CONFIRMED: Both quotes appear verbatim, and the two lines do restate the same cross-channel-consistency requirement in positive and negative form across separate lists.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft]",
+        "target_quote": "Use this exact structure for every Voice Profile, regardless of mode.",
+        "issue": "This states an unconditional bound ('exact structure ... regardless of mode'), but the template itself later permits deviation: '(If voice doesn't flex by funnel, replace with relevant context dimensions: long-form vs short-form, public vs member-only, etc.)' The agent cannot tell whether replacing that table complies with the 'exact structure' instruction or violates it.",
+        "proposed_fix": "Qualify the opening line, e.g. 'Use this structure for every Voice Profile; sections marked replaceable (see Channel and Stage Calibration) may be adapted to context.'",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 The quoted text does appear verbatim, but the alleged conflict is not genuine ambiguity; the parenthetical explicitly and locally authorizes replacing that one table, so a reader easily reconciles \"exact structure\" with the one documented exception rather than being left unable to tell. || CONFIRMED: The quote appears verbatim, and the template itself explicitly permits replacing the Channel/Stage Calibration table, creating a genuine contradiction with the \"exact structure...regardless of mode\" instruction. || REFUTED \u2014 the quoted text appears verbatim, but the alleged conflict is not a genuine ambiguity: the \"exact structure\" instruction and the parenthetical override are both explicit written instructions in the same document, and the more specific, later note clearly takes precedence for that one section, which is a common and unambiguous pattern rather than a real contradiction.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 18,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

@@ -154,6 +154,11 @@ applied):
   (`reports/swapgate4-summary.md`) — which is why this file exists.
 - **v2** (15 docs): 27 vs 29, 95% CI [−0.76, +0.49], **not_worse** at
   δ = 1.0 (`reports/swapgate5-summary.md`).
+- **v3.1 candidate** (15 docs, 2026-08-10): four review-endorsed sentences
+  restored from the ancestor; 24 vs v3's 42, 95% CI [−2.21, −0.19],
+  regression confirmed — **refused and reverted**
+  (`reports/swapgate7-summary.md`). Expert consensus endorsed every one of
+  those sentences; only the gate dissented.
 - **v3** (15 docs, 2026-08-08): 42 vs 29, 95% CI [+0.03, +1.70],
   **better** — bootstrap CI agrees, sign test alone would not resolve; a
   near-boundary win, published with the same calibration as the losses

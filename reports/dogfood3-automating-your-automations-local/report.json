@@ -1,0 +1,116 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.32160825
+    },
+    "verify": {
+      "trials": 15,
+      "total_cost_usd": 0.32979749999999997
+    }
+  },
+  "total_trials": 16,
+  "manifest": {
+    "run_id": "dogfood3-automating-your-automations-local",
+    "started_at": "2026-08-10T06:15:10Z",
+    "finished_at": "2026-08-10T06:21:26Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "sha256": "sha256:5584709576c0ce816d16992c484a119fceacf6adc4adcefefe03ba1efb7619db",
+        "source": "worktree",
+        "git_commit": "0492e1e9e5f22a60f3a53dac3aefeff42f115eda",
+        "git_path": "claude/skills-local/automating-your-automations-local/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 3,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 15,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Single source of truth [craft] \u2014 keep each meaning in one authoritative place; duplication costs maintenance and tokens with no routing signal, and both instances here are in-file (not behind a pointer), so neither pays for the other via disclosure.",
+        "target_quote": "**Your task runner is `package.json` scripts (many repos, no Makefiles).** Cross-reference what you *run* vs what's *defined*:",
+        "issue": "This restates, almost verbatim, the fact already given a few paragraphs earlier in the source table: \"**package.json** | `~/SITES/*/package.json` scripts | Your task runner (no Makefiles) \u2014 run-often = alias candidates\". Both are always-loaded in the same section, so the identity claim (\"task runner\", \"no Makefiles\") is paid for twice.",
+        "proposed_fix": "Drop the restated identity clause from the prose header and keep only the new instruction: \"**Cross-reference what you run vs what's defined:**\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the document, and it does duplicate the identity claim (\"task runner\", \"no Makefiles\") already stated in the Path A/B/C source table a few paragraphs earlier, both in the same always-loaded section with no disclosure boundary between them. || CONFIRMED: Both quotes appear verbatim in the target and the table row and prose header duplicate the same \"task runner (no Makefiles)\" fact in the same always-loaded section, with no pointer/disclosure boundary separating them. || CONFIRMED \u2014 both quotes appear verbatim in the same always-loaded section, and the \"task runner (no Makefiles)\" identity claim is genuinely duplicated between the table row and the Path C prose header."
+      },
+      {
+        "rule": "Single source of truth [craft] \u2014 duplication of the same meaning in more than one in-file location costs tokens without adding routing signal.",
+        "target_quote": "You already keep ~40 aliases; find commands you type a lot but haven't shortcut:",
+        "issue": "This repeats the fact already stated in the source table a few lines above \u2014 \"**shell aliases** | `~/.bashrc` (~40 aliases) | Existing shortcuts; the gap = frequent-but-unaliased commands\" \u2014 restating both the count (~40 aliases) and the gap concept.",
+        "proposed_fix": "Trim to the actionable instruction only, e.g. \"Find commands you type a lot but haven't shortcut:\", relying on the table above for the alias count.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim, and it does restate the \"~40 aliases\" count and \"gap\" concept already given in the shell-aliases table row above. || CONFIRMED \u2014 the quoted text appears verbatim, and it does restate the \"~40 aliases\" figure and the \"gap = frequent-but-unaliased\" concept already given in the table row above it. || CONFIRMED \u2014 the quote appears verbatim in Path C's \"un-aliased-frequent gap\" section, and it does restate the same ~40 aliases count and gap concept already given in the table row three lines above it."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft] \u2014 synonyms that rename a single branch are one branch written twice; collapse triggers that route to the same path.",
+        "target_quote": "Use when analyzing command patterns or finding automation opportunities.",
+        "issue": "\"Analyzing command patterns\" and \"finding automation opportunities\" are the same branch stated twice \u2014 mining history for patterns *is* how the skill finds automation opportunities, and both phrasings route to the identical seven-step loop. This pays routing-description tokens twice for one trigger.",
+        "proposed_fix": "Collapse to one phrase, e.g. \"Use when mining command history for automation opportunities.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the description doesn't branch into separate paths for each phrase; it's a single unbranched trigger clause, so the \"one trigger per branch\" rule doesn't genuinely apply here. || REFUTED \u2014 The description phrases are near-synonymous but this is a single \"Use when X or Y\" trigger clause, not two branches routing through separate logic paths; the \"one trigger per branch\" rule targets structurally distinct branches (e.g., conditional paths), not phrasing redundancy in a description line. || REFUTED \u2014 the quoted text is a \"use when\" trigger description, not a branching/routing rule in the skill's logic; the \"one trigger per branch\" rule concerns actual decision branches (e.g., Step 3's Propose flowchart), not two synonymous phrases in the description field.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Relevance and sediment [craft] \u2014 every line must still bear on what the document does; without pruning discipline, stale/unrelated material sediments in as permanent context load.",
+        "target_quote": "<!-- Local fork \u2014 see references/FORK-SYNC.md before running `jsm install-all` -->",
+        "issue": "This comment is always-loaded context but has no bearing on the skill's task (mining shell history for automation). `jsm install-all` and `FORK-SYNC.md` are never mentioned or explained anywhere else in the document, and `FORK-SYNC.md` is absent from the Reference Index table, so the pointer is orphaned \u2014 the agent has no way to act on it.",
+        "proposed_fix": "Remove the comment if the fork-sync process is out of scope for this document, or add `FORK-SYNC.md` to the Reference Index with a one-line trigger explaining when a maintainer needs it.",
+        "reason": "downgraded: quoted text not found verbatim in target document",
+        "refutation_mode": "quote_not_found"
+      },
+      {
+        "rule": "Negation [research] \u2014 steering by prohibition drags the forbidden behaviour into context and makes it more available; state the target behaviour positively instead, and pair any unavoidable prohibition with its positive target.",
+        "target_quote": "**Never skip 1-3.** Intuition about what's repetitive is unreliable; data wins.",
+        "issue": "The instruction leads with the ban (\"skip\") rather than stating the desired behaviour, and \"data wins\" is a justification, not a positive rephrasing of the action to take. This is exactly the failure mode the document should be guarding against: the loop already exists because the model wants to shortcut to proposing/building, so naming \"skip\" here makes the shortcut more salient rather than less.",
+        "proposed_fix": "Rephrase positively: \"Always complete Steps 1-3, in order, before proposing an automation.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the rule's premise is overapplied: \"Never skip 1-3\" already pairs the prohibition with an immediately following positive rationale (\"data wins\"), and the surrounding Loop section explicitly states the positive sequence (steps 1-3 listed first); this doesn't clearly constitute the negation failure mode the rule targets. || REFUTED \u2014 the quoted text appears verbatim, but it's not a bare prohibition: it pairs \"Never skip 1-3\" with the positive rationale \"data wins,\" and the rule's own guidance says pair unavoidable prohibitions with positive framing, which this already does. || REFUTED \u2014 the quoted text appears verbatim, but the rule's own guidance is to pair unavoidable prohibitions with a positive target, which \"Never skip 1-3. Intuition about what's repetitive is unreliable; data wins.\" already does (prohibition + positive framing \"data wins\"), so it doesn't clearly violate the cited rule.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

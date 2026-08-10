@@ -1,0 +1,100 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.16668105000000003
+    },
+    "verify": {
+      "trials": 9,
+      "total_cost_usd": 0.14563755
+    }
+  },
+  "total_trials": 10,
+  "manifest": {
+    "run_id": "dogfood3-cass-rerank-local",
+    "started_at": "2026-08-10T06:33:15Z",
+    "finished_at": "2026-08-10T06:35:45Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "sha256": "sha256:443f9d904aa4c80610847b002fde9b7284420819841aa2a5a61c288a6e513a40",
+        "source": "worktree",
+        "git_commit": "0eff27fb00ae6c211a11f32a1d0a53e8ed9d118f",
+        "git_path": "claude/skills-local/cass-rerank-local/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 9,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+    "target_files": [
+      "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Duplication / single source of truth [craft]",
+        "target_quote": "Use INSTEAD of bare `cass search` for top-1/top-few\n  relevant-session results (past fixes, decisions, \"how did I do X\"); fall\n  back to plain cass for broad scans.",
+        "issue": "The routing decision (top-1/few \u2192 cass-rerank, broad scan \u2192 plain cass) is stated in the always-loaded description and then restated in the body's 'When to use which' table ('\"Find the ONE session where I solved X\" (top-1 matters)' \u2192 cass-rerank; 'Broad keyword scan, many hits' \u2192 plain cass). Same meaning lives in two places, so an edit to one (e.g. changing the threshold for when to fall back) can drift from the other.",
+        "proposed_fix": "Keep the routing decision only in the table (body reference) and shorten the description to name what the skill is and the single condition to reach it, e.g. 'Use for finding a specific past session (top-1 relevance); see table below for other cass tools.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text matches the description verbatim, and the same routing logic (cass-rerank for top-1/few vs plain cass for broad scans) is indeed restated in the \"When to use which\" table, a genuine duplication risk. || CONFIRMED \u2014 quote matches the frontmatter description verbatim, and the same top-1-vs-broad-scan routing logic is indeed restated in the \"When to use which\" table, creating two places that could drift on edits. || CONFIRMED \u2014 the quoted text is verbatim in the description, and the same top-1-vs-broad-scan routing logic is indeed restated in the \"When to use which\" table, a genuine duplication."
+      },
+      {
+        "rule": "Progressive disclosure [craft]",
+        "target_quote": "## If it returns \"no results\" for everything\n\nThat usually means the **lexical index is broken**, not that nothing matched. Check first:",
+        "issue": "This section (status-check command, phase-stall diagnosis, the full env-var repair invocation, timing/RSS figures) is reference material for a narrow, rare failure branch (a stalled/interrupted index rebuild), yet it sits inline in the main skill body alongside the everyday 'Use it' steps. It is loaded on every invocation of the skill regardless of whether the failure occurs, and its length and density (specific env vars, magic numbers like `planned_shards\u2248317`, RSS thresholds) make it exactly the kind of branch-only detail the doctrine says to disclose rather than inline.",
+        "proposed_fix": "Move the index-repair procedure to a separate reference file (e.g. `cass-index-repair.md`) and leave a short in-file pointer: 'If cass-rerank returns no results for everything, the lexical index may be broken \u2014 see cass-index-repair.md for the fix.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quoted heading verbatim matches, and the section indeed contains dense rare-failure-branch detail (env vars, RSS figures, timing) inlined in the main skill body rather than disclosed progressively via a reference file. || CONFIRMED \u2014 the quoted heading and the detailed repair section (status check, env-var invocation, RSS/timing figures) appear verbatim inline in the skill body, matching a legitimate progressive-disclosure critique for rare-branch reference material. || CONFIRMED \u2014 the quoted heading and subsequent detailed repair procedure (env vars, RSS figures, timing) appear verbatim in the target and are inlined in the main body rather than disclosed progressively for this rare failure branch."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "(past fixes, decisions, \"how did I do X\")",
+        "issue": "Three parenthetical phrases are offered for a single branch (top-1/top-few relevant-session lookup). A query phrased as a 'past fix', a 'decision', or 'how did I do X' all route to the exact same behavior \u2014 per the doctrine's test, none of these phrases sends the agent down a different path than the one beside it, so they are one branch written three times, paying context-load three times for one routing decision.",
+        "proposed_fix": "Collapse to one representative phrase, e.g. '(e.g. \"how did I fix X\")', and drop the other two synonyms.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted phrases are illustrative examples in a description, not decision-tree branches, so the \"one trigger per branch\" rule doesn't genuinely apply here. || REFUTED \u2014 the quoted phrase is just illustrative examples in a description sentence, not a branching/routing structure the \"one trigger per branch\" rule could meaningfully apply to. || REFUTED \u2014 the quoted phrase is verbatim, but \"one trigger per branch\" doesn't genuinely apply: these are illustrative examples of one use case in the frontmatter description, not separate conditional branches with distinct behaviors in the skill's logic.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

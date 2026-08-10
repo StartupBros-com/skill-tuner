@@ -1,0 +1,108 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.18584130000000001
+    },
+    "verify": {
+      "trials": 12,
+      "total_cost_usd": 0.17712555
+    }
+  },
+  "total_trials": 13,
+  "manifest": {
+    "run_id": "dogfood3-browser-console-setup",
+    "started_at": "2026-08-10T06:30:27Z",
+    "finished_at": "2026-08-10T06:33:15Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+        "sha256": "sha256:65a8c2e84c7ce59a049fc6163e89ba93fedc6cc506315bbd5f01d25205fbfe08",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 12,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/browser-console-setup/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "by opening the exact URL in the local\n  Windows Brave browser and handing paste-ready click steps, then wiring the\n  reported credentials into Supabase/Vault/Vercel/.env.",
+        "issue": "This mechanism description in the always-loaded description is restated almost verbatim by the body's 'Core pattern' blockquote ('Open the exact URL in Will's real Windows Brave, hand him precise paste-ready clicks, get the resulting IDs/secrets back, then wire them in programmatically'). The pointer's job is to state when to reach the material, not what it is \u2014 the body already carries this identity, so the description pays permanent context load for zero additional routing signal.",
+        "proposed_fix": "Trim the description to routing information only, e.g. 'Set up cloud consoles that block headless automation via a real-browser handoff. Use when a console step cannot be scripted: bot detection, 2FA, CAPTCHA, or OAuth consent screens.' and let the Core Pattern blockquote in the body be the single place the mechanism is spelled out.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the description, and it does duplicate the mechanism already stated in the body's \"Core pattern\" blockquote, matching the redundancy claim. || CONFIRMED \u2014 the quoted text appears verbatim in the description, and it does substantively duplicate the \"Core pattern\" blockquote's mechanism description, matching the stated rule. || CONFIRMED \u2014 the quoted text appears verbatim in the description, and it does substantially duplicate the body's \"Core pattern\" blockquote, matching the stated redundancy issue."
+      },
+      {
+        "rule": "Duplication / polarity [craft]",
+        "target_quote": "| Playwright/xvfb for OAuth consent | Bot detection + cannot do 2FA | Real Brave handoff |",
+        "issue": "This anti-pattern row restates, negated, the rule the document already gives positively in the Core Pattern blockquote ('do not fight it with Playwright ... Open the exact URL in Will's real Windows Brave') and in 'The problem' section. It is the same meaning written twice under the polarity disguise the doctrine calls out.",
+        "proposed_fix": "Remove this row from the Anti-patterns table since the Core Pattern and 'The problem' section already establish it positively; keep the table only for guidance not already stated elsewhere (e.g. the 'Assume Will knows the IDs' row).",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quoted row is verbatim, and it does restate the same \"Playwright fails on OAuth consent, use real Brave\" point already made in the Core Pattern and \"The problem\" section, just phrased as a negated anti-pattern. || CONFIRMED \u2014 the quoted row verbatim duplicates the already-stated positive rule (Core Pattern/\"The problem\") under negated polarity, matching the described duplication pattern. || CONFIRMED \u2014 the quoted row verbatim duplicates the positive guidance already stated in the Core Pattern blockquote and \"The problem\" section, just with inverted polarity."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Set up cloud consoles that block headless automation (Google OAuth consent,\n  Stripe webhooks, GCP credentials) by opening the exact URL in the local\n  Windows Brave browser and handing paste-ready click steps, then wiring the\n  reported credentials into Supabase/Vault/Vercel/.env. Use when a console step\n  cannot be scripted: bot detection (Google's \"browser may not be secure\"), 2FA,\n  CAPTCHA, or OAuth consent screens.",
+        "issue": "'Google OAuth consent' (first parenthetical) and 'OAuth consent screens' (final clause) are the same branch named twice with different wording in the same always-loaded description. A run reaching the skill via either phrase takes the identical path (real-browser handoff, same playbook), so this pays the token cost of routing twice for one branch.",
+        "proposed_fix": "State the OAuth-consent trigger once, e.g. fold it into the closing list only: 'Use when a console step cannot be scripted: bot detection, 2FA, CAPTCHA, or OAuth consent screens (Google, Stripe, GCP).' and drop the separate 'Google OAuth consent' mention from the opening parenthetical.",
+        "reason": "panel 1/3 confirmed | REFUTED: The quoted text appears verbatim, but the rule doesn't genuinely apply \u2014 this is a single skill's description with one routing branch (frontmatter description \u2192 skill loads), not two separate branches; \"Google OAuth consent\" and \"OAuth consent screens\" are prose within the same always-loaded paragraph, not duplicate triggers causing redundant routing. || REFUTED \u2014 the quoted text is verbatim, but there's no branch structure here: the skill has a single path (real-browser handoff) and the two OAuth mentions serve different purposes (example use-case vs. trigger condition), not duplicate triggers for parallel branches. || CONFIRMED: The quoted text appears verbatim, and it does list \"Google OAuth consent\" and \"OAuth consent screens\" as separate phrasings for the same triggering condition within the always-loaded description.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria / Demand [craft]",
+        "target_quote": "- [ ] Clear \"report back\" format",
+        "issue": "\"Clear\" is a judgment term the agent cannot check without interpretation, unlike the other three checklist items which are binary (rules followed, identifiers included, commands ready). This stray uncheckable qualifier lets the agent tick the box impressionistically rather than verifying the concrete requirement the instruction template already defines ('Report back: [exactly what to copy back, with format]').",
+        "proposed_fix": "Replace with a checkable bound, e.g. '- [ ] \"Report back\" line specifies the exact value and format to copy (e.g. `whsec_...`)'.",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but \"clear\" is ordinary readable language, not a meaningfully ambiguous judgment call that blocks verification since the format is already fully specified elsewhere in the doc. || REFUTED: The quoted text appears verbatim, but \"Clear\" is a minor stylistic qualifier, not a genuine ambiguity\u2014the template already defines the exact format (\"Report back: [exactly what to copy back, with format]\"), so this checklist item is not meaningfully less checkable than the others. || CONFIRMED \u2014 The quoted checklist line appears verbatim, and \"Clear\" is indeed a subjective/uncheckable qualifier compared to the other binary items, making the critique valid.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

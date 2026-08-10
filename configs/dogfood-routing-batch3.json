@@ -1,0 +1,43 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "targets": [
+    {
+      "id": "agent-swarm",
+      "path": "/home/will/.claude/skills/agent-swarm/SKILL.md",
+      "pruned_description": "Run a large or parallelizable task across many agents (parallel subagents, the Workflow tool, Codex delegation, worktree isolation). Use when a task is too big for one context or has many independent units — whole-codebase campaigns (refactor / audit / migration / dead-code sweep), broad multi-file sweeps — or when you need multiple independent perspectives (adversarial verification)."
+    },
+    {
+      "id": "brand-voice-builder",
+      "path": "/home/will/.claude/skills/brand-voice-builder/SKILL.md",
+      "pruned_description": "Define a brand voice from scratch (Build mode) OR extract one from existing content (Extract mode). Use when starting a new brand, sub-brand, product, persona, or author voice, when copy sounds generic, or when \"how should this sound?\" is unclear. Does NOT apply existing voices — for that, use the brand-specific voice skill."
+    },
+    {
+      "id": "browser-console-setup",
+      "path": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+      "pruned_description": "Set up cloud consoles that block headless automation (Google OAuth consent, Stripe webhooks, GCP credentials) via the local Brave browser, then wire the credentials into Supabase/Vault/Vercel/.env. Use when a console step cannot be scripted: bot detection (Google's \"browser may not be secure\"), 2FA, CAPTCHA, or OAuth consent screens."
+    },
+    {
+      "id": "cass-rerank-local",
+      "path": "/home/will/.claude/skills/cass-rerank-local/SKILL.md",
+      "pruned_description": "Best-quality search over your prior agent sessions: cass lexical retrieval + semantic rerank. Use INSTEAD of bare `cass search` for top-1/top-few relevant-session results (past fixes, decisions, \"how did I do X\"); for broad scans, plain cass."
+    },
+    {
+      "id": "curl-bash-installer",
+      "path": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+      "pruned_description": "Write a production-grade `curl | bash` installer for a CLI tool. Use when writing a curl-pipe-bash install.sh one-liner for a CLI (Rust/TS/Go)."
+    },
+    {
+      "id": "de-monolithize-your-codebase-isomorphically-local",
+      "path": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+      "pruned_description": "Find monolith files, prove seams empirically, split isomorphically with zero API/perf/compile drift; hand off as GitHub issues. Use when a file or a whole repo has grown monolithic — split giant file, modularize repo."
+    }
+  ],
+  "distractors": [
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/.claude/skills/de-slopify/SKILL.md",
+    "/home/will/.claude/skills/tdd/SKILL.md",
+    "/home/will/.claude/skills/ui-polish/SKILL.md"
+  ]
+}
