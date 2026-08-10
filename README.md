@@ -134,6 +134,9 @@ Measured on 15 shared documents, four times, against the same banked ancestor le
 | v1, apparatus stripped | 22 vs 29 | [−1.30, +0.37] | inconclusive |
 | v2 | 27 vs 29 | [−0.76, +0.49] | not_worse |
 | **v3** | **42 vs 29** | **[+0.03, +1.70]** | **better** |
+| v3.1 candidate | 24 vs v3's 42 | [−2.21, −0.19] | **refused — reverted** |
+
+The v3.1 row is the strongest advertisement here: four sentences restored from the ancestor, each endorsed by a 13-reviewer audit as worth having, cost 43% of the doctrine's yield on identical documents (`reports/swapgate7-summary.md`). Every expert in the pipeline said yes; the measurement said no; v3 ships.
 
 \* v1 was originally published as **worse**. A 2026-08-08 statistics review found the worse verdict anchored at zero rather than −δ, so it fired on any confirmed regression even inside the declared-tolerable band; the corrected reading of the same interval is a confirmed regression of unresolved size against the margin. The data did not move — the label did, and the fix is in `compare.py` with a regression test.
 

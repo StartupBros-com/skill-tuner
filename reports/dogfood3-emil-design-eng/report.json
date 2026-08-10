@@ -1,0 +1,93 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.30826230000000004
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.1815756
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood3-emil-design-eng",
+    "started_at": "2026-08-10T06:49:34Z",
+    "finished_at": "2026-08-10T06:53:02Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/emil-design-eng/SKILL.md",
+        "sha256": "sha256:289d2526bc05f5ff4d1fd61d15b074e8b531b94ae61e1ac5ea0f6645857029fc",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/emil-design-eng/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/emil-design-eng/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Completion criteria [craft] \u2014 'Two bounds that contradict \u2014 a general ceiling in one place, a specific range crossing it in another \u2014 are a completion defect in the same family: the agent cannot tell whether a value between them complies, whichever bound it obeys.'",
+        "target_quote": "**Rule: UI animations should stay under 300ms.** A 180ms dropdown feels more responsive than a 400ms one.",
+        "issue": "This blanket 300ms ceiling directly contradicts the duration table two paragraphs above it, which lists 'Modals, drawers | 200-500ms' as the recommended range, and the same contradiction is then codified in the Review Checklist ('Duration > 300ms on UI element | Reduce to 150-250ms'). An agent reviewing a 400ms modal transition (compliant with the modals/drawers row) cannot tell whether it satisfies the doctrine's own rule or violates it \u2014 whichever bound it obeys, it appears to break the other.",
+        "proposed_fix": "Scope the ceiling explicitly, e.g. 'Rule: UI animations should stay under 300ms, except modals/drawers which may run up to 500ms and marketing/explanatory animations which have no cap' \u2014 or lower the modals/drawers table range to fit under 300ms and drop the exception.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and it genuinely contradicts the \"Modals, drawers | 200-500ms\" table entry and the checklist's \"Duration > 300ms\" rule, leaving compliance for a 400ms modal transition ambiguous. || CONFIRMED \u2014 The duration table explicitly lists \"Modals, drawers | 200-500ms\" yet the very next paragraph states the blanket rule \"UI animations should stay under 300ms,\" and the Review Checklist reinforces this with \"Duration > 300ms on UI element | Reduce to 150-250ms\" \u2014 both quotes appear verbatim and the contradiction is real: a 400ms modal complies with the table but violates the stated rule and checklist. || CONFIRMED \u2014 The quoted \"Rule: UI animations should stay under 300ms\" and the duration table's \"Modals, drawers | 200-500ms\" both appear verbatim in the document, and the Review Checklist's \"Duration > 300ms on UI element | Reduce to 150-250ms\" reinforces the conflict, leaving no stated exception for the modal/drawer range."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Single source of truth / duplication [craft] \u2014 'an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.'",
+        "target_quote": "| `scale(0)` entry animation                 | Start from `scale(0.95)` with `opacity: 0`                       |",
+        "issue": "This Review Checklist row restates, in Issue/Fix form, the exact same meaning already given positively in the '### Never animate from scale(0)' section ('Start from scale(0.9) or higher, combined with opacity') and again in the Review Format example table ('`transform: scale(0)` | `transform: scale(0.95); opacity: 0`'). The same pattern repeats for `transition: all`, `ease-in`, `transform-origin: center` on popovers, keyboard-action animation, and the transitions-vs-keyframes rule \u2014 each stated once as body guidance, once in the Review Format example, and once again in the Review Checklist, tripling maintenance cost and inflating each rule's apparent rank without adding routing or execution value.",
+        "proposed_fix": "Keep the rule stated once in the body section (e.g. 'Never animate from scale(0)'), and have the Review Format table and Review Checklist reference it by name instead of restating the before/after values, the way the checklist already does for ease-in ('See \"Never use ease-in for UI animations\" above').",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted row appears verbatim, but this is a legitimate quick-reference checklist (explicitly separate from body prose), not unintentional duplication requiring dedup. || REFUTED \u2014 the quoted row appears verbatim, but this is a legitimate reference table (Review Checklist) restating body guidance as an Issue/Fix pairing for practical use during review, not an accidental duplication anti-pattern; the document already does exactly what the finding proposes (see the ease-in row using \"See ... above\"), showing this format is a deliberate, mixed convention rather than uncontrolled duplication. || REFUTED \u2014 The quoted row is real but the \"Review Format\" table and \"Review Checklist\" serve distinct functional purposes (a required output-format example vs. a lookup/audit checklist), not mere restatement; this is intentional reinforcement, not duplication warranting the cited rule.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/emil-design-eng/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

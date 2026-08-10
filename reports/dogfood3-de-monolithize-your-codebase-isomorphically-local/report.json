@@ -1,0 +1,108 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.38853615
+    },
+    "verify": {
+      "trials": 12,
+      "total_cost_usd": 0.60012675
+    }
+  },
+  "total_trials": 13,
+  "manifest": {
+    "run_id": "dogfood3-de-monolithize-your-codebase-isomorphically-local",
+    "started_at": "2026-08-10T06:43:14Z",
+    "finished_at": "2026-08-10T06:49:34Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "sha256": "sha256:f9b2e20ec909a0d0bcf8593e2e4943feff8c9af9aa60465807d41121095dac98",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 2,
+    "refuted_count": 2,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 12,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Relevance and sediment [craft] (Pruning and drift) \u2014 a line loses relevance by going stale as the document changes; the cure is a pruning discipline, not letting sediment pile up.",
+        "target_quote": "<!-- TOC: One Rule | First-30-Seconds | Quick-Start | Confirmations | Bootstrap | Phases | Parallelism | Convergence | Operators | Taxonomy | Contract | Rubric | GitHub Issues | Anti-Patterns | Checklist | Reference Index -->",
+        "issue": "The TOC has gone stale relative to the actual headers: it lists \"Rubric\" as a section, but no header by that name exists (the actual section is \"Decomposition Design (Phase 8)\", which merely mentions a rubric in its body text), and it omits the \"Self-Test\" header that closes the document. A reader using the TOC as a navigation pointer is misled on both counts.",
+        "proposed_fix": "Replace \"Rubric\" with \"Decomposition Design\" (matching the actual header) and append \"Self-Test\" to the TOC list.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted TOC comment appears verbatim, \"Rubric\" has no matching header (only \"Decomposition Design (Phase 8)\" mentions a rubric in prose), and \"Self-Test\" is indeed the final header omitted from the TOC list. || CONFIRMED \u2014 the TOC (quoted verbatim from the document) lists \"Rubric\" as a section, but no header of that name exists (only \"Decomposition Design (Phase 8)\" which mentions a rubric in body text), and the TOC omits the final \"## Self-Test\" header, matching the described staleness issue. || CONFIRMED \u2014 the TOC (verbatim present) lists \"Rubric\" though no such header exists (only \"Decomposition Design (Phase 8)\", which merely mentions a rubric in prose), and omits \"Self-Test\" despite it being the final section header."
+      },
+      {
+        "rule": "Demand [craft] (Steps, completion, and demand) \u2014 \"watch for criteria that mix checkable and uncheckable terms \u2014 one stray uncheckable qualifier inside an otherwise precise list lets the agent satisfy the whole thing impressionistically.\"",
+        "target_quote": "Polish 4\u20135 rounds against the same standard as the plan itself \u2014 preserve every feature and the plan's full level of detail in each pass.",
+        "issue": "\"preserve every feature\" is checkable (diffable against the plan's feature list), but \"the plan's full level of detail\" is a judgment call with no way to tell done from not-done, letting the whole polish bound be satisfied impressionistically.",
+        "proposed_fix": "Replace \"the plan's full level of detail\" with a checkable proxy, e.g. \"the same section count and per-issue field list (migration mechanics, proof-gate dependency, docs dependency) as the plan.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim in the GitHub Issues Handoff section, and the critique is accurate: \"preserve every feature\" is diffable/checkable, but \"the plan's full level of detail\" has no operational definition, letting the polish criterion be satisfied impressionistically. || CONFIRMED \u2014 the quote appears verbatim in the \"GitHub Issues Handoff (Phase 9)\" section, and the critique is valid: \"preserve every feature\" is a checkable criterion while \"the plan's full level of detail\" is a vague, judgment-based qualifier that undermines objective verification of the polish requirement. || CONFIRMED \u2014 the quote appears verbatim in the GitHub Issues Handoff section, and \"the plan's full level of detail\" is indeed an unfalsifiable qualifier sitting alongside the checkable \"preserve every feature,\" matching the stated rule."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Duplication [craft] (Pruning and drift) \u2014 \"an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.\"",
+        "target_quote": "| Extract + rename + reformat in one commit | Kills `git blame` and reviewability; one mechanical move per commit |",
+        "issue": "This anti-pattern row (and several neighbors, e.g. \"Split along visual sections\" vs. the One Rule's \"never aesthetically,\" and \"Drop a re-export...\" vs. the fa\u00e7ade requirement) is the negated restatement of a rule the document already states positively \u2014 \"one mechanical move per commit\" appears verbatim in the Phase Loop table and again in Decomposition Design. The anti-pattern table pays the same meaning a third time.",
+        "proposed_fix": "Drop anti-pattern rows that merely negate a rule already stated positively elsewhere; keep only genuinely new failure modes (e.g. \"Skip Phase 3 because tests exist\", \"Silently delete dead code\") that aren't restated as positive rules elsewhere in the document.",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the quoted row appears verbatim, but it adds rationale (\"kills git blame and reviewability\") not present in the positive statements (\"one-move-per-commit\" in Phase Loop/Decomposition Design), so it isn't merely the same meaning restated negated; it's reinforcing the rule with a distinct reason, which doesn't clearly fit the cited \"duplication\" pattern. || REFUTED \u2014 the quoted anti-pattern row adds a concrete failure mode (combining extract+rename+reformat) and a specific consequence (breaks git blame) not present in the positive \"one mechanical move per commit\" statements, so it isn't a pure negated restatement of the same meaning. || CONFIRMED \u2014 the quoted anti-pattern row appears verbatim in the table, and it does restate a rule already stated positively in \"Decomposition Design\": \"one mechanical move per commit (`git mv`-friendly, blame-preserving)\" \u2014 the same phrase and same git-blame justification recur in both places.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth / Duplication [craft] (Pruning and drift) \u2014 keep each meaning in one authoritative place so changing the behaviour is a one-place edit; duplication inflates a meaning's rank on the ladder past its real importance.",
+        "target_quote": "A round is **quiet** when every registry entry has verdict \u2260 OPEN/NEEDS_REFINEMENT and the round's\ngenuinely-new-findings count is <3. Converged = two consecutive quiet rounds AND \u226510 total rounds\nAND zero unresolved hypotheses (DEFERRED requires written rationale plus `Deferred reviewed: yes`).",
+        "issue": "The full convergence definition (\u226510 rounds, <3 new findings, DEFERRED+rationale, 2 consecutive quiet rounds) is restated near-verbatim in four places: the Quick-Start block, this Convergence section, the ABORT IF list, and the Pre-Flight & End Checklist. Any future change to the numeric floor requires editing all four in lockstep or the copies drift out of sync.",
+        "proposed_fix": "Keep the full definition only in the \"Convergence (non-negotiable)\" section; replace the other three occurrences with a short pointer back to it (e.g. \"Convergence floor \u2014 see [Convergence](#convergence-non-negotiable)\"), retaining just the number if salience at the point of use is needed.",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 The quoted text matches the Convergence section verbatim, and the core numeric criteria (\u226510 rounds, <3 new findings for a quiet round, DEFERRED+rationale) are indeed restated across the Quick-Start block, the ABORT IF list (partially), and the Pre-Flight Checklist, creating genuine multi-location duplication risk for the numeric floor. || REFUTED \u2014 the quoted Convergence-section text is verbatim, but the finding overstates the duplication: only the Quick-Start block and Checklist substantially restate the full definition, while the ABORT IF bullet only repeats the \"\u226510-round\" floor (no <3-findings threshold, no 2-consecutive-rounds clause, no DEFERRED+rationale detail), so it is not a \"near-verbatim\" restatement of the full definition as claimed. || REFUTED \u2014 the quote itself is verbatim, but the finding's characterization is inaccurate: only the Quick-Start block and this Convergence section actually restate the full definition; the ABORT IF bullet only repeats the \"\u226510-round\" number (and already links back to CONVERGENCE.md), and the Pre-Flight checklist compresses three of the four elements without the DEFERRED+rationale clause. Calling all four \"near-verbatim\" restatements of the full definition overstates the duplication.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

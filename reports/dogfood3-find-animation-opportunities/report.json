@@ -1,0 +1,109 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.2719758
+    },
+    "verify": {
+      "trials": 12,
+      "total_cost_usd": 0.2505903
+    }
+  },
+  "total_trials": 13,
+  "manifest": {
+    "run_id": "dogfood3-find-animation-opportunities",
+    "started_at": "2026-08-10T06:53:02Z",
+    "finished_at": "2026-08-10T06:56:29Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/find-animation-opportunities/SKILL.md",
+        "sha256": "sha256:bdfb8b83dc84c5bed0a5de1519e15e95df2f6a8ff475fc0359dab1604e36f5ad",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 3,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 12,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/find-animation-opportunities/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/find-animation-opportunities/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Completion criteria \u2014 contradicting bounds (a general ceiling in one place, a specific range crossing it in another)",
+        "target_quote": "The suggestion must work within the standard budgets (UI under 300ms):\n\n| Element | Duration |\n| --- | --- |\n| Press feedback | 100\u2013160ms |\n| Tooltips, small popovers | 125\u2013200ms |\n| Dropdowns, selects | 150\u2013250ms |\n| Modals, drawers | 200\u2013500ms |\n| Marketing / explanatory | Can be longer |",
+        "issue": "The gate states a general ceiling of \"under 300ms\" for UI, but the table immediately below it gives modals/drawers a range of 200\u2013500ms, which crosses that ceiling. The agent cannot tell whether a 400ms modal transition complies with the gate \u2014 it satisfies the table row but violates the stated ceiling, whichever bound it obeys.",
+        "proposed_fix": "Remove the blanket \"UI under 300ms\" framing, or explicitly carve out modals/drawers as an exception the way marketing/explanatory already is, e.g. \"UI under 300ms, except modals/drawers (200\u2013500ms) and marketing/explanatory (can be longer).\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text is verbatim, and the \"under 300ms\" ceiling genuinely contradicts the 200\u2013500ms modal/drawer row (e.g., a 400ms modal transition satisfies the table but violates the stated ceiling), just as the example row in the sample output (`Toast.tsx:41`) uses 400ms. || CONFIRMED: The quoted text and table appear verbatim, and the general \"under 300ms\" ceiling genuinely conflicts with the table's own 200\u2013500ms row for modals/drawers without marking it as an exception. || CONFIRMED \u2014 the quoted text and table appear verbatim, and \"UI under 300ms\" genuinely conflicts with the 200\u2013500ms modal/drawer row (e.g., 400ms modal exceeds the stated ceiling while satisfying its own table row)."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Demand \u2014 criteria that mix checkable and uncheckable terms let the agent satisfy the whole thing impressionistically",
+        "target_quote": "At most 5\u20137 suggestions for a whole app, fewer for a single view.",
+        "issue": "\"At most 5\u20137\" is a checkable numeric cap, but \"fewer for a single view\" is an uncheckable qualifier with no number attached. The agent can claim compliance with any count it likes for a single-view sweep since there is no bound to fail.",
+        "proposed_fix": "Give the single-view case a number too, e.g. \"At most 5\u20137 for a whole app, at most 2\u20133 for a single view.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote is verbatim, but \"fewer for a single view\" is a directional constraint relative to the app cap, not a vague/uncheckable criterion pretending to be checkable; it's clear and enforceable (any count < the app-level count applied). || REFUTED \u2014 the quote is verbatim, but \"fewer for a single view\" is a comparative constraint relative to the app cap, not an unbounded/uncheckable term; it's still checkable against the count given for a whole app. || REFUTED \u2014 the quote is verbatim, but \"fewer for a single view\" is a comparative relative to the app cap, not an unbounded/uncheckable term; it still constrains the agent to fewer than the numeric cap already given.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Cut identity the body already states \u2014 a pointer restating what the body says about itself adds permanent context load for no routing signal",
+        "target_quote": "Search a codebase or UI for places that don't animate but should, and reject everything that shouldn't.",
+        "issue": "This identity clause in the description is restated almost immediately by the body's opening lines (\"A search skill. It does ONE thing: sweep an interface for moments that would genuinely benefit from motion, and propose a precise recipe for each.\"). The description's job is to signal when to reach the skill, not to restate what it is a second time.",
+        "proposed_fix": "Trim the description to the trigger conditions and the disambiguation from sibling skills, letting the body's opening line carry the identity statement alone, e.g. description: \"Use when the user asks 'what could be animated here?' or wants to 'make this feel more alive'. For fixing existing animations, use improve-animations or review-animations instead.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the \"rule\" is a subjective style opinion presented as a general principle, not a genuine documented convention this skill violates; frontmatter descriptions in this system are routinely self-contained trigger statements, so this isn't a verifiable defect. || REFUTED \u2014 the quoted text does appear verbatim in the description, but the rule's premise is subjective style preference dressed as a hard rule; description fields conventionally do restate purpose for model-invocation triggering, and this isn't a genuine redundancy defect (frontmatter description and body opening serve different consumers \u2014 one is metadata read without loading the skill, the other is in-body context). || REFUTED \u2014 the quoted text does appear verbatim in the description, but the rule's premise is subjective/stylistic critique rather than a verifiable factual claim about redundancy that clearly \"genuinely applies\" \u2014 description fields conventionally restate purpose for standalone discoverability (e.g., search indexes, skill pickers) even when the body also states it, so this is a matter of opinion, not a confirmed defect.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch \u2014 synonyms that rename a single branch are one branch written twice",
+        "target_quote": "Use when the user asks \"what could be animated here?\" or wants to \"make this feel more alive\".",
+        "issue": "Both phrases route to the exact same branch (find animation opportunities); a run reaching the skill through one phrase would take the identical path as one reaching it through the other. This is a synonym pair paying twice for one route.",
+        "proposed_fix": "Collapse to a single representative trigger, e.g. \"Use when the user wants to find where animation would help.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the cited \"one trigger per branch\" rule isn't a real rule in this document; nothing here penalizes multiple phrasings routing to the same skill's description field. || REFUTED \u2014 the quoted text appears verbatim, but the cited \"one trigger per branch\" rule doesn't exist in this document; nothing here evaluates description trigger phrasing for branch duplication. || REFUTED \u2014 the target document contains no such rule about \"one trigger per branch\"; this appears to be a fabricated rule not present in the SKILL.md.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/find-animation-opportunities/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

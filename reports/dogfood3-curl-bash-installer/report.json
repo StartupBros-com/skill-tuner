@@ -1,0 +1,98 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.27205365
+    },
+    "verify": {
+      "trials": 9,
+      "total_cost_usd": 0.369438
+    }
+  },
+  "total_trials": 10,
+  "manifest": {
+    "run_id": "dogfood3-curl-bash-installer",
+    "started_at": "2026-08-10T06:56:30Z",
+    "finished_at": "2026-08-10T07:01:33Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:5f608eab8b761b2008e97a3cfd6d417951c506368e5c42d142ed13db5c83fe0e",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 3,
+    "refuted_count": 0,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 9,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/curl-bash-installer/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Context pointers \u2014 'a branch being a distinct case the document handles'",
+        "target_quote": "Use when writing a curl-pipe-bash install.sh one-liner for a CLI (Rust/TS/Go).",
+        "issue": "The pointer advertises three language branches (Rust/TS/Go), but the body only implements the Rust branch: non-negotiable #4 says platform detection maps 'OS+arch \u2192 Rust target triple' and non-negotiable #9's build-from-source fallback is 'rustup (if needed) \u2192 git clone --depth 1 \u2192 cargo build --release'. There is no Go target-triple/GOOS-GOARCH handling and no go-build fallback, so an agent routed here for a Go or TS CLI gets content that silently doesn't cover its case.",
+        "proposed_fix": "Either narrow the description to 'CLI (Rust)' and split TS/Go into their own skill/section, or add the missing TS/Go platform-detection and build-from-source branches so the claimed scope matches the body.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted description text is verbatim, and the body's concrete machinery (platform\u2192Rust target triple in #4, rustup\u2192cargo build in #9, Cargo.toml/cargo snippets) is Rust-specific with no Go handling anywhere and only a superficial package.json version read for TS, so the claimed Rust/TS/Go scope is not actually covered. || CONFIRMED \u2014 The quoted description text appears verbatim, and the critique holds: non-negotiable #4 (\"OS+arch \u2192 Rust target triple\"), #9 (\"rustup \u2192 git clone \u2192 cargo build --release\"), and the concrete snippets (Cargo.toml-based platform/version/build logic) are Rust-specific, with no analogous GOOS/GOARCH or Go-build-from-source path, so the Rust/TS/Go scope claimed in the description isn't matched by the body's implementation. || CONFIRMED \u2014 quoted description text matches verbatim, and the body's core non-negotiables (#4, #9) are indeed Rust-specific (Rust target triple, rustup/cargo build-from-source) with no analogous Go/TS build-from-source or platform-triple handling, despite the description claiming Rust/TS/Go scope."
+      },
+      {
+        "rule": "Completion criteria \u2014 'Two bounds that contradict... are a completion defect in the same family'",
+        "target_quote": "else warn \"no SHA256 tool; skipping checksum\"; return 0; fi",
+        "issue": "Non-negotiable #7 states checksum verification should 'skip only on explicit --no-verify', but the implementation also silently skips (returning success) whenever neither sha256sum nor shasum is present, with no --no-verify flag involved. An agent following the rule text and one following the code snippet reach different behavior for the same case.",
+        "proposed_fix": "Make the code match the stated bound: if no SHA256 tool is found and --no-verify was not passed, hard-fail with an actionable error instead of skipping, or change the non-negotiable to 'skip on --no-verify or absence of a hashing tool' so the two agree.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted line appears verbatim in `verify_checksum()`, and it genuinely contradicts non-negotiable #7's \"skip only on explicit `--no-verify`\" since the code also silently skips (return 0) when no SHA256 tool exists, independent of the flag. || CONFIRMED \u2014 the quote is verbatim, and non-negotiable #7 (\"skip only on explicit --no-verify\") genuinely conflicts with the code path that skips checksum verification whenever no SHA256 tool is found, independent of any --no-verify flag. || CONFIRMED \u2014 the quote appears verbatim in `verify_checksum()`, and it genuinely contradicts non-negotiable #7 (\"skip only on explicit `--no-verify`\"): the code skips checksum verification whenever no SHA256 tool is found, independent of whether `--no-verify` was passed."
+      },
+      {
+        "rule": "Pruning and drift \u2014 Duplication: 'an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror'",
+        "target_quote": "- **Skipping checksum verification** \u2014 supply-chain risk; always verify SHA256.\n- **`gnu` target on Linux** \u2014 not portable; use `musl` (static).\n- **Editing settings/JSON without a backup**, or with `sed`/`awk` \u2014 `cp file file.bak.$(date +%s)` first, merge with `jq`/Python3.\n- **Assuming `~/.local/bin` is on PATH** \u2014 check `:$PATH:`, offer to fix, don't assume.\n- **Hard-failing on optional features** (missing cosign/gum) \u2014 warn and continue.\n- **`flock` as your only lock** \u2014 absent on macOS; flock-first + mkdir-fallback.\n- **Raw unstyled output** \u2014 route through `info/ok/warn/err`; honor `NO_COLOR`/non-TTY so piped/CI output has no ANSI.\n- **`<tool> --version` with no timeout** \u2014 wrap in `timeout 1` (some CLIs hang).\n- **Ignoring proxy env** \u2014 `PROXY_ARGS` on every curl call.",
+        "issue": "Most of these bullets are the negated restatement of rules already given positively elsewhere: checksum vs non-negotiable #7, musl vs non-negotiable #4 (also restated verbatim in the platform-detection snippet's own caption), hard-failing on optional features vs non-negotiable #8's soft-skip/hard-fail asymmetry, flock-only vs non-negotiable #6, ignoring proxy vs non-negotiable #3, and settings/JSON backup vs the Agent auto-config section's 'timestamped backup \u2192 jq-or-Python3 merge'. Each is the same meaning written twice, inflating its rank on the ladder and adding maintenance/token cost without new routing signal.",
+        "proposed_fix": "Drop the bullets that only negate an already-stated non-negotiable (checksum, musl, hard-fail-on-optional, flock-only, ignoring-proxy, JSON-backup) and keep only anti-patterns with no positive counterpart elsewhere (e.g. the --version timeout and PATH-assumption entries).",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 quotes are verbatim, but the \"duplication\" framing misapplies here: anti-pattern bullets are a standard negative-form checklist genre distinct from the numbered non-negotiables, and most flagged entries add concrete specifics (the `cp file file.bak.$(date +%s)` command, the \"not portable\" rationale, explicit PROXY_ARGS instruction) not present in the positive statement, so they aren't simply \"the same meaning written twice.\" || CONFIRMED \u2014 the quoted anti-pattern bullets appear verbatim, and each cited overlap genuinely exists: checksum vs #7, musl vs #4 (and the platform-detection snippet caption), hard-fail-on-optional vs #8's soft-skip/hard-fail asymmetry, flock-only vs #6, ignoring-proxy vs #3, and JSON-backup vs the Agent auto-config section's \"timestamped backup \u2192 jq-or-Python3 merge\" \u2014 these are indeed negated restatements of rules already stated positively elsewhere in the document. || CONFIRMED \u2014 the quoted anti-pattern bullets appear verbatim, and most (checksum, musl, hard-fail-on-optional, flock-only, proxy, JSON-backup) do genuinely restate non-negotiables #3/4/6/7/8 and the Agent auto-config backup pattern in negated form, matching the cited duplication rule."
+      }
+    ],
+    "refuted_findings": [],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

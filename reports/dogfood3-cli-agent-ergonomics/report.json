@@ -1,0 +1,109 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.29490735
+    },
+    "verify": {
+      "trials": 12,
+      "total_cost_usd": 0.3020268
+    }
+  },
+  "total_trials": 13,
+  "manifest": {
+    "run_id": "dogfood3-cli-agent-ergonomics",
+    "started_at": "2026-08-10T06:35:45Z",
+    "finished_at": "2026-08-10T06:40:24Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md",
+        "sha256": "sha256:b026438e5b18890a3c1699511eb3d08e481cee8424f6639085dc47c98424aa10",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 3,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 12,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Demand [craft] \u2014 \"Watch for criteria that mix checkable and uncheckable terms \u2014 one stray uncheckable qualifier inside an otherwise precise list lets the agent satisfy the whole thing impressionistically.\"",
+        "target_quote": "ship \u22655 substantive changes across \u22653 dimensions before calling it done",
+        "issue": "The numeric thresholds (\u22655, \u22653) are checkable, but \"substantive\" is not \u2014 nothing in the document defines what makes a change substantive versus cosmetic, so an agent can round up trivial edits to hit the count and satisfy the gate impressionistically.",
+        "proposed_fix": "Replace \"substantive\" with a checkable proxy, e.g. \"ship \u22655 changes, each moving at least one of the 11 dimensions' score, across \u22653 dimensions before calling it done\", or drop the adjective and let the count/dimension-spread alone define the bar.",
+        "reason": "panel 3/3 confirmed | CONFIRMED. The quote appears verbatim (\"Ambition gate. ship \u22655 substantive changes across \u22653 dimensions before calling it done\"), and the critique correctly identifies \"substantive\" as an uncheckable qualifier mixed into an otherwise numeric/checkable threshold, matching the cited rule. || CONFIRMED \u2014 the quote appears verbatim in the \"Ambition gate\" line, and \"substantive\" is indeed an uncheckable qualifier alongside the checkable \u22655/\u22653 thresholds, matching the described mixed-criteria pattern. || CONFIRMED: The quote appears verbatim as the \"Ambition gate\" line, and \"substantive\" is indeed an uncheckable qualifier alongside the checkable \u22655/\u22653 thresholds, matching the described mixed-criteria pattern."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Completion criteria [craft] \u2014 \"Two bounds that contradict \u2014 a general ceiling in one place, a specific range crossing it in another \u2014 are a completion defect in the same family: the agent cannot tell whether a value between them complies, whichever bound it obeys.\"",
+        "target_quote": "**Ship for \"useful hint\" minimum**; reserve inferred-and-acted for edit-distance-1, *non-destructive* corrections only \u2014 **destructive flags are NEVER auto-corrected; the agent must type the canonical form.**",
+        "issue": "The grading ladder reserves 'inferred-and-acted' (proceed with a warning) for exactly edit-distance-1, non-destructive corrections \u2014 which is precisely what a flag typo like `--jsno`\u2192`--json` is. But Recurring fixes item 1 (\"Levenshtein-1 typo correction on flags \u2014 ... suggest only at distance 1, keep the non-zero exit\") mandates hint-only behavior with a non-zero exit for that identical case, never acting. The document's own worked example (`--jsno` \u2192 exit 1, hint only) confirms it follows the second rule, not the first. An agent implementing the feature cannot tell whether edit-distance-1 flag typos should auto-correct-and-proceed or only hint-and-exit-nonzero.",
+        "proposed_fix": "Pick one policy and state it once. Either change the grading ladder to say typo corrections on flags are always hint-only (never inferred-and-acted), or change Recurring fixes item 1 to allow proceeding with a warning for edit-distance-1 non-destructive flag corrections, and update the `--jsno` example's exit code to match.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 \"reserve inferred-and-acted for edit-distance-1 non-destructive corrections only\" is a restriction on *when* that grade may apply, not a mandate that all such typos must be auto-corrected; it's fully consistent with item 1 and the `--jsno` example, which the document itself uses to show hint-only is the chosen policy for flags. || REFUTED \u2014 the quoted text is verbatim, but it's not a genuine contradiction: the ladder's \"reserve inferred-and-acted for edit-distance-1, non-destructive corrections only\" states a necessary (not sufficient) condition \u2014 it caps where inferred-and-acted may ever be used, it doesn't mandate that all edit-distance-1 flag typos must be auto-corrected. Item 1's explicit choice of hint-only/non-zero-exit for flag typos is simply picking the stated minimum tier (\"useful hint\"), which the ladder text itself allows. No boundary conflict exists. || REFUTED \u2014 the quoted text is verbatim, but it's not a contradiction: \"reserve inferred-and-acted for edit-distance-1 non-destructive corrections\" sets an eligibility ceiling (\"only these could use it\"), not a mandate that all such corrections must be auto-acted; Recurring fixes item 1 simply chooses the more conservative \"useful hint\" option within that allowed range, consistent with the `--jsno` worked example.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication / Single source of truth [craft] \u2014 \"an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.\"",
+        "target_quote": "**A polite scorecard with no applied fixes** (when improvement was asked for). Ship changes, not a report.",
+        "issue": "This is a negated restatement of two rules already given positively elsewhere: the default mode described in \"When to use\" (\"audit + apply + re-score + test\") and the \"Ambition gate\" in The loop (\"ship \u22655 substantive changes... A scorecard alone is not a deliverable\"). It's the same meaning written a third time.",
+        "proposed_fix": "Delete this bullet from Anti-patterns; the Ambition gate and the \"When to use\" default already carry this rule as the single authoritative statement.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but \"same meaning written twice\" is a subjective style judgment, not a genuine duplication (the Anti-patterns entry is a distinct negative-framing callout, not a redundant restatement of the affirmative \"When to use\"/\"Ambition gate\" text). || REFUTED \u2014 the quoted text appears verbatim, but reiterating a rule as a named anti-pattern (with a distinct framing: \"when improvement was asked for\") serves the audit checklist's purpose and isn't a genuine duplication flaw warranting deletion. || REFUTED \u2014 Anti-patterns sections conventionally restate rules as failure modes for scannability; this isn't true duplication since the framing (audit checklist of failure patterns) differs functionally from a prescriptive default or gate, so \"audit such lists against the rules they mirror\" doesn't genuinely mandate deletion here.",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication / Single source of truth [craft] \u2014 \"an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.\"",
+        "target_quote": "**Fixing one flag's error in isolation** \u2014 apply the operator stack so the whole surface class improves together.",
+        "issue": "This restates, negated, the rule already given positively in Named operators: \"Ship a **stack** as one coherent commit.\" Same meaning in two places means the stacking rule can be edited in one place and silently drift out of sync with its anti-pattern mirror.",
+        "proposed_fix": "Delete this bullet; the \"Ship a stack as one coherent commit\" line already states the rule this anti-pattern exists to enforce.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quote is verbatim, but the anti-patterns list serves a distinct summary/checklist purpose (paired with \"polite scorecard\" anti-pattern) rather than being an accidental duplicate; this is normal reinforcement structure, not a genuine single-source-of-truth violation. || REFUTED \u2014 the quoted text exists verbatim, but pairing a positive rule with its negative-form anti-pattern is a common intentional reinforcement pattern, not genuine duplication at risk of drift. || REFUTED \u2014 the quote is verbatim, but the \"Anti-patterns\" section serves a distinct pedagogical purpose (a quick checklist of what NOT to do) rather than being a redundant restatement that risks drift; this is a common and intentional documentation pattern, not a genuine single-source-of-truth violation.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/cli-agent-ergonomics/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

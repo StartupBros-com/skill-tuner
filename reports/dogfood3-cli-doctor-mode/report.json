@@ -1,0 +1,93 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 1,
+      "total_cost_usd": 0.1816008
+    },
+    "verify": {
+      "trials": 6,
+      "total_cost_usd": 0.20835120000000001
+    }
+  },
+  "total_trials": 7,
+  "manifest": {
+    "run_id": "dogfood3-cli-doctor-mode",
+    "started_at": "2026-08-10T06:40:24Z",
+    "finished_at": "2026-08-10T06:43:14Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:6b452dafbc1847033ad940d5705500dec4b806f3108ec1ac142b0c0ef6d86b7f",
+        "source": "worktree",
+        "git_commit": "40482c9ba52ac3891f93d2060a113676941741d8",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:b3d49f5611e9a139e885b10100218f4b9fdde35e6b54db04b69b7020ab7167e5",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 1,
+    "refuted_count": 1,
+    "overflow": 0,
+    "probe_calls": 1,
+    "verify_calls": 6,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/skills/cli-doctor-mode/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/skills/cli-doctor-mode/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Completion criteria \u2014 \"a bound is checkable when the agent can tell done from not-done without judgment.\"",
+        "target_quote": "repeat until every FM clears the project's floor on each, then re-mine failure modes on the next material code change (no doctor is ever \"done\")",
+        "issue": "\"the project's floor\" is never defined anywhere in the document \u2014 no numeric threshold, score cutoff, or reference is given for the 10 dimensions. The agent cannot tell, without judgment, whether a given score for a dimension clears the undefined floor, so this iteration-ending condition is not checkable.",
+        "proposed_fix": "Define the floor explicitly, e.g. 'repeat until every FM scores at least N/10 on each dimension (see DOCTOR-SPEC.md for the scoring rubric)', or point to a concrete threshold defined in DOCTOR-SPEC.md.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and \"the project's floor\" is indeed left undefined anywhere in the document, making the completion criterion unverifiable without judgment. || CONFIRMED \u2014 the quoted text appears verbatim, and \"the project's floor\" is indeed never numerically defined anywhere in the document, making the completion condition uncheckable without judgment. || CONFIRMED \u2014 the quote is verbatim and \"the project's floor\" is indeed never numerically defined anywhere in the document, making the completion criterion uncheckable without judgment."
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Pruning and drift \u2014 Duplication (polarity disguise): \"an anti-pattern list that restates, negated, rules the document already gives positively is the same meaning written twice \u2014 audit such lists against the rules they mirror.\"",
+        "target_quote": "## Anti-patterns\n\n- **Fix-then-detect**, or any disk write that bypasses `mutate()`. Grep the doctor module for writes not routed through it.\n- **Backups that reformat / \"tidy while fixing\"** \u2014 breaks byte-for-byte reversibility silently.\n- **`DeletePath` / `rm -rf` / `git reset --hard` / `DROP TABLE`** under `--fix` \u2014 rename-to-quarantine instead.\n- **Random/timestamp finding ids, ad-hoc exit codes, interactive prompts, calling home by default** \u2014 all break the agent contract.\n- **Cross-filesystem rename** as the \"atomic\" write \u2014 it isn't; keep the temp file on the target's FS.",
+        "issue": "Every bullet here is a negated restatement of a rule the body already states positively: 'Fix-then-detect' duplicates 'Detect-then-fix, never fix-then-detect' (The One Rule) and the mutate()-chokepoint definition; 'Backups that reformat' duplicates 'Backups are verbatim. No reformatting...' in the safety envelope; 'DeletePath/rm -rf/...' duplicates 'The Op enum has NO DeletePath' and 'Never rm -rf, git reset --hard, or DROP TABLE'; 'ad-hoc exit codes' duplicates 'a documented, additive-only dictionary \u2014 never ad-hoc'; and the cross-filesystem-rename bullet is nearly verbatim identical to the mutate() step-6 note 'Cross-FS rename is NOT atomic \u2014 the temp file must be on the same filesystem as the target.' This is the same meaning written twice (or more), costing tokens and maintenance and inflating these rules' apparent importance beyond a single authoritative statement.",
+        "proposed_fix": "Delete the Anti-patterns section, or replace it with a one-line pointer back to the sections that already state each rule positively (e.g. 'See The One Rule, mutate() chokepoint, safety envelope, and CLI surface above \u2014 every anti-pattern here is already forbidden there'), instead of re-deriving each rule in negated form.",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 the anti-patterns section is a standard scannable \"don't do X\" checklist (with grep-actionable specifics like \"Grep the doctor module for writes not routed through it\") distinct in function from the flowing rule statements it echoes; restating hard rules as a terse negative checklist for skimmers is a common, useful documentation pattern, not a genuine token-wasting duplication bug. || CONFIRMED \u2014 the quoted \"Anti-patterns\" bullets appear verbatim, and each one does restate an already-stated positive rule in negated form (e.g., \"Fix-then-detect\" \u2194 The One Rule's \"Detect-then-fix, never fix-then-detect\"; \"Backups that reformat\" \u2194 \"Backups are verbatim. No reformatting...\"; \"DeletePath/rm -rf/...\" \u2194 \"The Op enum has NO DeletePath\" + \"Never rm -rf, git reset --hard, or DROP TABLE\"; the cross-FS-rename bullet is near-verbatim identical to the mutate() step-6 note), matching the cited duplication/polarity-disguise pattern. || REFUTED \u2014 The quoted anti-patterns section is verbatim, but the claim that \"every bullet\" is pure negated duplication overstates the case: the last bullet's \"interactive prompts\" and \"calling home by default\" aren't stated as positive rules elsewhere in the doc, and the section adds actionable content not present in the positive statements (e.g., \"Grep the doctor module for writes not routed through it\"). A consolidated anti-pattern checklist for scanning is a common, defensible documentation pattern rather than a clear violation warranting deletion.",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/skills/cli-doctor-mode/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

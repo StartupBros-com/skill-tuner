@@ -1,0 +1,167 @@
+{
+  "conditions": {
+    "original": {
+      "trials": 44,
+      "total_cost_usd": 0.5042238
+    },
+    "pruned": {
+      "trials": 44,
+      "total_cost_usd": 0.4312605
+    }
+  },
+  "total_trials": 88,
+  "manifest": {
+    "run_id": "dogfood-routing-batch3",
+    "started_at": "2026-08-10T06:15:01Z",
+    "finished_at": "2026-08-10T06:25:40Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.3.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/agent-swarm/SKILL.md",
+        "sha256": "sha256:2f83bb7c6e558716b1663d4faee13973a101c634d8c420b38ab1ee3647ecca93",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/brand-voice-builder/SKILL.md",
+        "sha256": "sha256:f86cf23af688bc4ff38de111ce54e011e3774e51d133c51da605dc5cc07f1dcd",
+        "source": "worktree",
+        "git_commit": "0492e1e9e5f22a60f3a53dac3aefeff42f115eda",
+        "git_path": "claude/skills-local/brand-voice-builder/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/browser-console-setup/SKILL.md",
+        "sha256": "sha256:ea01d618edcc51a59583ad881146a58bf5e4f8e0ef6331d0219bdcd03d78f5a6",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/cass-rerank-local/SKILL.md",
+        "sha256": "sha256:443f9d904aa4c80610847b002fde9b7284420819841aa2a5a61c288a6e513a40",
+        "source": "worktree",
+        "git_commit": "0492e1e9e5f22a60f3a53dac3aefeff42f115eda",
+        "git_path": "claude/skills-local/cass-rerank-local/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:a45f84a6944d60e2830d7fa3236e55e2fb4b7c4cfa9119cf5aff43515aafa379",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/skills/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "sha256": "sha256:543ec33dce283f421b785d5e82f888cc0e4a93b12dd04f6e13aac98c1278069e",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:b3d49f5611e9a139e885b10100218f4b9fdde35e6b54db04b69b7020ab7167e5",
+        "source": "worktree",
+        "git_commit": "0492e1e9e5f22a60f3a53dac3aefeff42f115eda",
+        "git_path": "claude/skills-local/cli-doctor-mode/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+        "sha256": "sha256:277645e3ec2e17f3645474fd2334a8866c9254dc26ce5143de6a9ec77e071b32",
+        "source": "worktree",
+        "git_commit": "0492e1e9e5f22a60f3a53dac3aefeff42f115eda",
+        "git_path": "claude/skills-local/repo-junk-triage/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/de-slopify/SKILL.md",
+        "sha256": "sha256:3cac571ed3cc93c7369c46d3cf122b4a827f8db67789e821f9119fae824acc93",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/tdd/SKILL.md",
+        "sha256": "sha256:5e6b9c16b547113e90afbb946489d1c1384be5c2128f0159bd0bee57251ecf08",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/ui-polish/SKILL.md",
+        "sha256": "sha256:60debbc2299a0bd94b700cd5075f13fba0385e42595e13bb45a929900196d798",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "routing-parity",
+    "pin": null
+  },
+  "routing_parity": {
+    "verdict": "land",
+    "failing_case_ids": [],
+    "scores": {
+      "original": {
+        "condition": "original",
+        "total": 44,
+        "correct": 42,
+        "accuracy": 0.9545454545454546,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": [
+          "cass-rerank-local__obvious__2"
+        ]
+      },
+      "pruned": {
+        "condition": "pruned",
+        "total": 44,
+        "correct": 42,
+        "accuracy": 0.9545454545454546,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": [
+          "cass-rerank-local__obvious__2"
+        ]
+      }
+    }
+  }
+}
