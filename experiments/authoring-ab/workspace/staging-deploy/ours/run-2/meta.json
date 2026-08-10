@@ -1,0 +1,10 @@
+{
+  "brief": "staging-deploy",
+  "condition": "ours",
+  "trial": 2,
+  "cost_usd": 0.040449,
+  "seconds": 32.6,
+  "model": "claude-sonnet-5",
+  "model_resolved": "claude-sonnet-5",
+  "chars": 1378
+}

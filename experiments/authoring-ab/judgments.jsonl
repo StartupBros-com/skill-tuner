@@ -1,0 +1,12 @@
+{"brief": "pdf-invoice-extractor", "trial": 1, "order1_pick": "ours", "order2_pick": "ours", "winner": "ours"}
+{"brief": "pdf-invoice-extractor", "trial": 2, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "staging-deploy", "trial": 1, "order1_pick": "ancestor", "order2_pick": "ancestor", "winner": "ancestor"}
+{"brief": "staging-deploy", "trial": 2, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "sql-migration-review", "trial": 1, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "sql-migration-review", "trial": 2, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "weekly-metrics-digest", "trial": 1, "order1_pick": "ours", "order2_pick": "ours", "winner": "ours"}
+{"brief": "weekly-metrics-digest", "trial": 2, "order1_pick": "ours", "order2_pick": "ours", "winner": "ours"}
+{"brief": "incident-triage", "trial": 1, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "incident-triage", "trial": 2, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "brand-image-alt-text", "trial": 1, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}
+{"brief": "brand-image-alt-text", "trial": 2, "order1_pick": "ours", "order2_pick": "ancestor", "winner": "tie"}

@@ -507,8 +507,9 @@ def render(result: Mapping[str, Any]) -> str:
         f"{result['delta']:g} {result.get('metric', 'findings')} per {label})",
         "",
         (
-            f"- {result['metric']} paired across {result['n']} {label}s "
-            f"({result['candidate_config']} vs {result['baseline_config']})"
+            f"- {result.get('metric', 'score')} paired across {result['n']} {label}s "
+            f"({result.get('candidate_config', result.get('candidate_path', 'candidate'))} "
+            f"vs {result.get('baseline_config', result.get('baseline_path', 'baseline'))})"
             if source else
             f"- totals: candidate {result['candidate_total']} vs baseline "
             f"{result['baseline_total']} across {result['n']} documents"

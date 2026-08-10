@@ -1,0 +1,31 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "conditions": ["ancestor", "ours"],
+  "briefs": [
+    {
+      "id": "pdf-invoice-extractor",
+      "prompt": "Write a SKILL.md for `invoice-lines`, a skill that teaches an agent to extract line items from PDF invoices into CSV using the bundled scripts/extract.py (pdfplumber-based; takes a PDF path, writes stdout CSV with columns vendor,date,sku,qty,unit_price,total). Agents should use it whenever a user wants tabular data out of invoice/receipt PDFs. Known gotchas: scanned PDFs need OCR first (the script exits 3), multi-currency invoices need the --currency flag, and totals should be cross-checked against the document's stated total."
+    },
+    {
+      "id": "staging-deploy",
+      "prompt": "Write a SKILL.md for `staging-deploy`, our team's deploy-to-staging procedure: run the test suite (pnpm test), build (pnpm build), push the image (make docker-push TAG=staging-<git-sha>), apply migrations against the staging DB (pnpm db:migrate:staging — NEVER against prod, the prod URL is in the same .env), then `make deploy-staging`, then smoke-check https://staging.acme.dev/healthz returns 200 and the deployed sha matches. Rollback is `make rollback-staging`. Agents should reach for this whenever asked to deploy, ship, or push to staging."
+    },
+    {
+      "id": "sql-migration-review",
+      "prompt": "Write a SKILL.md for `migration-review`, a checklist skill an agent applies when reviewing a database migration PR: destructive ops (DROP/rename) need a two-phase plan, new columns on hot tables need defaults that don't lock (Postgres: avoid ADD COLUMN with volatile DEFAULT pre-11 semantics), every index on a big table must be CONCURRENTLY, down-migrations must actually reverse the up, and any data backfill belongs in a separate batched job, not the schema migration. The skill should make the agent produce a pass/fail review with cited lines."
+    },
+    {
+      "id": "weekly-metrics-digest",
+      "prompt": "Write a SKILL.md for `metrics-digest`, which builds our Monday metrics email: pull last week's numbers from the analytics CLI (an4 query --metric signups,activation,churn --last 7d --json), compare against the prior week, flag any metric that moved more than 10% either way, and render the fixed email template (subject 'Metrics week of <date>'; sections Growth, Engagement, Flags; plain text, no markdown). If a metric is missing from the CLI output, say so explicitly rather than omitting the row."
+    },
+    {
+      "id": "incident-triage",
+      "prompt": "Write a SKILL.md for `incident-triage`, guiding an agent through first-response on a production alert: acknowledge in PagerDuty (pd ack <id>), classify severity by user impact (SEV1 checkout down / SEV2 degraded / SEV3 cosmetic), pull the last deploy (deployctl last), check the four golden dashboards (links in runbooks/dashboards.md), and either roll back (if the alert started within 30min of a deploy) or escalate to the service owner in .github/CODEOWNERS. Everything gets logged to the incident channel as it happens, not after."
+    },
+    {
+      "id": "brand-image-alt-text",
+      "prompt": "Write a SKILL.md for `alt-text-writer`, which writes alt text for images on our marketing site: 125 characters max, front-load the subject, no 'image of'/'picture of', decorative images get empty alt=\"\", product shots must name the product line, and text baked into the image must be transcribed verbatim. The skill triggers whenever the user adds or reviews site imagery, and it should refuse to guess at image content it cannot see — it asks for a description instead."
+    }
+  ]
+}

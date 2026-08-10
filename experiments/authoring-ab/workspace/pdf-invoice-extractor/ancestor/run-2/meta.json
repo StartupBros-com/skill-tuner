@@ -1,0 +1,10 @@
+{
+  "brief": "pdf-invoice-extractor",
+  "condition": "ancestor",
+  "trial": 2,
+  "cost_usd": 0.10146675,
+  "seconds": 30.4,
+  "model": "claude-sonnet-5",
+  "model_resolved": "claude-sonnet-5",
+  "chars": 1161
+}

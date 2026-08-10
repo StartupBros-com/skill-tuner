@@ -1,0 +1,10 @@
+{
+  "brief": "sql-migration-review",
+  "condition": "ancestor",
+  "trial": 1,
+  "cost_usd": 0.07601084999999999,
+  "seconds": 49.9,
+  "model": "claude-sonnet-5",
+  "model_resolved": "claude-sonnet-5",
+  "chars": 3344
+}

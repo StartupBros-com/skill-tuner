@@ -134,6 +134,19 @@ class VerdictTest(unittest.TestCase):
             entries = [json_mod.loads(line) for line in lines]
             self.assertEqual(["not_worse", "better"], [e["verdict"] for e in entries])
 
+    def test_paired_json_result_renders_without_metric_key(self):
+        # The paired-json path sets source but no metric/config fields;
+        # render() KeyError'd on that shape (found live, 2026-08-10).
+        result = compare.compare_paired(
+            {"a": 0.8, "b": 0.9, "c": 1.0}, {"a": 0.9, "b": 0.9, "c": 1.0},
+            delta=0.05,
+            extra={"source": "paired-json", "baseline_path": "x.json",
+                   "candidate_path": "y.json"},
+        )
+        rendered = compare.render(result)
+        self.assertIn("Verdict:", rendered)
+        self.assertIn("y.json", rendered)
+
     def test_sign_test_matches_the_exact_binomial(self):
         self.assertIsNone(compare.exact_sign_test_p(0, 0))
         self.assertAlmostEqual(1.0, compare.exact_sign_test_p(6, 6))
