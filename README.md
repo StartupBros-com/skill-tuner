@@ -87,6 +87,16 @@ Use theirs for eval cases, grading, trigger tuning and benchmarking. Use this fo
 
 Two axes are out of scope, and the ecosystem's loudest 2026 numbers live on them. Whether a skill makes an agent **better at its end task** is skill-creator's benchmark question (and SkillsBench's, at academic scale) — this tool reads those results, it does not produce them. Whether a skill is **safe to install** — prompt injection, exfiltration — is a scanner's question (Snyk's ToxicSkills audit found injection in 36% of 22,511 public skills). skill-tuner grades the authoring and gates the edit: point it at a document you already trust, beside a benchmark you already run.
 
+## Case studies on the public record
+
+The verdict engine applied to the ecosystem's own disputes, at zero model
+cost: [the Ponytail benchmark saga](docs/case-studies/ponytail.md) — the
+famous "54% less code" is a totals artifact; the per-task paired truth is
+**35.4% [15, 56]**, direction near-certain, wildly task-dependent — and
+[SkillOpt's strictly-improves gate](docs/case-studies/skillopt.md), whose
+per-edit re-analysis is fully specified and blocked only on data its
+authors state is not public.
+
 ## Receipts
 
 Live runs against `claude -p`, reproducible from committed configs. The routing eval **refused** a description prune that lost accuracy; the probe **confirmed 19 defects** across sixteen already-shipped documents. A gate that only ever says yes is not a gate, so both outcomes are published.

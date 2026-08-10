@@ -1,0 +1,14 @@
+{
+  "date-picker-frontend": 0.0,
+  "color-picker-frontend": 0.0,
+  "file-dropzone-frontend": 0.0,
+  "multi-step-wizard-frontend": 0.0,
+  "star-rating-frontend": 0.0,
+  "command-palette-frontend": 0.0,
+  "archive-item-backend": 0.0,
+  "search-items-backend": 0.0,
+  "export-csv-backend": 0.0,
+  "bulk-delete-backend": 0.0,
+  "duplicate-item-backend": 0.0,
+  "count-items-backend": 0.0
+}
