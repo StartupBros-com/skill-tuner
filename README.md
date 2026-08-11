@@ -61,6 +61,17 @@ Three things, none of which a first-party harness gives you:
 - **Provenance** — every input content-hashed and git-pinned, model and CLI version recorded. `tune.py verify <run>` re-checks a finished run for **$0** and tells you what drifted. It caught a real input change within hours of being written.
 - **An adversarial probe** — applies an authoring doctrine to a document, judges each finding with an independent skeptic panel, and downgrades any finding whose quote is not actually in the target, regardless of how the panel voted.
 
+## Install
+
+Two steps, from inside Claude Code:
+
+```
+/plugin marketplace add https://github.com/StartupBros-com/hov-marketplace.git
+/plugin install skill-tuner@hov
+```
+
+The runner shells out to the `claude` CLI, so that needs to be installed too.
+
 ## Using it
 
 **`/skill-tuner:tune <path>`** — point it at a `SKILL.md`, `AGENTS.md` or `CLAUDE.md` and your agent will probe it, fix what the probe confirms, re-probe until those findings are gone, and prove the description still routes if it changed. The loop ships as the user-invoked `tune` skill (`skills/tune/SKILL.md`), so clients that load Agent Skills from plugins — Codex among them — surface it too; the runner itself still needs the `claude` CLI installed.
