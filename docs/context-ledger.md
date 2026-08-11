@@ -19,7 +19,8 @@ every time its skill fires:
 | **total** | | | **−6,089 (~1.5k tokens)** |
 
 Every batch reduced it. Against the corpus's 458KB of always-loaded skill
-text that is −1.3% — modest, stated as such. The per-skill numbers are
+text (41 skills at measurement time, 2026-08-11) that is −1.3% — modest,
+stated as such. The per-skill numbers are
 lumpier: the batches deleted duplication and sediment from the specific
 files that had it, not evenly.
 
