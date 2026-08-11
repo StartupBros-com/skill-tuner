@@ -1,0 +1,382 @@
+[
+ {
+  "id": "animate-g01",
+  "doc": "animate",
+  "rule": "One trigger per branch [craft]",
+  "target_quote": "Use when asked to animate something, add motion, make a component feel alive, or build a transition.",
+  "issue": "At minimum, `animate something` and `add motion` are synonymous triggers for the same build sequence; the sentence pays for both without defining different execution branches.",
+  "proposed_fix": "Collapse the construction triggers to one phrase, such as `Use when implementing new motion.` Retain additional phrases only if they route to genuinely different branches, and verify the pruned description at routing parity before landing it.",
+  "best_overlap": 0.12,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g02",
+  "doc": "animate",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "2. **No approximated values.** Every curve, duration, and spring config comes from the tables below. Never invent `cubic-bezier(0.4, 0, 0.2, 1)` because it looks familiar.\n3. **Extend the codebase's tokens, don't fork them.** If `--ease-out` or a duration scale already exists, use it. Adding a parallel system is a defect.",
+  "issue": "These rules provide incompatible sources of truth when an existing project token differs from the values below. Later, curves from external sites are also permitted, and the spring presets are code snippets rather than table entries. An agent cannot determine which source satisfies the absolute `every ... comes from the tables` criterion.",
+  "proposed_fix": "Define one explicit precedence ladder: use an existing project token first; otherwise choose an exact approved preset or value from this document; if no curve fits, take an exact named curve from the approved external catalog and add it to the project token system. Replace `tables below` with `approved presets and ranges below` unless every source is actually converted into a table.",
+  "best_overlap": 0.33,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g03",
+  "doc": "animate",
+  "rule": "Progressive disclosure [craft]",
+  "target_quote": "4. **Reduced motion and hover gating ship with the animation**, not as a follow-up.",
+  "issue": "Reduced-motion handling is universal, but hover gating applies only to the hover-motion branch. Combining them in an unconditional hard rule makes branch-only work appear mandatory for animations with no hover behavior.",
+  "proposed_fix": "Split the rule into `Reduced-motion handling ships with every animation` and a conditional rule: `When implementing :hover motion, gate it with @media (hover: hover) and (pointer: fine).` Place the latter with the CSS-hover branch or its recipe.",
+  "best_overlap": 0.2,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g04",
+  "doc": "animate",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "| Tens of times/day (hover effects, list navigation) | Near-imperceptible only \u2014 fast and subtle, or nothing |",
+  "issue": "`Near-imperceptible`, `fast`, and `subtle` are judgment-based bounds. The agent cannot determine from the rule whether a concrete duration, distance, or scale complies, despite the document\u2019s insistence on exact values.",
+  "proposed_fix": "Give this tier an explicit, sourced maximum duration and transform-amplitude/property bounds. State that the agent must choose no animation when no approved token or recipe falls within those bounds.",
+  "best_overlap": 0.12,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g05",
+  "doc": "animate",
+  "rule": "Co-location [craft]",
+  "target_quote": "| Springs, layout animations, exit animations, gesture-driven values | **Motion** (`motion.dev`) |",
+  "issue": "Step 3 requires choosing Motion when a spring is needed, but the criteria for deciding whether to use a spring do not appear until Step 5. Applying the tool-selection rule correctly therefore requires reading a later section, contrary to the mandated sequence.",
+  "proposed_fix": "Move the spring-selection criteria into Step 3 beside the Motion row, leaving Step 5 only to choose an approved spring configuration. Alternatively, move tool selection after the spring-versus-easing decision.",
+  "best_overlap": 0.11,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g06",
+  "doc": "animate",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "- **`transform` and `opacity` only.** They skip layout and paint and run on the GPU. `width`/`height`/`margin`/`padding`/`top`/`left` trigger all three. (`clip-path` is the sanctioned fourth \u2014 see RECIPES.md. `height` is tolerated only for accordions, where there's no transform equivalent.)",
+  "issue": "The absolute `only` bound immediately has two exceptions, while the tool and easing tables separately authorize color transitions without listing color as an exception. The allowed property set is therefore contradictory.",
+  "proposed_fix": "State the complete rule explicitly: use `transform` and `opacity` for spatial motion; color is allowed for state and hover transitions; `clip-path` and accordion height are the documented geometric exceptions; avoid the other listed layout properties.",
+  "best_overlap": 0.17,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g07",
+  "doc": "animate",
+  "rule": "Progressive disclosure [craft]",
+  "target_quote": "- **In Motion, use the full transform string.** `x`/`y`/`scale` shorthands are not hardware-accelerated and drop frames under load:",
+  "issue": "This implementation rule applies only after the Motion branch is selected, yet it remains inline among rules every tool branch reads. Other Motion-only spring and `useReducedMotion` material is likewise scattered through the main sequence.",
+  "proposed_fix": "Co-locate the Motion transform rule, spring presets, and Motion reduced-motion example in one disclosed Motion reference. Put a direct `Load this reference when Motion is selected` pointer in the Motion row of Step 3.",
+  "best_overlap": 0.15,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g08",
+  "doc": "animate",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "**Easing**, in decision order:\n\n| Situation | Easing |\n| --- | --- |\n| Entering or exiting | `ease-out` |\n| Moving / morphing on screen | `ease-in-out` |\n| Hover / color change | `ease` |\n| Constant motion (marquee, progress) | `linear` |\n| Default | `ease-out` |\n\n**Never `ease-in` on UI.** It starts slow, delaying the exact moment the user is watching. `ease-out` at 200ms *feels* faster than `ease-in` at 200ms.\n\nBuilt-in CSS easings are too weak. Use these:",
+  "issue": "The decision table presents built-in-looking CSS values such as `ease-out` and `ease-in-out`, then immediately says built-in easings are too weak. It does not say whether the table names easing families or literal values, and the blanket statement also conflicts with the table\u2019s `ease` and `linear` entries.",
+  "proposed_fix": "Put exact allowed values in the table\u2014for example, `var(--ease-out)` and `var(--ease-in-out)`\u2014and label any conceptual family separately. Scope the built-in warning to the cases that require custom curves, explicitly preserving built-in `ease` or `linear` only where intended.",
+  "best_overlap": 0.25,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g10",
+  "doc": "animate",
+  "rule": "Demand [craft]",
+  "target_quote": "**Reach for a spring instead** when the motion is drag with momentum, an element that should feel alive, a gesture the user can interrupt or reverse, or decorative mouse-tracking:",
+  "issue": "The criterion mixes observable conditions\u2014momentum, interruption, reversal, and pointer tracking\u2014with the uncheckable qualifier `should feel alive`. That qualifier lets the entire spring decision be made impressionistically.",
+  "proposed_fix": "Remove `an element that should feel alive` or replace it with observable interaction requirements. For example, limit springs to velocity-bearing, directly manipulated, interruptible, or reversible motion, with decorative tracking additionally subject to the frequency and purpose gates.",
+  "best_overlap": 0.15,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g11",
+  "doc": "animate",
+  "rule": "Front-load the leading word [craft]",
+  "target_quote": "For ready-to-build implementations of the common cases \u2014 button press, dropdown, tooltip, modal, drawer, toast, accordion, stagger, hold-to-confirm, tab indicator, scroll reveal, drag-to-dismiss \u2014 see [RECIPES.md](RECIPES.md). Load it whenever the request matches one of those components; start from the recipe rather than from a blank file.",
+  "issue": "The pointer delays its operative word, `Load`, until after an identity phrase and the entire trigger list. It also states the reach action twice as `see` and `Load`.",
+  "proposed_fix": "Rewrite it as `Load [RECIPES.md](RECIPES.md) when the request matches one of these recipes: ... Start from the matching recipe.`",
+  "best_overlap": 0.29,
+  "matched_kind": null
+ },
+ {
+  "id": "animate-g13",
+  "doc": "animate",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "Write the code. Then, in at most a few lines:",
+  "issue": "`A few` is not a checkable ceiling, so the agent cannot tell whether its output length complies.",
+  "proposed_fix": "Use an exact contract, such as: `After the code, output two required one-line bullets and one optional one-line feel-check bullet, for a maximum of three non-code lines.`",
+  "best_overlap": 0.3,
+  "matched_kind": null
+ },
+ {
+  "id": "apple-design-g00",
+  "doc": "apple-design",
+  "rule": "Cut identity the body already states [craft]",
+  "target_quote": "Apple's approach to interface design and fluid, physical motion, translated for the web.",
+  "issue": "This identity sentence repeats the skill name and opening body text, while the following sentence already identifies the domain through \u201cApple-style interfaces.\u201d It adds no invocation branch and delays the useful trigger language.",
+  "proposed_fix": "Delete this sentence so the description begins directly with the existing \u201cUse when building or reviewing\u2026\u201d trigger sentence.",
+  "best_overlap": 0.36,
+  "matched_kind": null
+ },
+ {
+  "id": "apple-design-g02",
+  "doc": "apple-design",
+  "rule": "Co-location [craft]",
+  "target_quote": "## Reconciling with the rest of this harness\n\n*Local section, not upstream.* Two other installed skills give advice that reads as\nconflicting with this one. Both conflicts are scope differences, not contradictions \u2014\nresolve them this way rather than picking a favourite.",
+  "issue": "Essential scope and precedence caveats for translucency and spring usage are separated from \u00a7\u00a712 and 3\u20134 and placed after the quick reference. Correctly applying either earlier rule therefore requires finding and remembering a distant section.",
+  "proposed_fix": "Move the `kill-ai-slop` precedence and floating-chrome limitation into \u00a712, and move the springs/CSS-transition/`@keyframes` hierarchy into \u00a7\u00a73\u20134. Remove the trailing reconciliation section after relocating its content.",
+  "best_overlap": 0.1,
+  "matched_kind": null
+ },
+ {
+  "id": "apple-design-g04",
+  "doc": "apple-design",
+  "rule": "Completion criteria [craft] \u2014 contradictory bounds",
+  "target_quote": "Every animation must be interruptible and redirectable at any moment.\n\nReach for springs for anything a user can touch.\n\n2. **CSS transitions** \u2014 state-driven motion that can retarget mid-flight but has no\ngesture behind it: toasts stacking, toggles, rapid open/close.\n3. **`@keyframes`** \u2014 predetermined motion that will not be interrupted: marquees,\nshimmer, decorative loops.",
+  "issue": "The universal requirements that every animation be interruptible and every touchable interaction use springs conflict with the later permission to use CSS transitions for touchable toggles and non-interruptible `@keyframes`. The agent cannot satisfy both scopes as written.",
+  "proposed_fix": "Replace the absolutes with: \u201cEvery gesture-driven value, and every state transition intended to accept input mid-flight, must remain interruptible. Use springs for values that are dragged, thrown, or grabbable mid-flight; use CSS transitions for state-driven retargeting and `@keyframes` only for predetermined noninteractive motion.\u201d",
+  "best_overlap": 0.18,
+  "matched_kind": null
+ },
+ {
+  "id": "apple-design-g05",
+  "doc": "apple-design",
+  "rule": "Completion criteria [craft] \u2014 contradictory bounds",
+  "target_quote": "const projectedEndpoint = currentPosition + project(releaseVelocity);\nconst target = nearestSnapPoint(projectedEndpoint);   // choose target from the projection\n\n| Decide reverse vs. commit | Use velocity **sign**, not position | at release |",
+  "issue": "The body selects a target from a projected endpoint that incorporates both current position and velocity, while the quick reference says to exclude position and use velocity sign alone. These rules can select different targets, especially for slow or zero-velocity releases.",
+  "proposed_fix": "Make the projection algorithm the sole default: compute `currentPosition + project(releaseVelocity)` and choose its nearest snap point. Delete the sign-only row; if directional flicks are a deliberate exception, define a named velocity threshold and specify exactly when that exception overrides projection.",
+  "best_overlap": 0.1,
+  "matched_kind": null
+ },
+ {
+  "id": "apple-design-g07",
+  "doc": "apple-design",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "## 17. Process\n\n- **Prototype interactively \u2014 an interactive demo is worth \"a million static designs.\"** You discover the interface by building and playing with it; a working prototype also sets a concrete bar that prevents a mediocre final implementation.\n- **Design interaction and visuals together.** \"You shouldn't be able to tell where one ends and the other begins.\" Motion is not a layer added after the pixels.\n- **Test with real people in real context**, and review motion with fresh eyes \u2014 play it in slow motion / frame-by-frame to catch what's invisible at full speed.",
+  "issue": "This explicitly procedural section supplies actions but no checkable exit conditions. Terms such as \u201cinteractive,\u201d \u201ctogether,\u201d \u201creal context,\u201d and \u201cfresh eyes\u201d do not establish which interactions must exist, what testing must cover, or what result permits completion.",
+  "proposed_fix": "Turn the bullets into gates: the prototype is complete when every named primary interaction and mid-flight interruption is executable; the integrated review is complete when visual and interaction states are exercised in the same build; testing is complete only after a predeclared participant count, contexts, tasks, and pass thresholds have recorded results, a frame-inspection log exists, and all failures above the agreed severity threshold are resolved.",
+  "best_overlap": 0.25,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g01",
+  "doc": "agent-swarm",
+  "rule": "Cut identity the body already states [craft]",
+  "target_quote": "Run a large or parallelizable task across many agents using the native stack \u2014\n  parallel Claude Code subagents, the Workflow tool, Codex delegation, and worktree\n  isolation \u2014 instead of a coordination protocol.",
+  "issue": "The tool inventory and contrast with a coordination protocol explain the skill\u2019s identity and implementation, both of which the title, core-shift section, and primitive map already state. They do not add a condition for invoking the skill.",
+  "proposed_fix": "Remove the implementation inventory and protocol contrast from the description. Keep those details in the body and reserve the description for nonoverlapping invocation conditions.",
+  "best_overlap": 0.11,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g02",
+  "doc": "agent-swarm",
+  "rule": "Progressive disclosure [craft]",
+  "target_quote": "## The patterns worth knowing (from the Workflow doctrine)\n\n- **Fan-out \u2192 adversarially verify \u2192 synthesize.** Generate findings in parallel, then spawn *independent\n  skeptics* per finding (prompted to refute; kill on majority-refute), then synthesize survivors. Stops\n  plausible-but-wrong findings from shipping.",
+  "issue": "The entire patterns section is specific to runs that selected the Workflow engine. Solo, Agent-tool, and direct Codex branches do not need this reference, yet they must consume it whenever the skill loads.",
+  "proposed_fix": "Move the Workflow-specific patterns into an authoritative Workflow reference, such as `references/workflow-patterns.md`. In the Workflow engine branch, retain an explicit conditional pointer: \u201cWhen selecting Workflow, read `references/workflow-patterns.md` before constructing the graph.\u201d",
+  "best_overlap": 0.14,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g03",
+  "doc": "agent-swarm",
+  "rule": "Progressive disclosure [craft]",
+  "target_quote": "## Cross-session claiming (before touching a gh issue)\n\nPhysical worktree isolation solves intra-task parallelism (above); it does nothing for two of the\n~6 concurrent sessions picking the SAME gh issue (the dotfiles#44 / arena-strategy-141-142 failure\nmode). Before opening a worktree for an existing issue:",
+  "issue": "Issue claiming is relevant only to the existing-GitHub-issue branch. Its commands, implementation details, incident references, TTL, and reaping schedule are inlined for every swarm invocation.",
+  "proposed_fix": "Keep those details solely in `claude/harness/gh-tracking-and-claims.md` and replace this section with: \u201cBefore opening a worktree for an existing GitHub issue, read `claude/harness/gh-tracking-and-claims.md` and complete its dedup-and-claim preflight.\u201d",
+  "best_overlap": 0.09,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g04",
+  "doc": "agent-swarm",
+  "rule": "Progressive disclosure [craft]",
+  "target_quote": "## Campaign template (the whole-codebase use case)\n\nThe shape a big campaign skill (refactor, audit, migration, dead-code) routes through:",
+  "issue": "The heading explicitly limits the template to the whole-codebase campaign branch, but the skill also handles smaller analysis fan-outs and independent-perspective requests. Those other branches still pay for the full campaign sequence.",
+  "proposed_fix": "Move the campaign sequence into `references/campaign.md` and place a conditional pointer in the engine-selection section: \u201cFor a whole-codebase campaign, read and execute `references/campaign.md`.\u201d",
+  "best_overlap": 0.39,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g05",
+  "doc": "agent-swarm",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "- **Solo / inline** \u2014 < ~5\u20137 independent units. Orchestration overhead isn't worth it; a single Sonnet\n  subagent or inline work is cheaper. Don't build a swarm for a small job.",
+  "issue": "\u201c< ~5\u20137\u201d is not a checkable boundary, and the later \u201c\u2265 5\u20137 units\u201d Codex rule does not resolve whether five or six units belong on either side. The agent cannot deterministically select an engine at the boundary.",
+  "proposed_fix": "State exact, nonoverlapping bands and update both rules together\u2014for example, \u201c1\u20136 mutating implementation units: solo/Sonnet; 7 or more: Codex delegation.\u201d Give read-only parallel fan-out its own exact rule if it has a different cutoff.",
+  "best_overlap": 0.15,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g06",
+  "doc": "agent-swarm",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "- **Loop-until-dry.** For unknown-size discovery (bugs, dead code, refactor sites), keep spawning finders\n  until K consecutive rounds surface nothing new \u2014 dedup against everything seen, not just what's kept.",
+  "issue": "`K` is never assigned and the agent is not instructed to choose it before launch. Consequently, the stated stopping condition cannot distinguish done from not done.",
+  "proposed_fix": "Make `empty_rounds_to_stop` a required positive-integer run parameter and prohibit launch until it is recorded. Define completion as the counter reaching that exact value after deduplication.",
+  "best_overlap": 0.11,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g07",
+  "doc": "agent-swarm",
+  "rule": "The subagent escape hatch has a cost ceiling [measured]",
+  "target_quote": "- **Loop-until-dry.** For unknown-size discovery (bugs, dead code, refactor sites), keep spawning finders\n  until K consecutive rounds surface nothing new \u2014 dedup against everything seen, not just what's kept.",
+  "issue": "Even after assigning `K`, discovery can continue indefinitely while each round finds something. The loop has no hard ceiling on rounds, candidates, or total agent dispatches; a concurrency queue limits simultaneous work, not total spend.",
+  "proposed_fix": "Require `max_rounds`, `max_candidates`, and `max_agent_dispatches` before launch. Stop at the first of the dry condition or a hard cap, and record which condition fired plus any known unsearched remainder.",
+  "best_overlap": 0.11,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g09",
+  "doc": "agent-swarm",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "1. **Scout inline** \u2014 discover the work-list first (list files, find the sites, scope the diff). You need\n   the *work-list* before you orchestrate, not before the task.\n2. **Fan out** \u2014 one unit per agent: read-only analysis via parallel subagents; mutating work via\n   worktree-isolated subagents or `codex exec --cd`; multi-stage-per-unit via a Workflow `pipeline`.\n3. **Verify each** \u2014 adversarial/diverse-lens verification as each unit completes (pipeline, not barrier).\n4. **Synthesize** \u2014 collect the survivors; dedup; a completeness-critic pass for what was missed.\n5. **Gate** \u2014 run the project's real tests + the lightest review tier that fits; never merge un-gated.",
+  "issue": "The numbered items describe actions but do not end in checkable done states. In particular, discovery has no coverage bound, fan-out does not require every unit to reach a terminal state, verification does not define an accepted verdict, critic findings have no disposition rule, and the gate does not define test or review success.",
+  "proposed_fix": "Append explicit terminal conditions: scouting ends after the declared discovery modalities and stopping bound produce a manifest; fan-out ends when every manifest ID is completed, refuted, or blocked; verification ends when every completed unit has an evidence-backed verdict; synthesis ends when every critic finding is processed or explicitly capped; gating ends when named test commands exit zero and no blocking review finding remains.",
+  "best_overlap": 0.32,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g11",
+  "doc": "agent-swarm",
+  "rule": "Single source of truth [craft]",
+  "target_quote": "- **Mechanical** (search sweeps, file collection, log trawls, summarization, bulk edits) \u2192 Sonnet, or\n  Haiku for trivial sweeps \u2014 pin `model` explicitly (see \"Pick the lightest engine that fits\" above).",
+  "issue": "This repeats the earlier Parallel-subagents rule to pin Sonnet or Haiku for mechanical work. The cross-reference does not remove the duplicated model-selection meaning, leaving two places to update when routing policy changes.",
+  "proposed_fix": "Make the Cost routing section authoritative. Replace the earlier model-selection sentence with a pointer such as \u201cSelect the model using Cost routing below,\u201d or keep the earlier rule and reduce this bullet to a pointer without restating the mapping.",
+  "best_overlap": 0.12,
+  "matched_kind": null
+ },
+ {
+  "id": "agent-swarm-g12",
+  "doc": "agent-swarm",
+  "rule": "Context pointers: state the material and the branches that should trigger reaching it",
+  "target_quote": "Pick the lightest tier: `/code-review` (diff) \u2192 `/ce-code-review` (personas) \u2192 `/codex-consult`\n(cross-model second opinion) \u2192 `/pro-gate` (terminal GPT-5.5 Pro gate).",
+  "issue": "The parentheticals identify what the commands are, but they do not state distinct conditions for invoking each one. The arrow suggests an escalation order while \u201clightest tier\u201d leaves the selection criterion to judgment.",
+  "proposed_fix": "Replace the arrow list with conditional pointers of the form \u201cWhen <specific condition>, invoke <command>.\u201d Define nonoverlapping triggers\u2014for example routine diff review, required persona-specific review, an unresolved claim needing a cross-model check, and a designated terminal high-risk gate\u2014and state the successful return condition for each.",
+  "best_overlap": 0.1,
+  "matched_kind": null
+ },
+ {
+  "id": "codex-consult-g00",
+  "doc": "codex-consult",
+  "rule": "Single source of truth [craft]",
+  "target_quote": "- Model: omit `-m` \u2014 it inherits `gpt-5.5` from `~/.codex/config.toml`.",
+  "issue": "The document caches a mutable configuration value while the command delegates model selection to that configuration. If the configured default changes, the command follows the new model while the description and body continue claiming GPT-5.5.",
+  "proposed_fix": "Make the command authoritative: add `-m gpt-5.5` if that model is part of the skill's contract, and remove the repeated model claims elsewhere.",
+  "best_overlap": 0.18,
+  "matched_kind": null
+ },
+ {
+  "id": "codex-consult-g03",
+  "doc": "codex-consult",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "- **Codex's answer**, quoted verbatim (don't paraphrase its core claims).\n   - **Claude's synthesis:** where you agree, where you disagree *and why*, and the\n     **final recommendation**. When you and Codex disagree, say which view you trust\n     more for *this specific* question and the reason.\n\nKeep the whole thing tight. The value is the disagreement surface between two\nmodels, not a wall of duplicated agreement.",
+  "issue": "The checkable demand to reproduce an unbounded answer verbatim can conflict with the subjective demand to keep the result \u201ctight.\u201d Because the prompt places no bound on Codex's answer, the agent cannot always satisfy both conditions or determine how short is short enough.",
+  "proposed_fix": "Put a checkable size and structure bound in the Codex prompt, such as at most 400 words covering findings, uncertainties, and recommendation; then require that bounded response to be quoted verbatim.",
+  "best_overlap": 0.24,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g03",
+  "doc": "automating-your-automations-local",
+  "rule": "Progressive disclosure [craft]",
+  "target_quote": "### Path A \u2014 atuin present (rich queries)\n\nOpen read-only: `sqlite3 -readonly \"$ATUIN_DB\"`. Atuin stores `timestamp`/`duration` in **nanoseconds**; exit 0 = success.\n\n```sql\n-- Top repeated commands (with failure count)\nSELECT command, COUNT(*) cnt, AVG(duration)/1e9 avg_sec,\n       SUM(exit != 0) fails\nFROM history GROUP BY command HAVING cnt > 5 ORDER BY cnt DESC LIMIT 30;\n```",
+  "issue": "This substantial Atuin-only recipe is always loaded even though the no-Atuin branch must ignore it. The document already has an Atuin reference file suitable for this branch-specific material.",
+  "proposed_fix": "Keep source detection and the required query names in the main workflow, then make the Atuin branch explicitly read `ATUIN-QUERIES.md`. Move the SQL recipes there; apply the same pattern to the Bash-only parsing recipes.",
+  "best_overlap": 0.23,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g04",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "if command -v atuin >/dev/null 2>&1; then\n  ATUIN_DB=$(ls ~/.local/share/atuin/history.db ~/.atuin/history.db 2>/dev/null | head -1)\n  echo \"atuin DB: ${ATUIN_DB:-(installed, DB not found)}\"\nelse\n  echo \"no atuin \u2014 mining ~/.bash_history (strings only; enable HISTTIMEFORMAT for timestamps)\"\nfi",
+  "issue": "The declared branch condition elsewhere is whether an Atuin database is present, but this step branches on whether the executable is installed. If Atuin is installed without a readable database, it reports that condition without selecting the required Bash fallback, so source detection has no valid completion state.",
+  "proposed_fix": "Resolve the candidate database paths first and select Atuin only when one is a readable database. In every other case, explicitly set the source to Bash history and continue through Path B.",
+  "best_overlap": 0.11,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g05",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "1. Detect source (atuin DB if present, else ~/.bash_history). Query: repeated commands,\n   multi-step workflows, high-failure commands, per-cwd (per-repo) repetition.",
+  "issue": "The Bash fallback is explicitly described as containing command strings only, so it cannot supply exit status for high-failure analysis or cwd/session metadata for per-repo analysis. Nevertheless, the exact prompt and Done checklist require all four query types for either source.",
+  "proposed_fix": "Define source-specific completion criteria. Require repeated-command, adjacency, and prefix analysis for Bash history; require failure, duration, cwd, and session analyses only for Atuin. Record unavailable signals explicitly instead of pretending the fallback can produce them.",
+  "best_overlap": 0.15,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g06",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "1. MINE      \u2192 atuin DB (if present) else ~/.bash_history; + systemd timers, journalctl, git log, crontab\n2. CLUSTER   \u2192 semantic similarity + temporal adjacency\n3. SCORE     \u2192 weighted score (frequency, time_saved, error_rate \u2014 formula in Step 2)\n4. PROPOSE   \u2192 bash script vs Python CLI vs alias vs systemd timer\n5. BUILD     \u2192 bash in ~/.local/bin/ or a Python CLI (uv/pipx)\n6. VALIDATE  \u2192 5\u00d7 run, --dry-run, --json, \u22653\u00d7 faster\n7. INSTALL   \u2192 systemd timer, shell alias, or PATH binary",
+  "issue": "This seven-stage numbering does not match the later five numbered steps: Mine and Cluster become one Step 1, Score becomes Step 2, and Install has no detailed step. Consequently, `Never skip 1-3` has two possible meanings, and there is no local completion procedure for the final stage.",
+  "proposed_fix": "Use one numbering scheme throughout\u2014for example, Step 1 Mine & Cluster, Step 2 Score, Step 3 Propose, Step 4 Build, Step 5 Validate, Step 6 Install. Refer to stages by name in guardrails and give Install its own checkable verification procedure.",
+  "best_overlap": 0.43,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g07",
+  "doc": "automating-your-automations-local",
+  "rule": "Demand [craft]",
+  "target_quote": "3. Inspect systemd user timers + ~/.claude/scripts for gaps and silent failures.",
+  "issue": "`Inspect`, `gaps`, and `silent failures` do not define what evidence must be collected or what accounts for every timer and script. The agent can satisfy this requirement impressionistically without performing a reproducible audit.",
+  "proposed_fix": "Specify a bounded inventory: account for every user timer and script; record enabled/active state, last and next trigger, last exit result, log/error destination, and failure notification; identify scripts without schedulers and timers without valid executables; then report every exception.",
+  "best_overlap": 0.08,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g08",
+  "doc": "automating-your-automations-local",
+  "rule": "Single source of truth [craft]",
+  "target_quote": "Analyze my command history AND my stack's automation surfaces to find opportunities.\n1. Detect source (atuin DB if present, else ~/.bash_history). Query: repeated commands,\n   multi-step workflows, high-failure commands, per-cwd (per-repo) repetition.\n2. Cross-reference package.json scripts across ~/SITES (run-often vs defined) and\n   find frequent commands NOT yet aliased in ~/.bashrc.\n3. Inspect systemd user timers + ~/.claude/scripts for gaps and silent failures.\n4. Score each pattern: frequency, time_saved, error_rate \u2014 formula in Step 2.\n5. Output top 10 candidates with: pattern, frequency, time estimate,\n   recommended implementation (bash/Python/alias/timer/skill), complexity (S/M/L).",
+  "issue": "This prompt is a second normative copy of the workflow and has already drifted: it omits the loop's `journalctl`, `git log`, and `crontab` surfaces; stops after proposals despite mandatory Build/Validate/Install stages; and adds `skill`, for which the decision tree, build section, validation, and Done criteria provide no path.",
+  "proposed_fix": "Keep one authoritative workflow and one authoritative implementation-type list. Remove this duplicated prompt from the agent-facing body, or reduce it to a pointer to a non-normative human template whose requirements are generated from or explicitly defer to the canonical steps.",
+  "best_overlap": 0.33,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g09",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "Score = freq_norm\u00d70.4 + time_norm\u00d70.3 + fail_norm\u00d70.2 + simplicity_norm\u00d70.1",
+  "issue": "None of the normalized variables has a defined range or normalization procedure, simplicity has no mapping from S/M/L, and the Bash fallback has no duration or failure data. Different agents can produce different scores from identical evidence, so the `Score \u2265 0.3` bound is not checkable. The adjacent pointer to an expanded five-factor formula also leaves the authoritative formula unclear.",
+  "proposed_fix": "Define the exact normalization equations, candidate population, zero-range behavior, S/M/L numeric mapping, and missing-signal policy. Name one formula as authoritative and mark the expanded formula as either a replacement with its own threshold or a clearly optional analysis that does not control completion.",
+  "best_overlap": 0.09,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g10",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "Only automate if Score \u2265 0.3.",
+  "issue": "The global Done checklist simultaneously requires at least one automation to be built. If every candidate scores below 0.3, obeying this threshold makes the document impossible to complete.",
+  "proposed_fix": "Make completion conditional: when one or more candidates qualify, build the selected qualifying candidate if implementation was requested; when none qualify, finish with an evidence-backed `no qualifying candidate` result and build nothing.",
+  "best_overlap": 0.17,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g11",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "Stateful? (remembers across runs, parses data, needs SQLite/JSON)\n\u251c\u2500 YES \u2192 Python CLI (uv/pipx), argparse/click, --json output\n\u2502  \u251c\u2500 Scheduled? \u2192 systemd timer\n\u2502  \u2514\u2500 Interactive? \u2192 subcommands + --json\n\u2514\u2500 NO\n   \u251c\u2500 >3 steps of glue? \u2192 bash script \u2192 ~/.local/bin/\n   \u251c\u2500 Retry/guard?      \u2192 bash wrapper + set -euo pipefail\n   \u2514\u2500 Single command?   \u2192 shell alias/function \u2192 ~/.bash_aliases",
+  "issue": "The classifier is not exhaustive. A two- or three-command non-stateful workflow\u2014which includes the document's own three-command priority example\u2014matches no branch, and stateless scheduled workflows cannot reach the Scheduled test because it is nested under `YES`. Therefore mandatory proposal cannot always terminate in an implementation choice.",
+  "proposed_fix": "Make artifact selection and scheduling orthogonal. For example: single command \u2192 alias/function; two or more simple glue steps \u2192 Bash; stateful/parsing work \u2192 Python; then independently wrap any selected executable in a systemd timer when scheduled. Define precedence for retry/guard behavior.",
+  "best_overlap": 0.33,
+  "matched_kind": null
+ },
+ {
+  "id": "automating-your-automations-local-g12",
+  "doc": "automating-your-automations-local",
+  "rule": "Completion criteria [craft]",
+  "target_quote": "- [ ] Run 5\u00d7, compare output to manual execution\n- [ ] `--dry-run` produces no side effects\n- [ ] `--json` output parses as valid JSON\n- [ ] Automated \u2265 3\u00d7 faster than manual\n- [ ] Force failure \u2192 exits non-zero, prints an error to stderr, leaves no partial output files",
+  "issue": "These criteria are unconditional even though the document proposes Bash scripts, aliases, timers, and skills, while Step 4 mandates `--dry-run` and `--json` only for Python CLIs. Aliases and timer units do not necessarily expose either flag, and scheduled or guard automations may improve reliability without executing three times faster. Valid branches can therefore never satisfy Done.",
+  "proposed_fix": "Create artifact-specific validation criteria. Keep behavioral equivalence and forced-failure checks as the common core; require JSON and dry-run only for interfaces that promise them; measure operator time saved for aliases; and validate timer enablement, triggering, logs, and failure reporting instead of imposing a runtime speed ratio.",
+  "best_overlap": 0.0,
+  "matched_kind": null
+ }
+]
