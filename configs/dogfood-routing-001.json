@@ -9,7 +9,7 @@
     },
     {
       "id": "skill-tuner-tune",
-      "path": "/home/will/SITES/skill-tuner/commands/tune.md",
+      "path": "/home/will/SITES/skill-tuner/skills/tune/SKILL.md",
       "pruned_description": "Find and fix real defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes."
     }
   ],
