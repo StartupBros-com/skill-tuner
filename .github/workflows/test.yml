@@ -45,3 +45,12 @@ jobs:
 
       - name: No third-party imports in the shipped runner (R7)
         run: python3 scripts/check_stdlib_only.py
+
+      - name: Known spec divergence (agentskills.io reference validator)
+        # skills/tune deliberately carries two Claude/Cursor-functional keys
+        # the spec's exhaustive list rejects. This pins that divergence: it
+        # fails if we drift further, and it fails the day the validator
+        # starts passing us — the signal to revisit (PR #38).
+        run: |
+          python3 -m pip install --quiet skills-ref==0.1.1
+          python3 scripts/check_spec_divergence.py
