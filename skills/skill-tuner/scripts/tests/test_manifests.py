@@ -26,13 +26,13 @@ def _load(relpath):
     return json.loads((REPO_ROOT / relpath).read_text())
 
 
-def _frontmatter_name(skill_md):
+def _frontmatter_value(skill_md, key):
     lines = skill_md.read_text().splitlines()
     assert lines[0] == "---", f"{skill_md} has no frontmatter"
     for line in lines[1:]:
         if line == "---":
             break
-        if line.startswith("name:"):
+        if line.startswith(f"{key}:"):
             return line.split(":", 1)[1].strip()
     return None
 
@@ -73,9 +73,19 @@ class TestSkillLayout(unittest.TestCase):
         found = list(skills_dir.glob("*/SKILL.md"))
         self.assertGreaterEqual(len(found), 2, "expected the doctrine and tune skills")
         for skill_md in found:
-            name = _frontmatter_name(skill_md)
-            if name is not None:
-                self.assertEqual(name, skill_md.parent.name)
+            name = _frontmatter_value(skill_md, "name")
+            self.assertIsNotNone(name, f"{skill_md} missing frontmatter name:")
+            self.assertEqual(name, skill_md.parent.name)
+
+    def test_tune_stays_user_invoked(self):
+        # AE4: the token-spending runner must never gain a model-invoked surface.
+        tune_md = REPO_ROOT / "skills" / "tune" / "SKILL.md"
+        self.assertEqual(_frontmatter_value(tune_md, "disable-model-invocation"), "true")
+
+    def test_tune_uses_arguments_not_positional(self):
+        # Skill $N is zero-indexed ($1 = second arg), unlike the old command's $1.
+        body = (REPO_ROOT / "skills" / "tune" / "SKILL.md").read_text()
+        self.assertNotRegex(body, r"\$1\b")
 
     def test_no_legacy_commands_dir(self):
         # The tune runbook lives at skills/tune/SKILL.md so non-Claude clients

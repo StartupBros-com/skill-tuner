@@ -12,8 +12,8 @@ tokens. Report the estimate before the first call and the actual after.
 
 `${CLAUDE_PLUGIN_ROOT}` below is Claude Code's expansion for the plugin's
 install root. In a client that does not expand it, resolve it yourself: the
-plugin root is the directory two levels up from this SKILL.md, the one
-containing `skills/`.
+plugin root is the directory three levels up from this SKILL.md — the one
+that contains `skills/`.
 
 ## 1. Read it
 
