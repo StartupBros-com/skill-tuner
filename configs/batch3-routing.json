@@ -1,0 +1,38 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "targets": [
+    {
+      "id": "kill-ai-slop",
+      "path": "/home/will/dotfiles/claude/skills-local/kill-ai-slop/SKILL.md",
+      "pruned_description": "Find and remove AI slop \u2014 the generic, machine-default visual and copy tics of vibe-coded products \u2014 from a web project. Use when the user asks to \"kill AI slop\", \"de-slop\", \"remove the AI look\", \"make this not look AI-generated\", or clean up a landing page / UI / docs that feels templated. Detects and fixes the catalogue of generic AI-default visual and copy tells (see references/taxonomy.md for the list). Works on HTML/CSS, React/Vue/Svelte/Astro, Tailwind, PHP, and Markdown copy."
+    },
+    {
+      "id": "memory-mine",
+      "path": "/home/will/dotfiles/claude/skills-local/memory-mine/SKILL.md",
+      "pruned_description": "Directed-capture pass for Claude Code auto-memory. Mines recent session logs (claude_code + cross-agent via cass) into validated project-memory notes with decay fields. The write-path fix measured by the 2026-07 memory face-off (see Evidence below). Additive-only; the dream pass consolidates later."
+    },
+    {
+      "id": "review-animations",
+      "path": "/home/will/dotfiles/claude/skills-local/review-animations/SKILL.md",
+      "pruned_description": "Reviews animation and motion code against a high craft bar derived from Emil Kowalski's design engineering philosophy."
+    },
+    {
+      "id": "ssh-local",
+      "path": "/home/will/dotfiles/claude/skills-local/ssh-local/SKILL.md",
+      "pruned_description": "Use when connecting to servers, ssh/scp/rsync, tunneling, or an agent needs to run a remote command headless; also covers this machine's host inventory (mac-mini) and agent-safe NON-INTERACTIVE flags (never hang on a prompt)."
+    },
+    {
+      "id": "verify-review",
+      "path": "/home/will/dotfiles/claude/skills-local/verify-review/SKILL.md",
+      "pruned_description": "Forensic skeptical verification pass over /ce-code-review findings, using this session's implementation context to catch reviewer misunderstandings. Run in the same chat that produced the diff."
+    }
+  ],
+  "distractors": [
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+    "/home/will/.claude/skills/de-slopify/SKILL.md",
+    "/home/will/.claude/skills/tdd/SKILL.md",
+    "/home/will/.claude/skills/ui-polish/SKILL.md"
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "conditions": {
+    "original": {
+      "trials": 38,
+      "total_cost_usd": 0.3464292
+    },
+    "pruned": {
+      "trials": 38,
+      "total_cost_usd": 0.2590464
+    }
+  },
+  "total_trials": 76,
+  "manifest": {
+    "run_id": "batch3-routing",
+    "started_at": "2026-08-11T00:52:09Z",
+    "finished_at": "2026-08-11T00:58:39Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.7.0",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/kill-ai-slop/SKILL.md",
+        "sha256": "sha256:0979bb273dbe0ce780870381ef6664ee9085ea23e89226bfeaa6fb32e733721c",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/kill-ai-slop/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/memory-mine/SKILL.md",
+        "sha256": "sha256:836b0a2e55ceab59f66e4d2060077bcb167873f0e3e816d38bdc562822969875",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/memory-mine/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/review-animations/SKILL.md",
+        "sha256": "sha256:61cf8ac0c4c8e1f63385298c546b16c65ca9aec34abddcd04e821c16712d671d",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/review-animations/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/ssh-local/SKILL.md",
+        "sha256": "sha256:5af00e3203d82c8ec8e64bffb48e347e912bc63ef25ae79e67e0e2bb372bf5fb",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/ssh-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/verify-review/SKILL.md",
+        "sha256": "sha256:f17a0d10cfe6b75f2c4fc8831934dcea97eb070df83d701b18d0c4a0ae8565a1",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/verify-review/SKILL.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:2365c3c980db638f3f42882569614126aec78564dd8ef86ce7679a3d29548584",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/cli-doctor-mode/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:58291952bd2adb2b0dc3589874ad09dac80b3775a2987886267f6da45ad57ae0",
+        "source": "worktree",
+        "git_commit": "cf3033257c8f012abe4d2b8f568bf7770a039587",
+        "git_path": "claude/skills-local/curl-bash-installer/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/de-slopify/SKILL.md",
+        "sha256": "sha256:3cac571ed3cc93c7369c46d3cf122b4a827f8db67789e821f9119fae824acc93",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/tdd/SKILL.md",
+        "sha256": "sha256:5e6b9c16b547113e90afbb946489d1c1384be5c2128f0159bd0bee57251ecf08",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/ui-polish/SKILL.md",
+        "sha256": "sha256:60debbc2299a0bd94b700cd5075f13fba0385e42595e13bb45a929900196d798",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "routing-parity",
+    "pin": null
+  },
+  "routing_parity": {
+    "verdict": "land",
+    "failing_case_ids": [],
+    "scores": {
+      "original": {
+        "condition": "original",
+        "total": 38,
+        "correct": 38,
+        "accuracy": 1.0,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      },
+      "pruned": {
+        "condition": "pruned",
+        "total": 38,
+        "correct": 38,
+        "accuracy": 1.0,
+        "near_miss_total": 8,
+        "near_miss_correct": 8,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      }
+    }
+  }
+}

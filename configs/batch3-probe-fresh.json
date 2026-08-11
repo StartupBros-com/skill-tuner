@@ -1,0 +1,22 @@
+{
+  "model": "claude-sonnet-5",
+  "max_findings": 5,
+  "verify_trials": 3,
+  "target_files": [
+    "/home/will/dotfiles/claude/skills-local/papercut/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/stash-mining/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/verify/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/verify-review/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/ssh-local/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/kill-ai-slop/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/improve-animations/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/review-animations/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/pick-ui-library/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/prototype/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/scaffold-agents-md/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/memory-mine/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/hov-brand-voice/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/system-performance-remediation-local/SKILL.md"
+  ]
+}
