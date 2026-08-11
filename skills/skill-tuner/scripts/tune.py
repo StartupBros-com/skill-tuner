@@ -5,9 +5,10 @@ The CLI skeleton, the guarded adapter, and the report/resume machinery every
 skill-tuner eval shares. Python 3 standard library only (KTD1) -- no
 third-party imports anywhere.
 
-Subcommands: routing-parity, probe, report. Resume is a flag (--resume
-RUN_ID) on the two eval subcommands, not a subcommand of its own. There is no
-doctor subcommand here -- doctor is a separate shell script in a later unit.
+Subcommands: routing-parity, probe, gate, endtask, report, verify, compare.
+Resume is a flag (--resume RUN_ID) on the eval subcommands, not a subcommand
+of its own. There is no doctor subcommand here -- doctor is a separate shell
+script in a later unit.
 
 Every eval path funnels through exactly one function, call_adapter(), which
 builds and runs the headless `claude` CLI call (KTD2/R8). Callers that need
