@@ -1,0 +1,15 @@
+{
+  "model": "claude-sonnet-5",
+  "max_findings": 8,
+  "verify_trials": 3,
+  "target_files": [
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/skill-creator/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/pptx/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/algorithmic-art/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/doc-coauthoring/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/canvas-design/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/mcp-builder/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/xlsx/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-anthropic/skills/frontend-design/SKILL.md"
+  ]
+}

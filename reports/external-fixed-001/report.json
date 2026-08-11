@@ -1,0 +1,392 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 5,
+      "total_cost_usd": 1.3466536500000001
+    },
+    "verify": {
+      "trials": 81,
+      "total_cost_usd": 1.48251405
+    }
+  },
+  "total_trials": 86,
+  "manifest": {
+    "run_id": "external-fixed-001",
+    "started_at": "2026-08-11T06:20:57Z",
+    "finished_at": "2026-08-11T06:44:23Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.8.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:107b31c2034d0de0cb76970477072b3b31189fd47e8ce6ec9b87d44754463eec",
+        "source": "worktree",
+        "git_commit": "9a91f44d4a9fa88fdf4f98afc7fe8089bbc06fa4",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+        "sha256": "sha256:e642ae53f86046fda4ae44c5434e6fa8e046aa9d20755430d8a96ca64c979dc6",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+        "sha256": "sha256:5d04f2816cea50d17f9ffcc1f7c01dab15deb5e3c1fd590880018bae43c3ecb8",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+        "sha256": "sha256:18a4c75ce562b729729375517a739aa37dbeadc1207a79fdac7eae60c8219374",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+        "sha256": "sha256:2f50d2d477ad42ee247cb5e11a0c836743253da684d30d7e4b96aee54bffd621",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md",
+        "sha256": "sha256:bb24a68ddfb18feac52e60f77e72762f2ca3f859a779cd4df584e459ccbc3900",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 9,
+    "refuted_count": 18,
+    "overflow": 0,
+    "probe_calls": 5,
+    "verify_calls": 81,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Pruning and drift \u2014 Single source of truth / Duplication [craft]",
+        "target_quote": "`/goal` is a **contract enforcer with a verification loop**, not a \"run forever\" button.",
+        "issue": "This restates the same meaning already given at the top of the document (\"**Not:** a budget command, a safety boundary, \"run forever\", or a replacement for `/plan`. It's a contract enforcer with a verification loop.\"). The doctrine treats this as duplication \u2014 the same meaning in two places costs tokens and creates a two-place edit if the framing ever changes.",
+        "proposed_fix": "Keep the definition in one place. Either drop the \"Not:\" framing from \"What `/goal` is\" and let the Mental model section be the single canonical statement, or drop the Mental model restatement and instead reference the earlier definition.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 both quotes appear verbatim and the \"contract enforcer with a verification loop / not run forever\" framing is genuinely duplicated between \"What `/goal` is\" and \"Mental model.\" || CONFIRMED \u2014 both quotes appear verbatim and genuinely restate the same \"contract enforcer with a verification loop, not a run-forever button\" claim in two separate places. || CONFIRMED \u2014 the quoted phrase verbatim matches text under \"Mental model,\" and it duplicates the near-identical \"It's a contract enforcer with a verification loop\" already stated in the \"What `/goal` is\" section, a genuine single-source-of-truth duplication.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states / Single source of truth",
+        "target_quote": "- **macOS only.** No Linux/Windows port.",
+        "issue": "The description already states \"macOS only (14.0+)\" as part of the always-loaded pointer. Restating it in Common Pitfalls is the same fact in two places \u2014 a maintenance/token cost with no added routing signal, since Common Pitfalls isn't reached via this fact.",
+        "proposed_fix": "Keep the platform constraint in the description only (where it does routing work); drop the Common Pitfalls bullet or replace it with something that isn't already said elsewhere.",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 both \"macOS only (14.0+)\" in the description and \"**macOS only.** No Linux/Windows port.\" in Common Pitfalls appear verbatim, stating the same platform fact twice with no added routing value in the second instance. || REFUTED \u2014 the quoted text does appear verbatim, but this is a body-content redundancy critique, not a \"single source of truth\" violation with meaningful routing/maintenance cost; the two mentions serve different purposes (frontmatter routing trigger vs. in-body pitfall reminder), so the rule doesn't genuinely apply as described. || CONFIRMED \u2014 the quoted bullet appears verbatim under \"Common Pitfalls,\" and \"macOS only (14.0+)\" is already stated in the frontmatter description, so it's a genuine duplicate with no added routing value.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md"
+      },
+      {
+        "rule": "Progressive disclosure",
+        "target_quote": "**Surface refs are global, not per-workspace.** A ref like `surface:126` from an earlier `markdown open` may live in a different window/workspace.",
+        "issue": "This and the surrounding \"Hard-won lessons\" / pane-reuse / swap-ordering content is deep, narrow reference material specific to one sub-workflow (markdown viewer pane management), yet it's inlined in the always-loaded skill body rather than disclosed behind a pointer \u2014 unlike the Socket API section a few headings later, which the same document correctly discloses to `references/socket-api.md`. Every cmux invocation pays for this markdown-viewer minutiae even when the task never touches the markdown viewer.",
+        "proposed_fix": "Move the Markdown Viewer troubleshooting/hard-won-lessons detail into a `references/markdown-viewer.md`, and leave a one-line pointer in the body naming the branch (\"markdown pane swap/reuse quirks\") the way the Socket API section already does.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim under \"Hard-won lessons,\" and the Markdown Viewer section's detailed troubleshooting content is inlined in the always-loaded body while the Socket API section nearby correctly discloses similar depth to `references/socket-api.md`, illustrating an inconsistent application of progressive disclosure. || CONFIRMED \u2014 the quoted text appears verbatim under \"Hard-won lessons,\" and the finding accurately contrasts it with the Socket API section's genuine progressive-disclosure pattern (pointing to references/socket-api.md) that this markdown-viewer minutiae lacks. || CONFIRMED \u2014 the quoted text appears verbatim in the Markdown Viewer section, and the finding accurately identifies that this narrow sub-workflow detail is inlined rather than disclosed via a pointer, unlike the analogous Socket API section which does use `references/socket-api.md`.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md"
+      },
+      {
+        "rule": "Progressive disclosure / the two loads",
+        "target_quote": "reading, parsing, or extracting text from any .pptx or .potx file (even if the extracted content will be used elsewhere, like in an email or summary)",
+        "issue": "The description explicitly names a read/extract-only branch, yet the body inlines ~120 lines of Create-only reference (the pptxgenjs gotchas section and the entire Design Ideas section: palettes, typography, spacing, avoid-list) with no pointer separating them. Every invocation, including a pure text-extraction request, pays the context cost of generation and design material it will never use.",
+        "proposed_fix": "Split 'Creating with pptxgenjs \u2014 gotchas' and 'Design Ideas' into a separate disclosed file (e.g. reference/design.md), reached only from the Create/template-fill rows of the top routing table, leaving Read invocations to load only the markitdown/thumbnail guidance.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the description, and the body does inline the entire pptxgenjs-gotchas and Design Ideas sections (Create-only material) in the same monolithic file with no separate disclosure path, so a pure Read/extract invocation would load that content anyway. || CONFIRMED \u2014 the quoted description text appears verbatim, and the body does inline the full pptxgenjs-gotchas and Design Ideas sections (~120 lines of create/design-only material) with no separate disclosed file, so a pure read/extract invocation still loads all of it. || CONFIRMED \u2014 the quoted description text appears verbatim, and the body does inline the full pptxgenjs-gotchas and Design Ideas sections (~120 lines of create-only material) with no separate reference file, so a pure-read invocation loads all of it despite the description explicitly carving out a read/extract-only use case.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth / Duplication [craft]",
+        "target_quote": "**2. Seed Navigation**\n- Display current seed number\n- \"Previous\" and \"Next\" buttons to cycle through seeds\n- \"Random\" button for random seed\n- Input field to jump to specific seed\n- Generate 100 variations when requested (seeds 1-100)",
+        "issue": "The fixed seed-navigation UI spec (display, prev/next, random, jump-to-seed) is stated in full here, again nearly verbatim under 'WHAT'S FIXED VS VARIABLE > FIXED' ('Seed section in sidebar: Seed display / Previous/Next buttons / Random button / Jump to seed input + Go button'), and a third time under 'Implementation Details > BUILD THE SIDEBAR > 1. Seed (FIXED)' ('Seed display / Prev/Next/Random/Jump buttons'). The same is true for the Actions/Regenerate/Reset spec, restated in both of those same two sections. This is one meaning (the fixed sidebar contents) written three times, costing tokens and creating drift risk if one copy is edited without the others.",
+        "proposed_fix": "State the fixed Seed and Actions UI element list once (e.g. under WHAT'S FIXED VS VARIABLE), and have REQUIRED FEATURES and BUILD THE SIDEBAR each point back to it rather than re-enumerating the same buttons.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and the same Seed/Actions fixed-element lists are indeed restated near-identically in three places (REQUIRED FEATURES, WHAT'S FIXED VS VARIABLE, and BUILD THE SIDEBAR), a genuine single-source-of-truth violation. || CONFIRMED \u2014 the quoted \"2. Seed Navigation\" block appears verbatim, and the same fixed seed-UI elements (display, prev/next, random, jump-to-seed) are indeed restated near-verbatim in both \"WHAT'S FIXED VS VARIABLE\" and \"BUILD THE SIDEBAR > 1. Seed (FIXED)\", confirming the triplication claim. || CONFIRMED \u2014 the quoted text appears verbatim under REQUIRED FEATURES, and the same seed-navigation/actions UI spec is indeed restated nearly identically in the WHAT'S FIXED VS VARIABLE and BUILD THE SIDEBAR sections, making this a genuine duplication issue.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md"
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 checkable bound ('the agent can tell done from not-done without judgment')",
+        "target_quote": "To achieve mastery, create algorithms that feel like they emerged through countless iterations by a master generative artist. Tune every parameter carefully. Ensure every pattern emerges with purpose.",
+        "issue": "This is offered as the CRITICAL bar for the implementation step, but 'feel like they emerged through countless iterations by a master' and 'ensure every pattern emerges with purpose' give the agent no way to tell done from not-done without subjective judgment \u2014 the doctrine's own example of an uncheckable bound ('verify the config').",
+        "proposed_fix": "Replace with checkable criteria, e.g. 'every parameter has a min/max/default and visibly changes the output when moved; no two default runs look identical; no unused parameters remain.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim under \"CRAFTSMANSHIP REQUIREMENTS **CRITICAL**\", and its bar (\"feel like... a master\", \"emerges with purpose\") is genuinely unfalsifiable/subjective, matching the cited rule. || CONFIRMED \u2014 the quoted text appears verbatim in the CRAFTSMANSHIP REQUIREMENTS section, and it genuinely provides only subjective, unmeasurable success criteria (\"feel like,\" \"with purpose\") rather than a checkable done/not-done bound. || CONFIRMED \u2014 the quoted text appears verbatim under the \"CRAFTSMANSHIP REQUIREMENTS\" CRITICAL heading, and it genuinely offers only subjective/unmeasurable success criteria (\"feel like,\" \"with purpose\") with no checkable bound.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md"
+      },
+      {
+        "rule": "Demand [craft] \u2014 mixing checkable and uncheckable qualifiers in one criteria list lets the agent satisfy it impressionistically",
+        "target_quote": "- **Balance**: Complexity without visual noise, order without rigidity\n- **Color Harmony**: Thoughtful palettes, not random RGB values\n- **Composition**: Even in randomness, maintain visual hierarchy and flow\n- **Performance**: Smooth execution, optimized for real-time if animated\n- **Reproducibility**: Same seed ALWAYS produces identical output",
+        "issue": "Reproducibility is checkable (run the same seed twice, compare output), but Balance, Color Harmony, and Composition are impressionistic ('without visual noise', 'thoughtful', 'visual hierarchy'). Bundled into one CRAFTSMANSHIP REQUIREMENTS list, the checkable item lets the agent treat the whole list as satisfied once it passes the one item it can actually verify.",
+        "proposed_fix": "Separate the list into a verifiable subset (e.g. reproducibility, performance budget) the agent must literally check, and a stated-intent subset (balance, harmony, composition) framed as guidance rather than a requirement to be 'met'.",
+        "reason": "panel 3/3 confirmed | CONFIRMED: The quoted list appears verbatim under \"CRAFTSMANSHIP REQUIREMENTS\" and genuinely mixes one objectively checkable criterion (Reproducibility) with three impressionistic, unverifiable ones (Balance, Color Harmony, Composition), matching the described failure mode. || CONFIRMED: The quoted list appears verbatim under \"CRAFTSMANSHIP REQUIREMENTS\" and genuinely mixes one objectively checkable criterion (Reproducibility) with several impressionistic, unverifiable ones (Balance, Color Harmony, Composition, and partly Performance), matching the described failure mode. || CONFIRMED \u2014 The quoted list appears verbatim under \"CRAFTSMANSHIP REQUIREMENTS,\" and it genuinely mixes one objectively checkable criterion (Reproducibility) with impressionistic, unverifiable ones (Balance, Color Harmony, Composition, Performance), supporting the claim that the checkable item could let the whole bundle appear satisfied.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md"
+      },
+      {
+        "rule": "Demand \u2014 mixing checkable and uncheckable terms",
+        "target_quote": "Every element must stay fully within the canvas boundaries with clear margins, breathing room, and no overlaps, regardless of text scale. This is non-negotiable for professional execution.",
+        "issue": "\"within the canvas boundaries\" and \"no overlaps\" are checkable, but \"clear margins\" and \"breathing room\" carry no measurable threshold. The stray uncheckable qualifiers let the whole criterion be satisfied impressionistically even where the checkable parts are met.",
+        "proposed_fix": "Quantify the vague terms, e.g. \"stay within the canvas boundaries with a minimum N% margin on all sides and no overlaps, regardless of text scale.\"",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 The quote is verbatim, but \"clear margins\" and \"breathing room\" don't undermine the checkable terms; they're additional qualitative guidance alongside objectively verifiable constraints (within boundaries, no overlaps), not a loophole that lets the whole criterion be satisfied impressionistically. || CONFIRMED \u2014 quote appears verbatim, and the mix of checkable (\"no overlaps\") with unquantified terms (\"clear margins\", \"breathing room\") accurately describes the vagueness issue. || CONFIRMED \u2014 The quote appears verbatim, and \"clear margins\"/\"breathing room\" are indeed unquantified while \"within canvas boundaries\" and \"no overlaps\" are checkable, matching the described mixing issue.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md"
+      },
+      {
+        "rule": "Demand \u2014 mixing checkable and uncheckable terms",
+        "target_quote": "Double-check that nothing overlaps, formatting is flawless, every detail perfect.",
+        "issue": "\"nothing overlaps\" is checkable, but \"formatting is flawless\" and \"every detail perfect\" are unbounded superlatives with no way to distinguish done from not-done. Mixed into the same checklist, they let the agent claim compliance on judgment rather than verification.",
+        "proposed_fix": "Drop the superlatives and keep only checkable items, e.g. \"Double-check that nothing overlaps and all text sits fully inside the canvas margins.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim, and it genuinely mixes a checkable item (\"nothing overlaps\") with unbounded, unverifiable superlatives (\"formatting is flawless\", \"every detail perfect\"). || CONFIRMED \u2014 the quoted text appears verbatim, and it genuinely mixes a checkable criterion (\"nothing overlaps\") with unbounded superlatives (\"formatting is flawless\", \"every detail perfect\") in a single directive. || CONFIRMED \u2014 The quote appears verbatim, and the critique accurately identifies that \"nothing overlaps\" is objectively verifiable while \"formatting is flawless\" and \"every detail perfect\" are unbounded subjective superlatives with no verification criteria.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md"
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "Leading words \u2014 Negation [research]",
+        "target_quote": "**Never instruct the agent to create new ADRs** \u2014 ADRs require the user's explicit approval, so goal prompts must not pre-approve or encourage them.",
+        "issue": "The rule leads with the ban and never states the positive alternative \u2014 what the goal prompt should say instead when an ADR-worthy decision comes up. The doctrine requires a prohibition to stand paired with its positive target.",
+        "proposed_fix": "Add the positive instruction, e.g., \"If a change seems to warrant an ADR, flag it for the user's explicit approval instead of creating one.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the sentence already pairs the prohibition with an implicit positive target (require explicit user approval instead), and the doctrine's \"flag it\" wording is not a verbatim requirement violated here. || REFUTED \u2014 the quoted text does appear verbatim, but it already pairs the prohibition with a positive alternative (\"ADRs require the user's explicit approval, so goal prompts must not pre-approve or encourage them\" implies the alternative is to seek explicit approval), so the claimed rule violation doesn't genuinely apply. || REFUTED \u2014 the quoted text does appear verbatim, but it already states the positive alternative implicitly (ADRs require explicit user approval, i.e., flag for approval instead), so the claimed absence of a positive target is inaccurate.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Leading words \u2014 Negation [research]",
+        "target_quote": "Forbid scope creep explicitly: \"Do not refactor unrelated code. Do not add dependencies.\"",
+        "issue": "Pure prohibition with no positive framing, unlike the reward-hacking bullet immediately above it, which correctly leads with the positive target (\"Keep the existing test suite intact; add new tests only to cover new behavior.\") before the negation. This is the exact tell the doctrine flags: a rule that leads with the ban and never says what to do instead.",
+        "proposed_fix": "State the positive scope first, e.g., \"Touch only files required for the objective, using only already-present dependencies. Do not refactor unrelated code or add new dependencies.\"",
+        "reason": "panel 1/3 confirmed | REFUTED \u2014 The quote is verbatim but the \"leading words\" issue is subjective style preference, not a genuine rule violation; the doctrine's negation guidance is about avoiding pure prohibitions in general instructions, not a hard requirement that every bullet pair positive/negative framing identically. || REFUTED \u2014 quote appears verbatim but the doctrine claim is inapplicable: this bullet is explicit guidance the user writes to instruct an agent (a boilerplate scope-creep clause), not an example of the assistant's own conversational phrasing subject to a \"lead with positive framing\" style rule. || CONFIRMED \u2014 quoted text matches verbatim, and the described asymmetry (positive-first framing in the reward-hacking bullet above vs. pure prohibition here) accurately applies to the text.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Context pointers \u2014 One trigger per branch [craft]",
+        "target_quote": "Use when the user mentions `/goal`, \"goal loop\", \"Ralph loop\", wants to kick off a long-running autonomous agent run, asks how to write a goal prompt, or wants a one-paragraph goal instruction drafted.",
+        "issue": "\"mentions `/goal`\", \"goal loop\", and \"Ralph loop\" are three names for the same subject rather than distinct branches \u2014 a run reached through any of the three takes the same path through the document. Three phrases for one branch pay three times and route once.",
+        "proposed_fix": "Collapse to a single trigger, e.g., \"mentions `/goal` (aka the \"Ralph loop\")\", keeping the alias as a parenthetical instead of a separate listed trigger.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the \"one trigger per branch\" rule is misapplied since these are alternate user phrasings that legitimately route to the same content (a description field listing synonymous triggers is standard and not a branching/pathing issue). || REFUTED \u2014 the quoted text does appear verbatim, but the rule misapplies: these are legitimate alternate user phrasings (synonyms a user might type) that all route to the same skill, which is exactly what a description trigger list is for, not three redundant branches within the document's logic. || REFUTED \u2014 The quoted text does appear verbatim, but the \"one trigger per branch\" rationale doesn't hold: these are legitimately separate phrasings a user might say (e.g., \"explain the Ralph loop\" vs \"how do I use /goal\") that all route to the same skill, which is exactly what a description trigger list is for \u2014 synonyms/aliases as separate triggers aid matching, not redundant branching logic.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch",
+        "target_quote": "Trigger ONLY when the user explicitly says \"cmux\" \u2014 a cmux pane, cmux workspace, cmux surface, or an agent running in cmux.",
+        "issue": "\"a cmux pane, cmux workspace, cmux surface, or an agent running in cmux\" are four rephrasings of one branch \u2014 the user naming cmux. None routes to a different path than the others, so per the doctrine's test (\"does a run reaching the document through this phrase take a different path than a run reaching it through the one beside it?\") they should collapse into one. This is an always-loaded pointer, so the redundant tokens cost on every turn.",
+        "proposed_fix": "Collapse to: \"Trigger ONLY when the user explicitly names cmux (a cmux pane/workspace/surface, or an agent running in cmux).\" \u2014 one branch, stated once.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the \"one trigger per branch\" rule doesn't genuinely apply: these are examples enumerating what counts as \"explicitly says cmux,\" not separate decision branches with different routing paths; the proposed fix is merely a rewording, not a removal of divergent logic. || REFUTED \u2014 The quoted text appears verbatim, but the four phrasings (\"cmux pane, cmux workspace, cmux surface, or an agent running in cmux\") are examples enumerating distinct surfaces/contexts, not redundant restatements of a single branch, so the \"one trigger per branch\" collapse rule doesn't genuinely apply. || REFUTED \u2014 the quoted text does appear verbatim, but the \"one trigger per branch\" doctrine targets redundant conditional branches that route to different logic paths; these are examples clarifying a single trigger condition (user says \"cmux\"), not separate branches, so the rule doesn't genuinely apply as described.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication (polarity) \u2014 Pruning and drift",
+        "target_quote": "Do NOT trigger on generic mentions of \"workspace\", \"pane\", \"the other agent\", or \"delegate\" when cmux is not named \u2014 workspaces in tmux, Ghostty, herdr, VS Code, etc. are NOT cmux.",
+        "issue": "This is the negated restatement of the rule immediately preceding it (\"Trigger ONLY when the user explicitly says 'cmux'\"). \"Trigger only when X\" already excludes every case where X is false; spelling out four excluded terms and four excluded tools is the same branch-exclusion meaning written twice, just with the polarity flipped, and it bloats an always-loaded pointer.",
+        "proposed_fix": "Delete the negative list; the positive \"Trigger ONLY when...\" clause already implies it. If a genuinely confusable near-miss (e.g. tmux panes) needs a call-out, keep one example, not four terms plus four tools.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but it's a clarifying elaboration (not a mere polarity-flip duplicate) that adds new information (specific confusable terms/tools) not derivable from \"Trigger ONLY when the user explicitly says 'cmux'\" alone, so it isn't true duplication. || REFUTED \u2014 the quoted text appears verbatim, but the \"trigger only when X\" clause and the explicit negative list serve different practical purposes (the latter names concrete lookalikes an agent might otherwise mistakenly match), so this is a stylistic redundancy judgment, not a genuine duplication violation. || REFUTED: The quoted text is a clarifying elaboration (naming concrete confusable tools/terms), not a mere polarity-flipped restatement of \"Trigger ONLY when...\" \u2014 it adds new information (specific competing tools like tmux/Ghostty/herdr/VS Code) not derivable from the positive clause alone, so this isn't true logical duplication.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth (environment as source of truth)",
+        "target_quote": "- cmux settings: `~/.config/cmux/cmux.json` (canonical). Project-local override: `.cmux/cmux.json` or `./cmux.json`.",
+        "issue": "The doc already instructs the agent to run `cmux docs settings` to get \"paths, schema URL, reload cmd \u2014 read BEFORE editing.\" Restating the exact paths right below is caching a one-command lookup that isn't expensive to obtain and can go stale, contrary to \"leave the one-command lookups to the environment, where they cannot go stale.\"",
+        "proposed_fix": "Drop the literal cmux.json path (rely on `cmux docs settings`); keep only the non-obvious gotcha that doesn't come from that command \u2014 that ghostty config is a separate file and NOT part of cmux.json.",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted text appears verbatim, but this is a documentation-style/completeness critique framed as a \"single source of truth\" rule violation, not a genuine instance of caching a volatile one-command lookup that risks staleness in a meaningful way \u2014 the doc explicitly tells the agent to run `cmux docs settings` before editing, so the redundancy is a minor convenience note, not a real violation. || REFUTED: The quoted text appears verbatim, but \"single source of truth\" is a code/config-drift principle, not a rule against documenting a command's output in prose \u2014 restating a stable canonical path alongside a lookup command is reasonable redundancy, not a violation. || REFUTED: The quoted text appears verbatim, but the \"single source of truth\" rule doesn't genuinely apply \u2014 listing canonical config paths alongside a doc command is normal documentation practice, not a caching violation that risks staleness in a meaningfully harmful way.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Leading words (undefined coined term) / Co-location",
+        "target_quote": "`send-panel` / `send-key-panel` exist ONLY for panels (`--panel`), not surfaces.",
+        "issue": "\"Panel\" is used here as if it were a defined concept, but Core Concepts only defines Window, Workspace, Pane, and Surface \u2014 never Panel. Coining a term this close in spelling to the already-defined \"Pane\" without a definition is exactly the failure the doctrine flags: a made-up/undefined word recruits no priors and risks being read as a typo for \"pane,\" and there's no section co-locating what a panel is.",
+        "proposed_fix": "Add \"Panel\" to Core Concepts with a one-line definition (what it is, how it differs from Pane), or if it's a legacy/rare concept, name it explicitly as such at first use: \"panels (a distinct UI element from panes \u2014 see X)\".",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but \"panel\" is plausibly a real distinct UI concept (e.g., settings/notification panels) not a typo for \"pane,\" and the doctrine's undefined-term concern doesn't clearly apply since the document isn't claiming panels need explanation for correct command usage. || REFUTED \u2014 the quoted text appears verbatim, but \"panel\" is plausibly a distinct real UI concept (referenced elsewhere via `--panel`/`focus-panel`) rather than a coined term, so the undefined-term rule doesn't clearly apply. || REFUTED \u2014 the quoted text appears verbatim, but \"panel\" is plausibly a legitimate distinct UI concept (e.g. settings/notification panels) rather than a typo-prone undefined coinage, and the doc explicitly distinguishes it from \"surfaces\" and \"panes\" by contrasting the command sets, which is itself a form of disambiguation.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use this skill any time a .pptx or .potx file is involved in any way \u2014 as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx or .potx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates (.potx), layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx or .potx filename, regardless of what they plan to do with the content afterward. If a .pptx or .potx file needs to be opened, created, or touched, use this skill.",
+        "issue": "The always-loaded description states the same branch three times (open, middle, and close all say 'any .pptx/.potx involvement triggers this') and stacks synonym triples per branch ('creating slide decks, pitch decks, or presentations'; 'reading, parsing, or extracting text'; 'editing, modifying, or updating'). A run reaching the skill via 'parsing' takes the same path as one reaching it via 'extracting text' \u2014 these are one branch written three times, paying context load on every turn with no added routing signal.",
+        "proposed_fix": "Collapse to one phrase per branch and drop the restated catch-all closer, e.g. 'Use for any .pptx/.potx file: creating, editing, reading/extracting, or working with templates, layouts, notes, or comments.' Then verify against a routing-parity battery before landing the prune.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text is verbatim, but \"one trigger per branch\" doesn't genuinely apply: the synonym triples (e.g. \"creating, parsing, extracting\") are enumerating distinct user-facing verbs/phrasings to widen trigger recall for a routing description, not separate logical branches with redundant guards; this is a style/verbosity critique mislabeled as a control-flow rule violation. || REFUTED \u2014 the quoted text appears verbatim, but the \"rule\" is a fabricated stylistic critique (redundancy/verbosity), not a genuine spec-divergence or skill-authoring rule the excerpt violates in a factually verifiable way. || REFUTED \u2014 the quoted text appears verbatim, but \"one trigger per branch\" is a style/verbosity critique, not a genuine rule violation: the repeated phrasing and synonym lists are redundant emphasis, not distinct logical branches with divergent routing paths.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication / anti-pattern list restating a positive rule [craft]",
+        "target_quote": "**Don't skimp on size contrast** \u2014 titles need 36pt+ to stand out from 14-16pt body",
+        "issue": "This restates, negated, the exact sizing already given positively in the Typography table ('Slide title | 36-44pt bold', 'Body text | 14-16pt'). It is the same meaning written twice \u2014 the doctrine names this exact pattern as the commonest disguise of duplication.",
+        "proposed_fix": "Drop this Avoid-list bullet; the Typography table already states the required contrast. If a reminder is wanted, cross-reference the table instead of restating its numbers.",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted text does appear verbatim, but \"Avoid\" list items reinforcing prescriptive table values as common-mistake warnings is a stylistic/redundancy judgment, not a genuine duplication defect \u2014 the table states a spec while the bullet warns against a specific failure mode, a legitimate craft pattern rather than duplicated content. || REFUTED \u2014 the quote appears verbatim, but restating a positive spec as a negative \"avoid\" reminder is a stylistic choice, not a genuine duplication defect warranting removal. || REFUTED \u2014 the quoted text does appear, but it's a summarized rationale/reminder in the Avoid list, not a pure restatement duplicating the doctrine's targeted anti-pattern; such cross-referencing reminders are common and not inherently a flagged duplication issue.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication / anti-pattern list restating a positive rule [craft]",
+        "target_quote": "**Don't mix spacing randomly** \u2014 choose 0.3\" or 0.5\" gaps and use consistently",
+        "issue": "This restates, negated, the rule already given positively in the Spacing section ('0.3-0.5\" between content blocks'). Same meaning in two places with no new information, inflating its rank on the ladder.",
+        "proposed_fix": "Remove this Avoid-list bullet and rely on the Spacing section as the single source of truth for gap sizing.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but it adds a distinct point (consistency of gap choice) beyond the Spacing section's range statement, so it's not mere duplication. || REFUTED \u2014 the quoted text appears verbatim, but it adds distinct information (consistency of application) beyond the Spacing section's range statement, so it's not pure duplication. || REFUTED \u2014 the quoted text does appear verbatim, but it isn't a mere restatement: the Spacing section states allowed values while the Avoid bullet adds the distinct instruction to pick one and apply it consistently, which is new information not present positively elsewhere.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research]",
+        "target_quote": "**Never reorder the children of `<p:presentation>`.** pptxgenjs writes `<p:notesMasterIdLst>` right after `<p:sldIdLst>` and points both masters at one theme part. PowerPoint reads that happily \u2014 move the element and the same deck becomes unopenable.",
+        "issue": "This is a hard guardrail (unphraseable-positive candidate), but the doctrine requires even hard guardrails to stand paired with their positive target so attention lands on what to do \u2014 this rule leads with the ban and never states the positive action.",
+        "proposed_fix": "Lead with the positive target, e.g. 'Preserve the child order pptxgenjs writes for `<p:presentation>`' followed by the existing rationale, rather than opening on 'Never reorder.'",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted text appears verbatim, but this is a genuine hard guardrail with no meaningful positive phrasing distinct from the negation (\"preserve the order\" is just a rewording of \"never reorder\"), and the rule already pairs the ban with concrete rationale explaining what/why. || REFUTED \u2014 the quoted text appears verbatim, but the rule is inherently a negative constraint (don't reorder existing correct output) with no meaningful distinct positive action to lead with; \"preserve the order\" is just a paraphrase of the same negation, not a genuine positive/negative pairing the doctrine requires. || REFUTED \u2014 the quoted text appears verbatim, but this is a genuine unphraseable-positive guardrail (the positive framing \"preserve the child order\" is just a restatement of \"never reorder\" with no added information, so the rule doesn't violate any real doctrine requiring pairing).",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 contradictory bounds ('the agent cannot tell whether a value between them complies, whichever bound it obeys')",
+        "target_quote": "Think like a jazz musician quoting another song through algorithmic harmony - only those who know will catch it, but everyone appreciates the generative beauty.",
+        "issue": "The frontmatter description instructs 'Create original algorithmic art rather than copying existing artists' work to avoid copyright violations,' but the 'DEDUCING THE CONCEPTUAL SEED' section instructs embedding a 'subtle, niche reference' to another work, explicitly analogized to 'a jazz musician quoting another song.' One instruction bounds the work away from referencing others' work, the other requires quoting another work into it. The agent cannot satisfy both, and whichever it follows, it silently violates the other.",
+        "proposed_fix": "Reconcile the two: either drop the copyright-avoidance clause from the description if referencing outside works/artists is intended (with 'niche reference' clarified as conceptual/thematic, never stylistic mimicry of a specific artist), or rewrite the conceptual-seed section to require the embedded reference be to an idea, concept, or feeling rather than another identifiable creative work.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 quote is verbatim, but the cited \"contradictory bounds\" rule doesn't genuinely apply: the frontmatter forbids copying identifiable artists' visual work/style, while the conceptual-seed section describes embedding an abstract conceptual/thematic reference \"woven invisibly into parameters, behaviors, and emergence patterns\" \u2014 these are reconcilable, not a value trapped between mutually exclusive numeric-style bounds. || REFUTED \u2014 The quote is verbatim, but the \"conceptual seed\" instructs embedding a subtle conceptual/thematic reference in algorithm parameters, not literally copying another artist's visual work or algorithm; the frontmatter's copyright clause targets replicating \"existing artists' work,\" a different axis, so this isn't a genuine unsatisfiable contradiction. || REFUTED \u2014 The quote is verbatim, but the rule is misapplied: the frontmatter clause bars copying an artist's visual/stylistic output (copyright infringement), while the conceptual-seed section is about embedding an abstract thematic/conceptual reference (not literal duplication of an artist's work) \u2014 these operate at different levels and aren't a genuine \"contradictory bounds\" conflict, let alone one fitting the rule's numeric-range framing.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 contradictory bounds",
+        "target_quote": "**Emphasize craftsmanship REPEATEDLY**: The philosophy MUST stress multiple times that the final algorithm should appear as though it took countless hours to develop, was refined with care, and comes from someone at the absolute top of their field. This framing is essential - repeat phrases like \"meticulously crafted algorithm,\" \"the product of deep computational expertise,\" \"painstaking optimization,\" \"master-level implementation.\"",
+        "issue": "This bullet directly contradicts the guideline immediately above it in the same CRITICAL GUIDELINES list: '**Avoid redundancy**: Each algorithmic aspect should be mentioned once. Avoid repeating concepts about noise theory, particle dynamics, or mathematical principles unless adding new depth.' One rule says mention each aspect once; the adjacent rule mandates repeating specific craftsmanship phrases multiple times. The agent cannot tell which bound governs the philosophy text it writes.",
+        "proposed_fix": "Scope the redundancy rule to exclude craftsmanship framing explicitly ('Avoid redundancy in the algorithmic/technical content; craftsmanship framing is the one exception and may recur'), or drop the repeat-the-phrases instruction and let one strong craftsmanship statement stand.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quoted text is verbatim, but the \"avoid redundancy\" bullet is explicitly scoped to \"noise theory, particle dynamics, or mathematical principles\" (algorithmic/technical content), while the craftsmanship bullet governs framing language about the algorithm's development story \u2014 a distinct category, so they don't genuinely contradict. || REFUTED \u2014 The quoted text is verbatim, but the \"avoid redundancy\" rule explicitly scopes to algorithmic content (\"noise theory, particle dynamics, mathematical principles\"), not to craftsmanship framing, so the two bullets govern distinct content types rather than genuinely conflicting. || REFUTED \u2014 the quoted text is verbatim, but the \"Avoid redundancy\" rule is explicitly scoped to \"concepts about noise theory, particle dynamics, or mathematical principles,\" not to craftsmanship framing, so the two bullets govern different content and aren't genuinely contradictory.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 checkable bound",
+        "target_quote": "Someone familiar with the subject should feel it intuitively, while others simply experience a masterful generative composition.",
+        "issue": "This is the success condition for the 'CRITICAL STEP' of deducing the conceptual seed, but 'feel it intuitively' is unfalsifiable \u2014 there is no way for the agent to check whether it has met this bar before moving on.",
+        "proposed_fix": "State a checkable proxy instead, e.g. 'name the reference explicitly in your own working notes, then confirm it maps to a specific parameter, behavior, or numeric relationship in the code \u2014 not to a title, name, or label rendered anywhere in the output.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 quote appears verbatim and is genuinely unfalsifiable, but the finding mislabels it as a \"completion criteria [craft] \u2014 checkable bound\" when it's the opposite (an explicitly unfalsifiable success condition), which is an internally contradictory/mismatched rule application. || REFUTED \u2014 The quote appears verbatim, but it describes how the audience perceives the finished art, not a self-checkable completion bound the agent evaluates before moving on, so labeling it a \"checkable bound\" issue misapplies the rule. || REFUTED \u2014 The quote appears verbatim, but it describes how an outside observer might perceive the finished work, not a checkable completion criterion the agent must verify before proceeding, so framing it as an unfalsifiable \"completion criteria\" rule misapplies the label.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft] \u2014 synonyms that rename a single branch are one branch written twice",
+        "target_quote": "Use this when users request generative or algorithmic art (flow fields, particle systems, etc.).",
+        "issue": "'Generative' and 'algorithmic' name the same single branch (a request for this kind of computational art) rather than two distinct cases the skill handles differently \u2014 the body itself uses the terms interchangeably throughout ('algorithmic philosophy', 'generative aesthetic movement', 'PURE GENERATIVE ART'). Per the doctrine, a run reaching the skill via 'generative art' takes the same path as one reaching it via 'algorithmic art', so listing both pays twice for one route.",
+        "proposed_fix": "Collapse to a single term, e.g. 'Use this when users request algorithmic/generative art (flow fields, particle systems, etc.)' or pick whichever term matches the skill's own name ('algorithmic-art') and drop the other.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear verbatim, but the \"one trigger per branch\" rule concerns distinct handled cases, not synonym pairs describing a single trigger condition; listing two near-synonyms in a description is normal phrasing, not a duplicated branch that costs extra evaluation paths. || REFUTED \u2014 The quoted text appears verbatim, but the proposed fix doesn't actually collapse anything (it still lists both terms slash-separated), and the \"rule\" is really a style nitpick about synonym listing rather than a genuine dual-branch trigger violation, since \"generative or algorithmic art\" describes one request type with two common names, not two divergent handling paths. || REFUTED \u2014 The quoted text appears verbatim, but \"generative or algorithmic art\" describes a single unified trigger phrase (not two branches with separate handling), and the proposed fix would not change any behavior, indicating this is a stylistic nitpick rather than a genuine branch-duplication issue.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Completion criteria / Demand \u2014 contradicting bounds",
+        "target_quote": "**Avoid redundancy**: Each design aspect should be mentioned once. Avoid repeating points about color theory, spatial relationships, or typographic principles unless adding new depth.",
+        "issue": "This bullet sets a general ceiling (\"mentioned once\") that directly contradicts the very next bullet, \"Emphasize craftsmanship REPEATEDLY: The philosophy MUST stress multiple times... repeat phrases like 'meticulously crafted'...\". The agent cannot tell whether repeating the craftsmanship framing violates the redundancy rule or is exempt from it \u2014 the doctrine's completion-criteria defect of a general ceiling contradicted by a specific range crossing it.",
+        "proposed_fix": "Fold the craftsmanship exception into the redundancy bullet itself, e.g.: \"Avoid redundancy: mention each design aspect (color theory, spatial relationships, typographic principles) once \u2014 except the craftsmanship framing, which should recur throughout.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the \"avoid redundancy\" bullet is explicitly scoped to \"color theory, spatial relationships, or typographic principles,\" not to the craftsmanship framing, so there's no genuine contradiction between the two bullets. || REFUTED \u2014 The redundancy bullet is explicitly scoped to \"color theory, spatial relationships, or typographic principles,\" not to the craftsmanship framing, so there's no genuine contradiction between the two bullets. || REFUTED \u2014 the quoted redundancy rule is scoped explicitly to \"color theory, spatial relationships, or typographic principles,\" not to craftsmanship framing phrases, so the two bullets govern different content categories and don't genuinely contradict each other.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth",
+        "target_quote": "Make it appear as though someone at the absolute top of their field labored over every detail with painstaking care.",
+        "issue": "This restates, almost verbatim, the craftsmanship framing already given in CRITICAL GUIDELINES (\"stress multiple times that the final work should appear as though it took countless hours to create, was labored over with care, and comes from someone at the absolute top of their field\"). Unlike ESSENTIAL PRINCIPLES, which correctly cross-references (\"See the craftsmanship framing under CRITICAL GUIDELINES above\") instead of repeating, this section duplicates the meaning in full rather than pointing back to it.",
+        "proposed_fix": "Replace the restatement in CANVAS CREATION with a pointer back to CRITICAL GUIDELINES, e.g. \"Apply the same craftsmanship framing established under CRITICAL GUIDELINES to the visual execution itself.\"",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 the quote appears verbatim in CANVAS CREATION and near-duplicates the craftsmanship phrasing already stated in CRITICAL GUIDELINES, which ESSENTIAL PRINCIPLES itself treats as the canonical location (using a cross-reference instead of restating). || REFUTED \u2014 the quote is verbatim, but the document explicitly instructs \"Emphasize craftsmanship REPEATEDLY\" and to \"repeat phrases\" across the skill, so restating the framing at the canvas-execution step is intentional reinforcement, not a genuine single-source-of-truth violation. || REFUTED \u2014 the quoted text is verbatim, but the repetition is intentional: CRITICAL GUIDELINES explicitly instructs to \"emphasize craftsmanship REPEATEDLY\" and \"repeat phrases like... painstaking attention,\" so restating it in CANVAS CREATION follows the document's own stated design rather than violating a single-source-of-truth principle.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch",
+        "target_quote": "You should use this skill when the user asks to create a poster, piece of art, design, or other static piece.",
+        "issue": "\"poster,\" \"piece of art,\" \"design,\" and \"other static piece\" all route to the same single, non-branching flow in the body (design philosophy \u2192 canvas expression). They are synonyms for one branch written four times, each paying context load on every turn without adding routing signal.",
+        "proposed_fix": "Collapse to one phrase, e.g. \"You should use this skill when the user asks to create a static piece of visual art (poster, print, etc.).\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but \"One trigger per branch\" concerns conditional branches in logic, not synonym lists in a description field; this is a wording redundancy critique, not a branching-rule violation. || REFUTED \u2014 the quoted text is verbatim, but \"One trigger per branch\" concerns branching logic in the skill body, not phrasing redundancy in the description's trigger list. || REFUTED \u2014 the quoted text appears verbatim, but \"One trigger per branch\" concerns conditional branches in logic/flow, not a description field listing example trigger phrases; there's no branching code here to critique.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 18,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 21,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 3,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "model": "claude-sonnet-5",
+  "max_findings": 8,
+  "verify_trials": 3,
+  "target_files": [
+    "/home/will/.claude/jobs/2c802246/tmp/extfix/goal-loop/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/extfix/cmux/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/extfix/pptx/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/extfix/algorithmic-art/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/extfix/canvas-design/SKILL.md"
+  ]
+}
