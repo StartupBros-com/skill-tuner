@@ -1,0 +1,512 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 8,
+      "total_cost_usd": 2.01632145
+    },
+    "verify": {
+      "trials": 105,
+      "total_cost_usd": 1.4874664499999999
+    }
+  },
+  "total_trials": 113,
+  "manifest": {
+    "run_id": "external-david-001",
+    "started_at": "2026-08-11T05:19:53Z",
+    "finished_at": "2026-08-11T05:46:29Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.8.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:107b31c2034d0de0cb76970477072b3b31189fd47e8ce6ec9b87d44754463eec",
+        "source": "worktree",
+        "git_commit": "9a91f44d4a9fa88fdf4f98afc7fe8089bbc06fa4",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "sha256": "sha256:a8d1f3be30ee3edcd72baf4c3eeff46b01307d4cb59ea882abe9314f948673e2",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md",
+        "sha256": "sha256:b1958377f39a89c5f0ab6dd6e070507be62be769870ca253f52548eead38479b",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/agent-orchestration/cmux/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md",
+        "sha256": "sha256:ab0ed9c1d81537312012b81cdbd26b7b8cdf8cc22ce75f671dd827bc5b4e3a20",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/research-and-web/browser-harness/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md",
+        "sha256": "sha256:45939291c42b03be5acfa48da4244a3ecc2b73ce507d97e9ef8db072ed28bd0c",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/agent-orchestration/goal-loop/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+        "sha256": "sha256:54e1c1b6b294204a331370bb5159cb62072c9ff876f05a8bdca4b8759973167c",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/ops-and-setup/prod-push/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/global-agent-guardrails/SKILL.md",
+        "sha256": "sha256:07341ee9ac3336b45f515d037d72c847f106548bfc04c0ec6093f0a172099570",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/ops-and-setup/global-agent-guardrails/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md",
+        "sha256": "sha256:7a210e5caf9ec1d367dad8695e4c1069edc1f05598cc4cbb2363b77d30b0e2ce",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/thinking-and-docs/teach/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md",
+        "sha256": "sha256:827a9e2a97c04a773ca982076c27e90d5a26df7c921c64ba84a26ba86ca13b0a",
+        "source": "worktree",
+        "git_commit": "081d4d52cddb1f24e9358add21d47a45d82dd3fd",
+        "git_path": "skills/research-and-web/deepapi/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "probe",
+    "pin": null
+  },
+  "probe": {
+    "findings_confirmed": 21,
+    "refuted_count": 14,
+    "overflow": 0,
+    "probe_calls": 8,
+    "verify_calls": 105,
+    "verify_trials": 3,
+    "doctrine_file": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/skills/skill-tuner/SKILL.md",
+    "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+    "target_files": [
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/global-agent-guardrails/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md",
+      "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md"
+    ],
+    "confirmed_findings": [
+      {
+        "rule": "Single source of truth / Duplication [craft]",
+        "target_quote": "**One skill = one concern.** Resist bundling.",
+        "issue": "This exact meaning is stated four separate times across the document: \u00a76 ('One skill = one capability or one discipline. Resist bundling concerns into \"the X workflow.\"'), \u00a77 ('If one skill does design + planning + implementation + testing + deployment, you've built a framework, not a skill. Split it.'), here in \u00a710, and again in \u00a713 ('One skill, one concern. Composition beats bundling.'). None is designated authoritative, so changing this rule requires a four-place edit.",
+        "proposed_fix": "State the rule once (e.g. in \u00a76), and in \u00a77/\u00a710/\u00a713 either drop it or replace with a one-line cross-reference to the single statement.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in \u00a710, and the rule is genuinely restated near-identically in \u00a76, \u00a77, and \u00a713, creating a real four-place duplication. || CONFIRMED \u2014 the quoted text appears verbatim in \u00a710, and the same \"one skill, one concern\" rule is indeed restated near-identically in \u00a76, \u00a77, and \u00a713, a genuine duplication issue. || CONFIRMED \u2014 the quoted text appears verbatim in \u00a710, and the rule is indeed repeated near-identically in \u00a76, \u00a77, \u00a710, and \u00a713 with no single designated authoritative source.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md"
+      },
+      {
+        "rule": "Duplication [craft]",
+        "target_quote": "Audit `scripts/` for unexpected network calls, file access outside expected scope, or hidden instructions in references. Watch for typosquatted skill names. Sandbox execution environments.",
+        "issue": "This is near-verbatim duplicated by the \u00a711 'Security checklist' ('Audit `scripts/` for outbound network calls, file access outside expected scope, command execution', 'Verify the skill name isn't typosquatting a popular one', 'Run in a sandboxed environment first'). Same meaning, two authoritative-looking locations.",
+        "proposed_fix": "Keep the checklist form in \u00a711 as the single source of truth and replace the \u00a77 anti-pattern body with a pointer to it, e.g. 'Don't trust unfamiliar skills \u2014 see the Security checklist (\u00a711) before installing.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in \u00a77, and \u00a711's checklist covers the same three points (network calls/file access audit, typosquatting check, sandboxing) in near-duplicate form. || CONFIRMED \u2014 The quoted text appears verbatim in \u00a77, and \u00a711 restates the same three points (network calls/scope audit, typosquatting check, sandboxing) in checklist form, constituting genuine duplication. || CONFIRMED \u2014 the quoted text appears verbatim in \u00a77, and \u00a711's checklist covers the same three points (network calls/file access, typosquatting, sandboxing) in near-identical form.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md"
+      },
+      {
+        "rule": "Negation [research]",
+        "target_quote": "No README.md, no CHANGELOG.md, no INSTALLATION_GUIDE.md inside the skill folder. Skills are for agents.",
+        "issue": "This anti-pattern is pure prohibition \u2014 it lists three banned filenames and never states what should be in the folder instead. The doctrine requires a prohibition to stand paired with its positive target so attention lands on what to do, not just what's forbidden.",
+        "proposed_fix": "Pair it with the positive target, e.g. 'Keep the skill folder scoped to SKILL.md, scripts/, references/, and assets/ \u2014 agent-facing content only, not README.md, CHANGELOG.md, or INSTALLATION_GUIDE.md.'",
+        "reason": "panel 2/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim under \"Don't include human-facing docs,\" and it is indeed a bare prohibition (three banned filenames) with no adjacent statement of what should populate the folder instead. || CONFIRMED \u2014 the quoted text appears verbatim in section 7 and is indeed a pure prohibition (three banned filenames) without stating what belongs in the folder instead; \"Skills are for agents\" is rationale, not a positive target. || REFUTED: The quoted text does appear verbatim, but section 4 already establishes the positive folder structure (SKILL.md, scripts/, references/, assets/), so the prohibition is not standing without a positive target as claimed.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "Control the cmux macOS terminal app (CLI + socket API) \u2014 cmux workspaces, panes, surfaces, browser automation, notifications, settings, hooks.",
+        "issue": "This restates the identity claim the body's own opening paragraph already makes ('cmux is a native macOS terminal app for running multiple AI coding agents in parallel. It exposes a CLI (`cmux`) and a Unix-socket JSON-RPC API...'). The pointer's job is when to reach the material, not what it is, so this clause adds permanent context load on every turn without adding routing signal.",
+        "proposed_fix": "Drop the identity clause from the description and keep only the triggering conditions, e.g. 'MUST be read before running any `cmux` command. Trigger ONLY when the user explicitly says \"cmux\"...' \u2014 let the body's opening paragraph be the sole place identity is stated.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in the frontmatter description and duplicates the identity claim made in the body's opening paragraph. || CONFIRMED \u2014 the quoted description clause verbatim restates identity content that the body's opening paragraph (\"cmux is a native macOS terminal app...\") already states, redundantly adding no routing signal. || CONFIRMED \u2014 the quoted text is verbatim in the frontmatter description, and it does duplicate the identity statement given in the body's opening paragraph (\"cmux is a native macOS terminal app...\").",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth [craft]",
+        "target_quote": "1. **Anchor to `CMUX_WORKSPACE_ID`.** Never assume the visually focused workspace is the target.",
+        "issue": "This is the identical rule already stated verbatim earlier in the document ('**Always anchor automation to `CMUX_WORKSPACE_ID`** \u2014 the visually focused workspace may not be the agent's caller workspace.' under Detect cmux in a Shell). Keeping the same meaning in two places means both copies must be edited in sync or they drift.",
+        "proposed_fix": "State the anchoring rule once (in Critical Rules, where it belongs alongside the other non-disruptive-automation rules) and replace the earlier occurrence with a short forward reference, or vice versa.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 both quotes appear verbatim in the document, and the rule genuinely is restated with the same meaning in two separate sections (Detect cmux in a Shell and Critical Rules). || CONFIRMED \u2014 both quoted phrasings appear verbatim in the document, and they express the same anchoring rule in two separate locations, creating genuine duplication risk. || CONFIRMED \u2014 both quoted passages appear verbatim in the document and genuinely restate the same anchoring rule in two separate sections, creating duplicate-source-of-truth risk.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth \u2014 environment is a source of truth too [craft]",
+        "target_quote": "The user keeps BOTH off (set 18-07-2026) \u2014 don't re-enable.",
+        "issue": "This caches the live value of a `cmux.json` setting that is a cheap one-command lookup (`cmux settings cmux-json`). Config state is exactly the kind of fact that changes independently of the doc and will go stale; the doctrine reserves caching for what can't be looked up (unwritten conventions, gotchas), not for a value the environment already holds authoritatively.",
+        "proposed_fix": "Drop the dated snapshot of the toggle values. If the intent is 'don't flip these without asking,' state that as the durable rule and have the agent check current values via `cmux settings cmux-json` when it matters, rather than embedding a point-in-time state.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim and does cache a live config value that's cheaply re-checkable via `cmux settings cmux-json`, matching the described single-source-of-truth violation. || CONFIRMED \u2014 the quoted text appears verbatim and does cache a live config value that's cheaply re-checkable via `cmux settings cmux-json`, matching the doctrine's rationale for not caching lookupable facts. || CONFIRMED \u2014 the quoted text appears verbatim and genuinely caches a live, independently-mutable config value instead of directing the agent to check `cmux settings cmux-json`.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth [craft]",
+        "target_quote": "**Pi/Pi-like socket connection failures from external processes** \u2192 default `cmuxOnly` mode; either run inside a cmux terminal or change socket mode.",
+        "issue": "This restates the same meaning already given in full in the Socket API section ('If you hit `Failed to connect to socket`, you're likely an external process under `cmuxOnly` \u2014 switch mode in Settings > Automation or run from inside a cmux terminal.'). Two authoritative copies of the same fix cost tokens and maintenance for no new information.",
+        "proposed_fix": "Remove the Common Pitfalls line and instead point back to the Socket API section, e.g. 'Socket connection failures from external processes \u2014 see Access modes above.'",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 The quoted line appears verbatim in Common Pitfalls and duplicates the same fix already stated in full in the Socket API/Access modes section. || CONFIRMED \u2014 the quoted line duplicates the fix already stated verbatim in meaning in the Socket API section, both texts appear in the document as described. || CONFIRMED \u2014 both quotes appear verbatim in the target and genuinely describe the same fix (external process under cmuxOnly \u2192 run inside cmux terminal or switch socket mode), duplicated across the Socket API and Common Pitfalls sections.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md"
+      },
+      {
+        "rule": "Pruning and drift \u2014 Single source of truth / duplication",
+        "target_quote": "## Hermes Agent integration\n\nInstalled at `~/Developer/browser-harness` as editable `uv tool install -e .`. Binary at `~/.local/bin/browser-harness`. Skill at `~/.hermes/skills/browser-harness/`.",
+        "issue": "The entire '## Hermes Agent integration' section, including the frontmatter-pitfall note and the Brave Browser note, appears twice in the document, word-for-word except for one trailing clause in the frontmatter warning. This is the same meaning stated in two places, doubling both token cost and the maintenance burden of keeping the two copies in sync.",
+        "proposed_fix": "Delete the second occurrence of the '## Hermes Agent integration' section entirely and keep only the first.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the \"## Hermes Agent integration\" section and its content appear verbatim twice in the document, confirming genuine duplication. || CONFIRMED \u2014 the \"## Hermes Agent integration\" section (with identical Installed/Binary/Skill text) appears twice verbatim in the target document, differing only in the trailing clause of the frontmatter-pitfall note. || CONFIRMED \u2014 the \"## Hermes Agent integration\" section and its content appear verbatim twice in the target document, confirming true duplication.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md"
+      },
+      {
+        "rule": "Pruning and drift \u2014 Single source of truth / duplication",
+        "target_quote": "## Authenticated content extraction (proven pattern)\n\nbrowser-harness connects to the user's real browser with active sessions \u2014 ideal for login-walled sites where `web_extract` or Hermes's built-in `browser_navigate` fail (X/Twitter articles, LinkedIn, paywalled sites).",
+        "issue": "The 'Authenticated content extraction (proven pattern)' section \u2014 including the full code block and its four bullet caveats \u2014 is restated a second time later in the document with only cosmetic wording changes (e.g. 'their active sessions' \u2192 'active sessions', dropped 'e.g.'). The same pattern is then condensed a third time as the 'Login-walled content extraction' bullet in the Gotchas section. Three copies of one meaning inflate the document and create three places to update if the pattern changes.",
+        "proposed_fix": "Keep a single authoritative version of the extraction pattern (with its code block) in one place, and reduce the Gotchas bullet to a one-line pointer to that section rather than a re-explanation.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the \"Authenticated content extraction (proven pattern)\" section (and the \"Hermes Agent integration\" section before it) is duplicated verbatim/near-verbatim, and a third condensed version appears in Gotchas, matching the quoted text and the duplication issue described. || CONFIRMED \u2014 the quoted text matches the second \"Authenticated content extraction\" block verbatim, and the document does contain three near-duplicate treatments of the same pattern (two full sections plus a condensed Gotchas bullet), genuinely supporting the duplication/pruning rule. || CONFIRMED \u2014 the \"Authenticated content extraction (proven pattern)\" section (and \"Hermes Agent integration\" above it) is verbatim duplicated later in the document, and the Gotchas bullet condenses the same pattern a third time.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md"
+      },
+      {
+        "rule": "Steps, completion, and demand",
+        "target_quote": "read every file in the matching `agent-workspace/domain-skills/<site>/` directory before inventing an approach",
+        "issue": "The same instruction is stated twice with different demand strength: near the top it requires reading 'every file' in the matching directory, while the 'Domain skills (opt-in)' section at the bottom restates it as \"search `agent-workspace/domain-skills/<host>/` before inventing an approach\" \u2014 a softer, less checkable verb that lets the agent satisfy the rule by skimming rather than reading every file. The two versions also disagree on the placeholder name (`<site>` vs `<host>`), leaving it unclear which bound governs.",
+        "proposed_fix": "State the instruction once, with one verb and one placeholder name, e.g. keep 'read every file in agent-workspace/domain-skills/<site>/ before inventing an approach' as the single authoritative statement and remove the reworded restatement in the bottom section.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text matches verbatim near the top, and the bottom section genuinely restates it with a weaker verb (\"search\" vs \"read every file\") and a different placeholder (`<host>` vs `<site>`), creating a real inconsistency in demand strength. || CONFIRMED: The quoted text appears verbatim near the top, and the bottom section genuinely restates it with a softer verb (\"search... before inventing an approach\") and inconsistent placeholder (`<host>` vs `<site>`), creating a real strength/consistency mismatch. || CONFIRMED: Both quotes appear verbatim (\"read every file in the matching...\" near top, \"search... before inventing an approach\" at bottom), and they genuinely restate the same instruction with a stronger/weaker verb and inconsistent placeholder (<site> vs <host>).",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md"
+      },
+      {
+        "rule": "Negation [research] \u2014 prohibition steers by naming the forbidden behaviour, and even a hard guardrail must pair with its positive target so attention lands on what to do.",
+        "target_quote": "Do not delete, skip, weaken, or narrow tests to make the goal pass.",
+        "issue": "This literal string is meant to be pasted into the downstream agent's goal contract. It leads with the ban and names the exact reward-hacking moves (delete, skip, weaken, narrow) without ever stating the positive target, which the doctrine says makes the banned behaviours more available, not less.",
+        "proposed_fix": "Pair the ban with a positive instruction, e.g. \"Keep the existing test suite intact; add new tests only to cover new behavior. Do not delete, skip, weaken, or narrow existing tests to make the goal pass.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim (\"Forbid reward-hacking explicitly: 'Do not delete, skip, weaken, or narrow tests to make the goal pass.'\") and it is indeed a pure negation with no paired positive instruction. || CONFIRMED \u2014 the quoted text appears verbatim under \"Forbid reward-hacking explicitly,\" and it is indeed a pure prohibition with no paired positive instruction as the negation rule requires. || CONFIRMED \u2014 the quoted text appears verbatim as the \"Forbid reward-hacking explicitly\" instruction, and it is indeed a pure negation with no paired positive framing, so the rule genuinely applies.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md"
+      },
+      {
+        "rule": "Completion criteria [craft] \u2014 two bounds that contradict leave the agent unable to tell which specification is authoritative.",
+        "target_quote": "emit a structured `/goal` markdown block using the 4-part contract",
+        "issue": "The document defines and repeatedly uses a 5-part contract (\"## The 5-part contract (every goal needs this)\": Objective, Constraints, Validation command, Stop condition, Documentation), but the meta-prompting section instructs the second AI session to use a '4-part contract,' contradicting the count established earlier with no indication of which one governs.",
+        "proposed_fix": "Change '4-part contract' to '5-part contract' to match the section it's defined in, or explicitly name which item is dropped and why.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim and genuinely contradicts the \"5-part contract\" defined and named earlier in the same document. || CONFIRMED \u2014 the quoted text appears verbatim, and it genuinely contradicts the \"5-part contract\" defined and used elsewhere in the document. || CONFIRMED \u2014 the quoted \"4-part contract\" text appears verbatim and genuinely contradicts the document's own \"5-part contract\" heading and enumeration.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth [craft] \u2014 keep each meaning in one authoritative place; restating it elsewhere is duplication that costs a second edit whenever the rule changes.",
+        "target_quote": "**Documentation is mandatory.** Every `/goal` prompt must include a single sentence committing the agent to concise, targeted docs \u2014 new `.md` files or focused updates to existing docs.",
+        "issue": "This restates, almost verbatim, item 5 of \"The 5-part contract\" ('Documentation \u2014 one sentence instructing the agent to write concise, targeted docs for every change, either creating new .md files or updating existing ones') and the template's `**Document:**` line. The same meaning is stated three times, so a future change to the documentation rule requires three edits instead of one.",
+        "proposed_fix": "Delete the redundant 'Documentation is mandatory' bullet from Writing rules and rely on the 5-part contract definition as the single source; if emphasis is needed, cross-reference it instead of restating it.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text verbatim appears under \"Writing rules\" and duplicates the meaning already stated in item 5 of the 5-part contract and the template's `**Document:**` line, a genuine single-source-of-truth violation. || CONFIRMED \u2014 the quoted text appears verbatim and genuinely duplicates the meaning already stated in the 5-part contract item 5 and the template's `**Document:**` line, a genuine single-source-of-truth violation. || CONFIRMED: The quoted text appears verbatim, and it does restate item 5 of the 5-part contract and the template's `**Document:**` line, making the documentation requirement stated three times.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md"
+      },
+      {
+        "rule": "Context pointers [craft] \u2014 'Cut identity the body already states': a pointer restating what the body already says about itself adds permanent context load for no routing signal.",
+        "target_quote": "the persistent self-checking agent loop (plan \u2192 act \u2192 test \u2192 review \u2192 iterate), available in agents like Codex, Claude Code, and Hermes Agent",
+        "issue": "This identity information is restated almost word-for-word in the body twice: '`/goal` is a slash command that turns an agent prompt into a **persistent agent** looping `plan \u2192 act \u2192 test \u2192 review \u2192 iterate`...' and 'Agents with the `/goal` feature right now: **Codex, Claude Code, and Hermes Agent**.' The always-loaded description pays permanent context load to say what the body already states, with no added routing signal.",
+        "proposed_fix": "Trim the description to only the routing triggers, e.g. \"Use when the user mentions `/goal`, 'goal loop', or 'Ralph loop', wants to kick off a long-running autonomous agent run, asks how to write a goal prompt, or wants a goal instruction drafted.\" and let the body carry the identity/agent-list detail.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted description text is verbatim in the target, and the body indeed restates both the \"persistent...loop\" definition and the \"Codex, Claude Code, Hermes Agent\" list, matching the claimed redundancy. || CONFIRMED \u2014 the quoted description text is verbatim from the frontmatter and duplicates identity/agent-list detail already stated in the body (\"persistent agent looping plan \u2192 act...\" and \"Agents with the /goal feature right now: Codex, Claude Code, and Hermes Agent\"). || CONFIRMED \u2014 the quoted description text is verbatim, and the same identity/agent-list content is indeed restated almost word-for-word in the body (\"persistent agent looping plan \u2192 act \u2192 test \u2192 review \u2192 iterate\" and \"Codex, Claude Code, and Hermes Agent\"), matching the rule's rationale.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md"
+      },
+      {
+        "rule": "Single source of truth [craft] \u2014 the same meaning stated in more than one place costs maintenance and inflates its rank on the ladder.",
+        "target_quote": "An agent with the `/goal` feature \u2014 right now: Codex, Claude Code, or Hermes Agent",
+        "issue": "The list of supported agents ('Codex, Claude Code, and Hermes Agent') is stated a third time here, having already appeared in the description and in 'What `/goal` is'. Adding or removing a supported agent now requires three synchronized edits instead of one.",
+        "proposed_fix": "State the supported-agent list once (in 'What `/goal` is') and have the Requirements section reference it, e.g. 'An agent with the `/goal` feature (see above)'.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim in Requirements, and the agent list is indeed repeated three times (description, \"What `/goal` is\", and Requirements), a genuine single-source-of-truth violation. || CONFIRMED \u2014 the quote appears verbatim in Requirements, and the agent list is indeed repeated a third time after the description and \"What `/goal` is\" section, a genuine single-source-of-truth violation. || CONFIRMED \u2014 the quoted text appears verbatim in Requirements, and the agent list (Codex, Claude Code, Hermes Agent) is indeed repeated a third time after the description and \"What `/goal` is\" section.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "or when the user mentions command guard, guardrails, dangerous command hook, or PreToolUse safety.",
+        "issue": "These four phrases are near-synonyms for the same branch \u2014 a user mentioning any of them wants the same thing (general info about this guard), and none routes to a different path than the others. Per the doctrine's test ('does a run reaching the document through this phrase take a different path than a run reaching it through the one beside it?'), these should collapse into one trigger instead of paying always-loaded context four times over.",
+        "proposed_fix": "Collapse to a single trigger, e.g. '...or when the user mentions this command guard or PreToolUse safety.'",
+        "reason": "panel 2/3 confirmed | REFUTED \u2014 the quoted text is one trigger condition with synonym keyword variants for matching, not four separate branches each paying duplicated always-loaded context; the \"one trigger per branch\" doctrine targets routing to different paths/documents, not keyword synonyms within a single description line. || CONFIRMED: The quote appears verbatim in the description field, and the four phrases (command guard, guardrails, dangerous command hook, PreToolUse safety) are indeed synonymous triggers that all route to the same document with no differentiated path, matching the cited one-trigger-per-branch violation. || CONFIRMED: The quoted text appears verbatim in the description, and the four listed trigger phrases (\"command guard,\" \"guardrails,\" \"dangerous command hook,\" \"PreToolUse safety\") are indeed near-synonymous ways a user would reference the same guard system, all routing to the same document with no differentiated path.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/global-agent-guardrails/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "One shared denylist of catastrophic shell commands (rm -rf on / or ~, dd/mkfs, sudo rm, fork bombs, curl|sh, git push --force, gh repo delete) enforced as a PreToolUse/pre-exec guard across every AI coding agent on the machine \u2014 Cursor, Claude Code, Codex, OpenCode, Pi, Hermes, Grok, Droid, Devin.",
+        "issue": "The pointer restates identity the body already states: the body's opening line ('A \"bouncer\" that blocks catastrophic shell commands before any AI agent runs them') covers the same 'what this is' ground, and the full nine-agent roster is repeated verbatim in the Per-agent wiring table. The parenthetical command list and full agent enumeration add permanent context load (this description is always loaded) without adding routing signal beyond 'catastrophic commands, all agents.'",
+        "proposed_fix": "Trim the description to the routing-relevant claim, e.g. 'Shared denylist of catastrophic shell commands enforced as a pre-exec guard across all AI coding agents on the machine,' and let the body's file map and wiring table carry the specific commands and agent list.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quoted text is verbatim in the frontmatter description, and the described redundancy (agent roster duplicated in the wiring table, \"what this is\" already covered by the body's opening line) holds up on inspection. || CONFIRMED \u2014 The quoted text matches the frontmatter description verbatim, the body's opening sentence (\"A \\\"bouncer\\\" that blocks catastrophic shell commands before any AI agent runs them\") covers the same identity ground, and the same 9-agent roster (Claude Code, Codex, Cursor, Grok, OpenCode, Pi, Hermes, Droid, Devin) is fully repeated in the Per-agent wiring table. || CONFIRMED \u2014 the quoted text matches the description field verbatim, and the body's opening line plus the Per-agent wiring table (which lists all nine agents) genuinely duplicate the identity/roster information redundantly restated in the always-loaded description.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/global-agent-guardrails/SKILL.md"
+      },
+      {
+        "rule": "Pruning and drift \u2014 Single source of truth [craft]",
+        "target_quote": "They should be the compressed essence of the lesson, in a format designed for quick reference.",
+        "issue": "This restates, almost verbatim, what the Teaching Workspace bullet already says about the same files: \"`./reference/*.html`: ... They are the raw units of learning. They should be beautiful documents which print out well, and are designed for quick reference.\" Both passages define reference documents as the compressed/quick-reference form of a lesson and both give overlapping example lists (\"cheat sheets, reference algorithms, syntax, yoga poses, glossaries\" vs. \"Syntax and code snippets... Algorithms and flowcharts... Yoga poses and sequences... Glossaries\"). This is the same meaning stated twice in two places, costing tokens and creating two spots to update if the definition changes.",
+        "proposed_fix": "Keep one authoritative description of reference documents (in the ## Reference Documents section) and shrink the Teaching Workspace bullet to a one-line pointer, e.g. \"`./reference/*.html`: reference materials for the topic \u2014 see ## Reference Documents below.\"",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 quoted text appears verbatim in the target document, and both passages do overlap in defining reference documents as compressed/quick-reference material with similar example lists. || CONFIRMED \u2014 the quote appears verbatim in the Reference Documents section, and it does substantively overlap with the earlier Teaching Workspace bullet's description of the same `./reference/*.html` files (both defining them as compressed/quick-reference material with overlapping example lists). || CONFIRMED \u2014 quote appears verbatim in the Reference Documents section, and it does genuinely duplicate the earlier Teaching Workspace bullet's description of reference docs (both define them as compressed/quick-reference materials with overlapping example lists).",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md"
+      },
+      {
+        "rule": "Pruning and drift \u2014 Single source of truth [craft]",
+        "target_quote": "Every lesson should be tied into the mission - the reason that the user is interested in learning about the topic.",
+        "issue": "This near-verbatim repeats the identity already given in the Teaching Workspace bullet: \"`MISSION.md`: A document capturing the _reason_ the user is interested in the topic.\" Both sentences define \"mission\" as \"the reason the user is interested in the topic,\" so the definition lives in two places rather than one authoritative spot.",
+        "proposed_fix": "Drop the restated definition from ## The Mission and start that section directly with the operational guidance (e.g. \"If the user is unclear about the mission...\"), trusting the Teaching Workspace bullet as the single place mission is defined.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim under \"## The Mission\" and genuinely restates the same \"reason the user is interested\" definition already given in the Teaching Workspace bullet for MISSION.md. || CONFIRMED \u2014 the quoted sentence appears verbatim under \"## The Mission,\" and it does restate the mission's definition (\"the reason the user is interested in the topic\") already given in the Teaching Workspace bullet for `MISSION.md`, matching the described duplication. || CONFIRMED \u2014 the quote appears verbatim in the \"## The Mission\" section, and it does restate the definition of \"mission\" already given in the Teaching Workspace bullet for MISSION.md, supporting the single-source-of-truth critique.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states / single source of truth [craft]",
+        "target_quote": "Platform data has dedicated DeepAPI endpoints \u2014 prefer them over web search.",
+        "issue": "This routing rule is fully restated in the body: 'Always prefer the dedicated endpoint; web search is the fallback for the open web only' under Picking the Right Endpoint, with a worked example. The always-loaded description pays permanent context cost to restate a rule the body already elaborates in detail, with no added routing signal beyond what the preceding sentence in the same description already conveys.",
+        "proposed_fix": "Drop the sentence from the description and let the body's 'Picking the Right Endpoint' section be the sole statement of the prefer-dedicated-endpoint rule.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 The quote appears verbatim in the description, and the body's \"Picking the Right Endpoint\" section restates the same prefer-dedicated-endpoint rule with more detail and an example, making the description sentence redundant. || CONFIRMED \u2014 the quoted sentence appears verbatim in the description and is fully restated with more detail in the \"Picking the Right Endpoint\" body section. || CONFIRMED: The quoted text appears verbatim in the description, and the body's \"Picking the Right Endpoint\" section restates the same rule in more detail, making the description's sentence redundant.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "generate images with DEEPAPI_API_BASE_URL and DEEPAPI_API_KEY",
+        "issue": "Naming the two environment variables here restates identity/mechanism the body's 'Required Environment' section already owns in full, and reads as if these variables are specific to image generation when they are required for every endpoint call \u2014 misleading scoping paid for on every turn.",
+        "proposed_fix": "End the sentence at 'generate images' and let 'Required Environment' remain the single place the env var names are stated.",
+        "reason": "panel 3/3 confirmed | CONFIRMED \u2014 the quote appears verbatim in the description, and it genuinely re-states variable names already fully owned by \"Required Environment,\" while its trailing placement plausibly misscopes them as image-generation-specific. || CONFIRMED \u2014 the quote appears verbatim in the description, and the critique correctly notes it redundantly restates env-var names already fully owned by \"Required Environment\" while syntactically appearing scoped only to image generation. || CONFIRMED \u2014 the quoted text appears verbatim in the description, and the env vars are indeed required for every endpoint (per \"Required Environment\"), not specific to image generation, so appending them only to the \"generate images\" clause is misleading scoping and duplicates info already owned by that section.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md"
+      }
+    ],
+    "refuted_findings": [
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when the user says \"create a skill\", \"new skill\", \"update this skill\", \"improve a skill\", \"why isn't my skill triggering\", or anything else involving authoring or editing SKILL.md files.",
+        "issue": "\"create a skill\" and \"new skill\" route to the same branch (authoring a new skill), and \"update this skill\" / \"improve a skill\" route to the same branch (editing an existing skill). A run reaching this description via any phrase in each pair takes the identical path, so per the doctrine's test each pair should collapse to one trigger. As written, four phrases pay four times to cover two branches.",
+        "proposed_fix": "Collapse to one phrase per branch, e.g.: 'Use when the user wants to create, edit, review, or debug a SKILL.md file, or asks why a skill isn't triggering.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the target document contains no \"one trigger per branch\" rule at all; this is a fabricated doctrine applied to the description field. || REFUTED \u2014 the quoted text is verbatim, but the document contains no \"one trigger per branch\" rule; it explicitly advises including \"trigger phrases the user will say\" (plural) and never restricts phrasing to one item per outcome, so the cited rule doesn't genuinely apply here. || REFUTED \u2014 the target document contains no \"one trigger per branch\" rule; it explicitly instructs including trigger phrases (\"Description includes likely user trigger phrases\") without any doctrine against listing multiple near-synonymous phrases per scenario, so the cited rule doesn't apply as described.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Cut identity the body already states [craft]",
+        "target_quote": "How to write effective agent skills \u2014 what to do, what not to do, anatomy, progressive disclosure, design patterns, anti-patterns, testing, security.",
+        "issue": "This clause enumerates the document's own section headings (anatomy \u00a74, progressive disclosure \u00a73, do/don't \u00a76-7, testing \u00a79, security \u00a711) rather than encoding when to reach the document. It restates the body's identity instead of doing routing work, spending permanent context load on a table of contents.",
+        "proposed_fix": "Drop the topic list; state only what the skill is for and when to load it, e.g. 'Guidance for writing effective agent skills. Read whenever a SKILL.md is being created, edited, reviewed, or debugged.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim in the description, but the description also includes \"Read this whenever a skill... is being created, edited, reviewed, or debugged. Use when the user says...\" which is exactly the routing/when-to-use content the finding claims is missing, so the critique that it \"restates identity instead of doing routing work\" mischaracterizes the full description. || REFUTED \u2014 The quoted text appears verbatim, but the description also contains \"Read this whenever a skill... is being created, edited, reviewed, or debugged\" plus explicit trigger phrases, so it does the routing work the finding claims is missing; the topic list supplements rather than substitutes for it. || REFUTED \u2014 the quote is verbatim, but the document's actual rule (\"Never summarize the full workflow in the description\") targets step-by-step *how* summaries, not topic-label lists like this one, so the cited rule doesn't genuinely apply as described.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Duplication by polarity [craft]",
+        "target_quote": "Don't write vague descriptions",
+        "issue": "This anti-pattern restates, negated, the rule already given positively in 'Description as routing contract' (\u00a76: 'Include three elements: What... When... Differentiator...'), and the same meaning is stated again in \u00a78 ('Draft the description first. What + when + differentiator'), the \u00a712 checklist ('Description includes what + when + differentiator'), and \u00a713 ('The description routes; the body executes'). The doctrine specifically calls out anti-pattern lists that mirror positive rules the document already gives.",
+        "proposed_fix": "Remove the redundant restatement from the anti-pattern list (keep only the Bad/Good example, which adds new information) and let \u00a76 remain the single authoritative statement of the rule; make \u00a78/\u00a712/\u00a713 references rather than restatements.",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted text appears verbatim, but \"Don't write vague descriptions\" is immediately followed by a concrete Bad/Good example pair that adds new, non-redundant content, not a mere negated restatement of \u00a76's rule. || REFUTED: The quoted text \"Don't write vague descriptions\" appears verbatim, but its accompanying Bad/Good example adds concrete new information (not mere polarity-flipped duplication), and no doctrine in the target document actually calls out anti-pattern lists mirroring positive rules. || REFUTED: The quoted text \"Don't write vague descriptions\" appears verbatim, but the claim that this is mere negated duplication is wrong \u2014 it's accompanied by concrete Bad/Good examples not present elsewhere, and the \"doctrine\" citation about anti-pattern lists mirroring positive rules is fabricated (no such rule exists in the target document).",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Fill PDF form fields, extract form data, flatten completed PDFs. Use when the user mentions PDF forms, fillable forms, or programmatic field population.",
+        "issue": "This is presented as the 'Good' exemplar of a description, but 'PDF forms' and 'fillable forms' name the same branch (a PDF with form fields) rather than distinct paths \u2014 a run reaching the skill through either phrase does the same thing. The doctrine's own test ('does a run reaching the document through this phrase take a different path than the one beside it? If not, collapse them') would fail this example.",
+        "proposed_fix": "Collapse the synonym pair: 'Use when the user mentions PDF forms or programmatic field population.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quoted text appears verbatim, but the target document contains no \"one trigger per branch\" rule or any such test about collapsing synonymous trigger phrases; this rule is not present in the document at all. || REFUTED \u2014 The quote appears verbatim, but the target document contains no \"one trigger per branch\" rule or synonym-collapsing test; that doctrine is not present in this document at all. || REFUTED \u2014 The quoted text appears verbatim, but the target document contains no \"one trigger per branch\" rule or synonym-collapsing test; that doctrine is not present in this document at all.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Trigger ONLY when the user explicitly says \"cmux\" \u2014 a cmux pane, cmux workspace, cmux surface, or an agent running in cmux.",
+        "issue": "The four listed phrases ('cmux pane', 'cmux workspace', 'cmux surface', 'an agent running in cmux') are not distinct branches that route differently \u2014 they're all just instances of the literal token 'cmux' appearing in the user's message, restating the single preceding rule ('the user explicitly says \"cmux\"') three extra times.",
+        "proposed_fix": "Collapse to the single test: 'Trigger ONLY when the user explicitly says the word \"cmux.\"' Drop the enumerated examples, which pay load without adding a new branch.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the four phrases are examples clarifying what counts as saying \"cmux\" (contrasted with the next sentence's non-triggers), not separate decision branches, so the \"one trigger per branch\" critique misapplies. || REFUTED \u2014 the quoted text appears verbatim, but the four phrases are examples clarifying what counts as an explicit \"cmux\" mention, not separate routing branches, so the \"one trigger per branch\" critique misapplies the rule. || REFUTED \u2014 The quoted text appears verbatim, but the four phrases aren't redundant restatements; \"an agent running in cmux\" covers a case where the user doesn't say the literal word \"pane/workspace/surface\" but references an agent operating inside cmux, so it's not merely repeating the same single test three extra times.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Leading words \u2014 Negation",
+        "target_quote": "Don't add a manager layer. No retries framework, session manager, daemon supervisor, config system, or logging framework.",
+        "issue": "This bullet leads with the ban and every clause after it is also a negation, with no positive target stated for what to do instead (contrast with the preceding 'run.py stays tiny' / 'Core helpers stay short' bullets, which state the positive behavior before the negation). Per the negation rule, a prohibition should stand paired with its positive target so attention lands on what to do, not just on what's forbidden.",
+        "proposed_fix": "Lead with the positive instruction, e.g. \"Keep control flow inline \u2014 handle retries, sessions, and config at the call site. No retries framework, session manager, daemon supervisor, config system, or logging framework.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text appears verbatim, but the \"Leading words \u2014 Negation\" rule (per the doc's own contrast example) is about pairing a prohibition with a positive target, which is a style preference judgment call, not a verifiable factual defect; the bullet is consistent with the adjacent \"Don't add features...\" style bullets used throughout the doc. || REFUTED \u2014 the quoted text appears verbatim, but the rule's stated purpose (positive target should precede negation) is not violated in a way that makes this a genuine defect; it's a subjective style preference about bullet ordering, not a clear rule violation like the contrasted examples imply, and the document already states the positive intent elsewhere (\"Don't add a manager layer\" itself functions as the constraint, with the specifics as clarifying detail, not a missing positive target). || REFUTED \u2014 the quoted text appears verbatim, but the surrounding bullets (\"run.py stays tiny\", \"Core helpers stay short\") are themselves positive constraints paired with negations by design; \"Don't add a manager layer\" is consistent with that same pattern (the positive target is implicit: keep logic inline/simple), so this isn't a genuine deviation from a stated rule, just a stylistic variation.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research] \u2014 a prohibition must stand paired with its positive target.",
+        "target_quote": "Do not refactor unrelated code. Do not add dependencies.",
+        "issue": "Another literal string destined for the goal contract that leads with two bans and never states what the agent should do instead, dragging 'refactor unrelated code' and 'add dependencies' into context rather than suppressing them.",
+        "proposed_fix": "State the positive scope first and keep the ban as backup, e.g. \"Touch only files required for the objective, using only already-declared dependencies. Do not refactor unrelated code or add dependencies.\"",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 The quoted text appears verbatim, but it's presented as a supplementary \"forbid scope creep explicitly\" instruction alongside a full contract that already states the positive objective/constraints, so the \"negation without positive target\" critique misapplies the rule to this context. || REFUTED \u2014 the quoted text appears verbatim, but it's listed as an example of \"Forbid scope creep explicitly\" advice under Writing rules, not itself the goal contract's positive-scope statement (the actual contract already specifies Objective/Constraints elsewhere), so the rule's premise misapplies. || REFUTED \u2014 the quoted text appears verbatim, but it's a supplementary scope-creep guard, not the goal's core contract, and the \"positive target\" (Objective/Constraints fields) already precedes it in the actual template.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft] \u2014 synonyms that rename a single branch are one branch written twice; collapse triggers that route to the same place.",
+        "target_quote": "asks how to write a goal prompt, or wants a one-paragraph goal instruction drafted",
+        "issue": "Both phrases route to the same 'Writing a goal' section with no differentiated path \u2014 a run reaching the doc via 'asks how to write a goal prompt' takes the identical path as one reaching it via 'wants a one-paragraph goal instruction drafted.' Per the doctrine's test, these should collapse into one trigger.",
+        "proposed_fix": "Collapse to a single trigger, e.g. 'asks how to write a goal prompt' and drop 'or wants a one-paragraph goal instruction drafted.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the two triggers are not mere synonyms: \"how to write a goal prompt\" seeks guidance/explanation while \"wants a one-paragraph goal instruction drafted\" asks for a concrete deliverable to be produced, a meaningful distinction even if both land in the same section. || REFUTED \u2014 the two phrases describe distinct triggers (general how-to question vs. a request for a drafted one-paragraph instruction), not synonyms renaming the same branch, so the \"one trigger per branch\" collapse test doesn't genuinely apply. || REFUTED \u2014 the quoted text appears verbatim, but the two phrases describe distinct user intents (general \"how do I write one\" guidance vs. a concrete drafted deliverable), not mere synonyms for the same branch.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "One trigger per branch [craft]",
+        "target_quote": "Use when the user says \"push\", \"push to github\", \"push to prod\", \"ship it\", or \"deploy\".",
+        "issue": "All five phrases route to the exact same procedure \u2014 there is no branch in the document where 'ship it' behaves differently from 'deploy' or 'push to prod'. This is one branch written five times in an always-loaded description, paying five times in context load to route once.",
+        "proposed_fix": "Collapse to a single representative trigger, e.g. 'Use when the user asks to push, ship, or deploy to production.'",
+        "reason": "panel 0/3 confirmed | REFUTED: The quoted phrases are triggers listing distinct user phrasings for the same procedure, not \"one branch written five times\"\u2014this is standard trigger-matching phrasing (needed since users use varied wording), not a genuine rule violation of a \"one trigger per branch\" principle. || REFUTED \u2014 the quoted text does appear verbatim, but listing multiple trigger phrases for a single skill-invocation match is not \"one branch written five times\"; it's a standard trigger-phrase list for description-based matching, not a duplicated conditional branch in the procedure. || REFUTED: The quoted text lists trigger phrases (synonyms for invoking the skill), not five separate branches with different behavior \u2014 \"one trigger per branch\" doesn't meaningfully apply since this is a single trigger condition with multiple phrasings, not distinct branches of logic.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth / duplication (polarity) [craft]",
+        "target_quote": "Never push side branches.",
+        "issue": "This restates, negated, the fact already given positively earlier in the document: \"Direct pushes to `main`. No PRs, no side branches.\" It is the same meaning written twice \u2014 the doctrine specifically calls out anti-pattern/hard-rule lists that mirror rules the document already gives.",
+        "proposed_fix": "Drop the restatement from Hard rules and let 'Direct pushes to main. No PRs, no side branches.' stand as the single authoritative statement, or replace the Hard rules line with a pointer back to it.",
+        "reason": "panel 0/3 confirmed | REFUTED: The two statements serve different purposes\u2014the first describes the shipping workflow (no PR-based branches), while the \"Hard rules\" restatement emphasizes never force-pushing or pushing side branches as an inviolable safety rule; this is reinforcement of a critical constraint, not meaningless duplication. || REFUTED: The two statements serve different purposes (workflow description vs. hard prohibition alongside \"never force-push\"/\"never push without go-ahead\"), not a genuine duplication issue \u2014 this is stylistic emphasis on a safety-critical rule, not a single-source-of-truth violation. || REFUTED: The two statements serve different purposes (workflow description vs. hard rule/imperative for the agent), and the doctrine's duplication concern targets redundant explanations, not a brief reinforcing prohibition in a \"Hard rules\" safety list \u2014 this is reasonable emphasis, not true duplication.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth / duplication (polarity) [craft]",
+        "target_quote": "NEVER push without the user's explicit go-ahead.",
+        "issue": "This duplicates the meaning already stated at the top of the document: \"Only run this after the user explicitly told you to push. Never push on your own.\" Same rule, same polarity even, restated in the Hard rules checklist \u2014 the doctrine's guidance to audit such lists against the rules they mirror applies directly.",
+        "proposed_fix": "Remove the duplicate line from Hard rules, keeping the single statement at the top as the authoritative source.",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted text does appear, but this is intentional emphasis/summary of a critical safety rule in a \"Hard rules\" checklist, not unintentional duplication that constitutes a genuine single-source-of-truth violation; the two statements serve different purposes (opening context vs. quick-reference checklist) and removing either doesn't reduce risk of contradiction since they're consistent restatements, not divergent sources of truth. || REFUTED: The quoted text does appear verbatim, but restating a critical safety rule in a \"Hard rules\" summary checklist is a deliberate reinforcement pattern, not an unintentional duplication violating single-source-of-truth. || REFUTED: The quoted text does appear verbatim, but the rule is a deliberate summary/checklist restatement (common and reasonable technical writing practice), not a genuine duplication issue \u2014 \"Hard rules\" is explicitly a consolidated recap section, so restating the top-line rule there is intentional reinforcement, not an accidental duplication to be pruned.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Single source of truth / duplication [craft]",
+        "target_quote": "If tracked dirt remains that is not yours, stop and tell the user \u2014 never stash around it.",
+        "issue": "The near-identical instruction \"If it is dirty with WIP that is not yours, stop and tell the user \u2014 never stash around it\" already appears in the 'Landing work from a worktree' section. The same meaning (and nearly the same wording) is stated twice, so changing this policy requires editing two places.",
+        "proposed_fix": "State the never-stash-around-dirty-WIP rule once (e.g. in 'How shipping works here') and have the loop step reference it rather than restating it.",
+        "reason": "downgraded: quoted text not found verbatim in target document",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+        "refutation_mode": "quote_not_found"
+      },
+      {
+        "rule": "Steps, completion, and demand \u2014 Demand [craft]",
+        "target_quote": "For quizzes, each answer should be exactly the same number of words (and characters, if possible).",
+        "issue": "The word-count requirement is checkable, but the parenthetical \"if possible\" is a stray uncheckable qualifier attached to the character-count requirement in the same sentence. It lets the agent treat the whole rule impressionistically \u2014 satisfying only the word-count half while waving off the character-count half as merely aspirational, exactly the mixed checkable/uncheckable pattern the doctrine flags.",
+        "proposed_fix": "State a single hard bound: \"each answer should be exactly the same number of words and the same number of characters\" \u2014 or, if character-matching is genuinely optional, split it into its own clearly-labeled preference rather than folding it into the precise word-count rule.",
+        "reason": "panel 1/3 confirmed | CONFIRMED \u2014 the quoted text appears verbatim, and the analysis correctly identifies the \"if possible\" as an uncheckable qualifier grafted onto an otherwise precise rule. || REFUTED: The quoted text appears verbatim, but the finding mischaracterizes it \u2014 \"if possible\" is an explicit, honest acknowledgment that character-matching may not always be achievable (given words have different lengths), not a stray uncheckable qualifier enabling rule evasion. || REFUTED\nThe quote appears verbatim, but the \"if possible\" qualifier is a legitimate, deliberate hedge for a genuinely harder constraint (exact character match is often infeasible for arbitrary same-word-count answers), not a doctrine violation letting the agent skip the checkable word-count requirement.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md",
+        "refutation_mode": "verifier"
+      },
+      {
+        "rule": "Negation [research]",
+        "target_quote": "Never commit, print, log, paste, or expose `DEEPAPI_API_KEY`.",
+        "issue": "The rule leads with the ban and never states the positive target \u2014 where/how the key should be handled instead \u2014 so per the doctrine's negation rule it drags the forbidden behaviors into context without anchoring the agent on the correct one.",
+        "proposed_fix": "Pair it with the positive instruction, e.g. 'Keep `DEEPAPI_API_KEY` only in the environment and send it solely via the Authorization header; never commit, print, log, paste, or expose it.'",
+        "reason": "panel 0/3 confirmed | REFUTED \u2014 the quoted line appears verbatim, but the claim that the positive target is never stated is false: the same document already anchors correct handling (\"Read `DEEPAPI_API_KEY` from the environment\" and \"Send `Authorization: Bearer $DEEPAPI_API_KEY` on every request\") just above/below this line. || REFUTED \u2014 the positive target is stated elsewhere in the doc (\"Read `DEEPAPI_API_KEY` from the environment\" and \"Send `Authorization: Bearer $DEEPAPI_API_KEY` on every request\"), so the claim that the document \"never states the positive target\" is false. || REFUTED \u2014 The document already states the positive target: \"Read `DEEPAPI_API_KEY`... from the environment\" (Required Environment) and \"Send `Authorization: Bearer $DEEPAPI_API_KEY` on every request\" (Request Rules) appear immediately before the negation line, so the claim that the positive instruction is never stated is false.",
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md",
+        "refutation_mode": "verifier"
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 21,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md",
+        "findings_confirmed": 4,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md",
+        "findings_confirmed": 5,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 21,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+        "findings_confirmed": 0,
+        "refuted_count": 4,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/global-agent-guardrails/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      }
+    ],
+    "halted_on_budget": false
+  }
+}

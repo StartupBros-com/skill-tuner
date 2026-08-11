@@ -1,0 +1,15 @@
+{
+  "model": "claude-sonnet-5",
+  "max_findings": 8,
+  "verify_trials": 3,
+  "target_files": [
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/skill-authoring/effective-agent-skills/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/cmux/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/browser-harness/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/agent-orchestration/goal-loop/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/prod-push/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/ops-and-setup/global-agent-guardrails/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/thinking-and-docs/teach/SKILL.md",
+    "/home/will/.claude/jobs/2c802246/tmp/ext-david/skills/research-and-web/deepapi/SKILL.md"
+  ]
+}
