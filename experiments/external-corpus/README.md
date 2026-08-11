@@ -82,9 +82,13 @@ Notes:
   description. Landing that upstream would require the routing-parity
   battery per our own playbook; in scratch it only affects the
   defect count.
-- Upstream PRs to either repo are prepared-but-held: publishing someone
-  else's fixed skill is an outward-facing act that doesn't happen without
-  an explicit go.
+- Upstream PRs shipped 2026-08-11 with the operator's go:
+  [davidondrej/skills#3](https://github.com/davidondrej/skills/pull/3)
+  (goal-loop + cmux, 9 edits) and
+  [anthropics/skills#1543](https://github.com/anthropics/skills/pull/1543)
+  (pptx + algorithmic-art + canvas-design, 13 edits; the un-batteried
+  description edit excluded). The verified findings for the other probed
+  davidondrej skills were deliberately not contributed.
 
 ## Files
 
