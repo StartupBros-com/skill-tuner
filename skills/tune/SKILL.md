@@ -13,10 +13,10 @@ tokens. Report the estimate before the first call and the actual after.
 `${CLAUDE_PLUGIN_ROOT}` below is Claude Code's expansion for the plugin's
 install root. In a client that does not expand it, resolve it yourself: the
 plugin root is the directory three levels up from this SKILL.md — the one
-that contains `skills/`. The same goes for `$ARGUMENTS`: Claude Code
-substitutes the invocation arguments; in a client that does not, bind the
-human's target path yourself wherever `$ARGUMENTS` appears below — never
-pass the placeholder through to a shell unexpanded.
+that contains `skills/`. The command blocks below use `<target-path>` as a
+slot, not a variable: replace it with the document path the human gave,
+keeping the surrounding double quotes so a path with spaces stays one
+argument. Never pass an unexpanded placeholder through to a shell.
 
 ## 1. Read it
 
@@ -29,7 +29,7 @@ you fix it.
 
 ```
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/skill-tuner/scripts/tune.py probe \
-  --target "$ARGUMENTS" --run-id tune-$(date +%s) --yes --budget-usd 3 --verify-trials 3
+  --target "<target-path>" --run-id tune-$(date +%s) --yes --budget-usd 3 --verify-trials 3
 ```
 
 Every finding it reports has already survived three independent skeptics in

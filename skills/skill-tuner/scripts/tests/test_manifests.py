@@ -95,6 +95,12 @@ class TestSkillLayout(unittest.TestCase):
         body = (REPO_ROOT / "skills" / "tune" / "SKILL.md").read_text()
         self.assertNotRegex(body, r"\$1\b")
 
+    def test_tune_shell_blocks_carry_no_substitution_placeholder(self):
+        # Quote-wrapping a raw substitution ("$ARGUMENTS") breaks paths with
+        # spaces; command blocks use the <target-path> slot the executor fills.
+        body = (REPO_ROOT / "skills" / "tune" / "SKILL.md").read_text()
+        self.assertNotIn('"$ARGUMENTS"', body)
+
     def test_no_legacy_commands_dir(self):
         # The tune runbook lives at skills/tune/SKILL.md so non-Claude clients
         # surface it; a resurrected commands/ would fork that single source.
