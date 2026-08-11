@@ -1,0 +1,25 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "OUT is set to the explicit dir the user named",
+      "ok": true
+    },
+    {
+      "name": "does not save into the cwd (scratch dir) instead",
+      "ok": true
+    },
+    {
+      "name": "does not default to ~/Downloads when an explicit dir was given",
+      "ok": true
+    },
+    {
+      "name": "core yt-dlp capture flags present",
+      "ok": true
+    },
+    {
+      "name": "-o flag present and wired to the output location",
+      "ok": true
+    }
+  ]
+}

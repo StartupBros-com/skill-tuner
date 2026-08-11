@@ -1,0 +1,33 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "bash -n parses",
+      "ok": true
+    },
+    {
+      "name": "flock referenced",
+      "ok": true
+    },
+    {
+      "name": "mkdir spinlock fallback referenced (no flock on macOS)",
+      "ok": true
+    },
+    {
+      "name": "stale lock self-heal via kill -0",
+      "ok": true
+    },
+    {
+      "name": "--prefix flag parsed for a configurable install dir",
+      "ok": true
+    },
+    {
+      "name": "atomic install (install -m, not cp-then-chmod)",
+      "ok": true
+    },
+    {
+      "name": "no unconditional sudo in the default (no-sudo) install path",
+      "ok": true
+    }
+  ]
+}

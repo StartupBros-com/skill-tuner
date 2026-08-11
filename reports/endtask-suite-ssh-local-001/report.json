@@ -1,0 +1,160 @@
+{
+  "manifest": {
+    "run_id": "endtask-suite-ssh-local-001",
+    "started_at": "2026-08-11T05:05:21Z",
+    "finished_at": "2026-08-11T05:08:52Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.8.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/configs/endtask-suite/ssh-local/ancestor.md",
+        "sha256": "sha256:5af00e3203d82c8ec8e64bffb48e347e912bc63ef25ae79e67e0e2bb372bf5fb",
+        "source": "worktree",
+        "git_commit": "f9061184019ae15972d811c419aab0bd037b19c7",
+        "git_path": "configs/endtask-suite/ssh-local/ancestor.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/ssh-local/SKILL.md",
+        "sha256": "sha256:bb4467a6cfc6d5d34841f5cba73f3cdcc51ba29bffd8a20c33e69e13697b4d82",
+        "source": "worktree",
+        "git_commit": "50cc5be25fa30ae491674b79fda03606f01e90b6",
+        "git_path": "claude/skills-local/ssh-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "endtask"
+  },
+  "endtask": {
+    "delta": 0.1,
+    "baseline": "ancestor",
+    "candidate": "current",
+    "halted_on_budget": false,
+    "cases_scored": 7,
+    "per_case": [
+      {
+        "case": "config-include-alias-resolution",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "cron-password-no-tty",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "first-connect-key-auth",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "mac-mini-reachability",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "password-env-basic",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "restricted-deploy-key-setup",
+        "baseline": 0.8333333333333334,
+        "candidate": 0.8333333333333334
+      },
+      {
+        "case": "scp-password-copy",
+        "baseline": 1.0,
+        "candidate": 1.0
+      }
+    ],
+    "verdict": {
+      "verdict": "not_worse",
+      "delta": 0.1,
+      "documents": [
+        "config-include-alias-resolution",
+        "cron-password-no-tty",
+        "first-connect-key-auth",
+        "mac-mini-reachability",
+        "password-env-basic",
+        "restricted-deploy-key-setup",
+        "scp-password-copy"
+      ],
+      "excluded": [],
+      "n": 7,
+      "baseline_total": 6.833333333333333,
+      "candidate_total": 6.833333333333333,
+      "per_document": [
+        {
+          "target_file": "config-include-alias-resolution",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "cron-password-no-tty",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "first-connect-key-auth",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "mac-mini-reachability",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "password-env-basic",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "restricted-deploy-key-setup",
+          "baseline": 0.8333333333333334,
+          "candidate": 0.8333333333333334,
+          "diff": 0.0
+        },
+        {
+          "target_file": "scp-password-copy",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        }
+      ],
+      "mean_diff": 0.0,
+      "sd": 0.0,
+      "se": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "regression_confirmed": false,
+      "bootstrap_ci_low": 0.0,
+      "bootstrap_ci_high": 0.0,
+      "sign_test_p": null,
+      "effect_size_dz": null,
+      "documents_won": 0,
+      "documents_lost": 0,
+      "documents_tied": 7,
+      "passes_legacy_count_rule": true,
+      "n_for_delta": 7,
+      "source": "endtask",
+      "metric": "pass_rate",
+      "baseline_config": "ancestor",
+      "candidate_config": "current",
+      "warnings": []
+    }
+  }
+}

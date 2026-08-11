@@ -1,0 +1,25 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "uses `ssh -G stagingbox` -- the one-command way to see the fully-resolved effective config, Include'd files and all",
+      "ok": true
+    },
+    {
+      "name": "actually engages with the task (mentions both ssh and the stagingbox alias, not an off-topic non-answer)",
+      "ok": true
+    },
+    {
+      "name": "does not fall back to a live connection attempt as the inspection method (bare `ssh stagingbox` without -G)",
+      "ok": true
+    },
+    {
+      "name": "does not tell the user to open the config in an editor (misses that definitions live in config.d/*.conf)",
+      "ok": true
+    },
+    {
+      "name": "no leftover quoted remote-command argument tacked onto the -G invocation (ssh -G doesn't run anything remote)",
+      "ok": true
+    }
+  ]
+}

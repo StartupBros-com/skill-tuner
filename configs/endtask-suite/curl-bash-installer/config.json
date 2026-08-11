@@ -1,0 +1,39 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "conditions": {
+    "ancestor": "ancestor.md",
+    "current": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md"
+  },
+  "baseline_condition": "ancestor",
+  "cases": [
+    {
+      "id": "daemon-service-uninstall-guard",
+      "prompt": "Write a complete, production-ready curl-pipe-bash installer (install.sh) for `flowctl`, a Rust CLI hosted at github.com/acme/flowctl. flowctl can optionally run as a background sync daemon: pass `--daemon` at install time to also register it as a systemd user service on Linux (or a launchd LaunchAgent on macOS) that starts on login; the default install (no `--daemon`) is just the CLI binary with no service. Ship a full uninstall path too: it must cleanly remove the binary, shell completions, and \u2014 if one was registered \u2014 the background service, and it must complete successfully and report success even on a machine where `--daemon` was never used. Output the full script."
+    },
+    {
+      "id": "idempotent-hook-merge",
+      "prompt": "Write a complete curl-pipe-bash installer (install.sh) for `warpline`, a TypeScript CLI (github.com/acme/warpline) that plugs into AI coding agents by adding a pre-tool-use hook to whichever of Claude Code (`~/.claude/settings.json`) or Codex CLI it finds installed. The installer must be safe to run repeatedly \u2014 a user piping the same curl|bash one-liner five times in a row must never end up with duplicate hook entries, never lose their existing settings if something goes wrong mid-merge, and must not touch the JSON with sed/awk. Output the full script."
+    },
+    {
+      "id": "proxy-airgap-checksum",
+      "prompt": "Write a complete curl-pipe-bash installer (install.sh) for `netshim`, a Go CLI (github.com/acme/netshim), intended for large enterprises: many target machines sit behind a corporate HTTPS proxy and reach GitHub only through it, and a subset of machines are fully airgapped with no network access at all and must install from a local tarball supplied by the operator. Every network fetch the installer makes has to honor the corporate proxy. The downloaded artifact must be verified against a known SHA256 before it's trusted, and skipping that verification must require an explicit, clearly-named opt-out flag rather than being silently possible. Output the full script."
+    },
+    {
+      "id": "no-sudo-atomic-lock",
+      "prompt": "Write a complete curl-pipe-bash installer (install.sh) for `bexport`, a Rust CLI (github.com/acme/bexport), for a shared build server where regular users have no sudo access. Support a `--prefix DIR` flag so each user can install into their own directory (default: `$HOME/.local/bin`); nothing in the default flow should require elevated privileges. Multiple CI jobs on the same box sometimes trigger the installer concurrently \u2014 a second run must wait for (or safely detect and recover from) a first run's lock rather than corrupting a half-installed binary, and the binary that lands in place must never be observable in a partially-written state. Output the full script."
+    },
+    {
+      "id": "checksum-signature-supply-chain",
+      "prompt": "Write a complete curl-pipe-bash installer (install.sh) for `ledgerctl`, a security-sensitive Rust CLI (github.com/acme/ledgerctl) used to sign financial records, so the supply-chain checks matter more than usual. Every downloaded release artifact must be checksummed with SHA256 using whatever tool is available on the box, and the installer must additionally check for a Sigstore/cosign signature bundle: if `cosign` isn't installed, that's fine and the install proceeds with a warning, but if `cosign` IS installed and the signature fails to verify, the install must stop hard \u2014 this tool should never land unsigned-and-unverified on a machine that has the means to check it. Output the full script."
+    },
+    {
+      "id": "build-from-source-consent",
+      "prompt": "Write a complete curl-pipe-bash installer (install.sh) for `octoparse`, a Rust CLI (github.com/acme/octoparse) that has prebuilt binaries for common platforms but not for everything \u2014 on an unsupported platform the installer's last resort is to install a Rust toolchain and build from source. Installing a whole toolchain is a big, surprising thing to do to someone's machine without asking: when the installer is running in a terminal a human is watching, it should ask before doing that; when it's running unattended (e.g. piped in CI with no TTY), it must never silently start installing a toolchain \u2014 it should require an explicit flag or environment variable the caller set on purpose, and if that consent isn't present, fail with a clear message naming exactly what to pass to allow it. Output the full script."
+    },
+    {
+      "id": "full-lifecycle-audit",
+      "prompt": "Write a complete, production-grade curl-pipe-bash installer (install.sh) for `octoline`, a Go CLI hosted at github.com/acme/octoline, covering the full lifecycle end to end: platform detection for Linux and macOS on both x86_64 and arm64 (WSL users should be told about quirks, not blocked), a preflight that won't let the install begin if there isn't enough disk space or the destination isn't writable, a locking mechanism so two simultaneous installs can't corrupt each other, checksum-verified download, and a final report of what happened plus how to uninstall everything the script just did. Output the full script."
+    }
+  ]
+}

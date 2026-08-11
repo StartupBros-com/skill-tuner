@@ -1,0 +1,21 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "checks available caption languages first (--list-subs)",
+      "ok": true
+    },
+    {
+      "name": "does not blindly hardcode English-only without checking",
+      "ok": true
+    },
+    {
+      "name": "core yt-dlp capture flags present",
+      "ok": true
+    },
+    {
+      "name": "uses the real project cwd",
+      "ok": true
+    }
+  ]
+}

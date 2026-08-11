@@ -1,0 +1,29 @@
+{
+  "pass_rate": 0.8333333333333334,
+  "expectations": [
+    {
+      "name": "generates an Ed25519 key (ssh-keygen -t ed25519)",
+      "ok": true
+    },
+    {
+      "name": "key is generated passphrase-free for unattended use (-N '' )",
+      "ok": true
+    },
+    {
+      "name": "uses a dedicated key path, not the default id_ed25519 (-f <custom path>)",
+      "ok": true
+    },
+    {
+      "name": "restricts the authorized_keys entry to the one allowed command (command=\"...backup.sh...\")",
+      "ok": false
+    },
+    {
+      "name": "final verification uses all four non-interactive safety flags together (BatchMode=yes, IdentitiesOnly=yes, ConnectTimeout, StrictHostKeyChecking=accept-new)",
+      "ok": true
+    },
+    {
+      "name": "verification targets runner@203.0.113.99 with -i pointing at a key",
+      "ok": true
+    }
+  ]
+}

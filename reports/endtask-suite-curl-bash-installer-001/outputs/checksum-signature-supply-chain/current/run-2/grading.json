@@ -1,0 +1,29 @@
+{
+  "pass_rate": 0.8333333333333334,
+  "expectations": [
+    {
+      "name": "bash -n parses",
+      "ok": true
+    },
+    {
+      "name": "dual-tool SHA256 (sha256sum then shasum -a 256 fallback)",
+      "ok": true
+    },
+    {
+      "name": "checksum mismatch is a hard failure",
+      "ok": false
+    },
+    {
+      "name": "cosign absent -> soft-skip with a warning",
+      "ok": true
+    },
+    {
+      "name": "cosign present + bad signature -> hard fail",
+      "ok": true
+    },
+    {
+      "name": "--no-verify flag exists to explicitly skip checksum",
+      "ok": true
+    }
+  ]
+}

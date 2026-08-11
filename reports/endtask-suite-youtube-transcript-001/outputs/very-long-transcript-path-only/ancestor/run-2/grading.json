@@ -1,0 +1,25 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "reports the saved .txt path",
+      "ok": true
+    },
+    {
+      "name": "explicitly states it will NOT print the full transcript (too long)",
+      "ok": true
+    },
+    {
+      "name": "uses the real project cwd rather than ignoring it",
+      "ok": true
+    },
+    {
+      "name": "core yt-dlp capture flags present",
+      "ok": true
+    },
+    {
+      "name": "does not default to ~/Downloads despite a legitimate project cwd",
+      "ok": true
+    }
+  ]
+}

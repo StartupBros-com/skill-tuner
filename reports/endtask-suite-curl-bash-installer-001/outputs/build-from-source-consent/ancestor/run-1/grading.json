@@ -1,0 +1,29 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "bash -n parses",
+      "ok": true
+    },
+    {
+      "name": "TTY detected before deciding to prompt",
+      "ok": true
+    },
+    {
+      "name": "interactive confirmation prompt before building from source",
+      "ok": true
+    },
+    {
+      "name": "non-interactive path requires an explicit flag or env var (some --flag / ENV_VAR pair, self-consistently named)",
+      "ok": true
+    },
+    {
+      "name": "unattended refusal names the flag in its error",
+      "ok": true
+    },
+    {
+      "name": "flag documented (appears in logic and again in help/usage text)",
+      "ok": true
+    }
+  ]
+}

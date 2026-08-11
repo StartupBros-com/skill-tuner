@@ -1,0 +1,1 @@
+SSHPASS="$BATCH_PW" sshpass -e ssh -o BatchMode=no -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o PreferredAuthentications=password -o PubkeyAuthentication=no batch@203.0.113.80 '/opt/scripts/nightly.sh' < /dev/null
