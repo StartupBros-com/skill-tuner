@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "skill-tuner",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Tells you whether a change to an agent-consumed document actually worked: paired comparison with a confidence interval and a non-inferiority margin, content-hashed provenance with drift detection, and an adversarial defect probe. Reads Anthropic's skill-creator benchmark output and supplies the verdict it stops short of.",
   "author": {
     "name": "StartupBros / House of Vibe",
