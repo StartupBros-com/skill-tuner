@@ -26,6 +26,27 @@ def _load(relpath):
     return json.loads((REPO_ROOT / relpath).read_text())
 
 
+AGENTSKILLS_SPEC_FIELDS = {
+    "name", "description", "license", "compatibility", "metadata", "allowed-tools",
+}
+# Deliberate divergence, decided 2026-08-10 (PR #32 review + PR #38): these two
+# keys are functional on Claude Code and Cursor, tolerated by Codex and VS Code,
+# and no portable invocation-policy field exists to replace them.
+KNOWN_CLAUDE_ONLY_FIELDS = {"argument-hint", "disable-model-invocation"}
+
+
+def _frontmatter_keys(skill_md):
+    lines = skill_md.read_text().splitlines()
+    assert lines[0] == "---", f"{skill_md} has no frontmatter"
+    keys = set()
+    for line in lines[1:]:
+        if line == "---":
+            break
+        if line and not line[0].isspace() and ":" in line:
+            keys.add(line.split(":", 1)[0].strip())
+    return keys
+
+
 def _frontmatter_value(skill_md, key):
     lines = skill_md.read_text().splitlines()
     assert lines[0] == "---", f"{skill_md} has no frontmatter"
@@ -100,6 +121,21 @@ class TestSkillLayout(unittest.TestCase):
         # spaces; command blocks use the <target-path> slot the executor fills.
         body = (REPO_ROOT / "skills" / "tune" / "SKILL.md").read_text()
         self.assertNotIn('"$ARGUMENTS"', body)
+
+    def test_doctrine_skill_stays_spec_clean(self):
+        keys = _frontmatter_keys(REPO_ROOT / "skills" / "skill-tuner" / "SKILL.md")
+        self.assertLessEqual(
+            keys, AGENTSKILLS_SPEC_FIELDS,
+            f"doctrine skill grew non-spec frontmatter keys: {keys - AGENTSKILLS_SPEC_FIELDS}",
+        )
+
+    def test_tune_spec_divergence_is_exactly_the_known_set(self):
+        # One half of the tripwire: trips when we drift FURTHER from the
+        # agentskills.io field list. The CI validator job is the other half:
+        # it trips when the spec starts accepting us. Either firing means
+        # revisit the single-file dual-format decision.
+        keys = _frontmatter_keys(REPO_ROOT / "skills" / "tune" / "SKILL.md")
+        self.assertEqual(keys - AGENTSKILLS_SPEC_FIELDS, KNOWN_CLAUDE_ONLY_FIELDS)
 
     def test_no_legacy_commands_dir(self):
         # The tune runbook lives at skills/tune/SKILL.md so non-Claude clients
