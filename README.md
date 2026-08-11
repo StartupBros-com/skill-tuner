@@ -89,6 +89,13 @@ Two axes are out of scope, and the ecosystem's loudest 2026 numbers live on them
 
 ## Case studies on the public record
 
+**Start with [the August 2026 campaign](docs/case-study-august-2026.md)** —
+the tool pointed at its own harness and then at corpora we didn't write:
+96 verified fixes at certified behavioral parity, two expert-endorsed
+doctrine changes refused by measurement, a cross-family judge audit, and a
+CI-backed 61% defect reduction on external OSS skills, with upstream PRs
+to `anthropics/skills` among the receipts.
+
 The verdict engine applied to the ecosystem's own disputes, at zero model
 cost: [the Ponytail benchmark saga](docs/case-studies/ponytail.md) — the
 famous "54% less code" is a totals artifact; the per-task paired truth is
