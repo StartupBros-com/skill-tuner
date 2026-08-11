@@ -1,0 +1,5 @@
+interface:
+  display_name: Tune
+  short_description: Find and fix confirmed defects in a skill, AGENTS.md, or CLAUDE.md, then prove the description still routes.
+policy:
+  allow_implicit_invocation: false

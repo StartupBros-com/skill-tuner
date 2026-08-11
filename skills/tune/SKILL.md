@@ -13,7 +13,10 @@ tokens. Report the estimate before the first call and the actual after.
 `${CLAUDE_PLUGIN_ROOT}` below is Claude Code's expansion for the plugin's
 install root. In a client that does not expand it, resolve it yourself: the
 plugin root is the directory three levels up from this SKILL.md — the one
-that contains `skills/`.
+that contains `skills/`. The same goes for `$ARGUMENTS`: Claude Code
+substitutes the invocation arguments; in a client that does not, bind the
+human's target path yourself wherever `$ARGUMENTS` appears below — never
+pass the placeholder through to a shell unexpanded.
 
 ## 1. Read it
 

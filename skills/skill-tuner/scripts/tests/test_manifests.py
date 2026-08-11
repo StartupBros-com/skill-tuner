@@ -82,6 +82,14 @@ class TestSkillLayout(unittest.TestCase):
         tune_md = REPO_ROOT / "skills" / "tune" / "SKILL.md"
         self.assertEqual(_frontmatter_value(tune_md, "disable-model-invocation"), "true")
 
+    def test_tune_codex_gate_pins_no_implicit_invocation(self):
+        # Codex ignores disable-model-invocation; its native gate is the
+        # per-skill agents/openai.yaml policy. Both gates must stay pinned.
+        agent_yaml = REPO_ROOT / "skills" / "tune" / "agents" / "openai.yaml"
+        self.assertTrue(agent_yaml.exists(), "skills/tune/agents/openai.yaml missing")
+        text = agent_yaml.read_text()
+        self.assertIn("allow_implicit_invocation: false", text)
+
     def test_tune_uses_arguments_not_positional(self):
         # Skill $N is zero-indexed ($1 = second arg), unlike the old command's $1.
         body = (REPO_ROOT / "skills" / "tune" / "SKILL.md").read_text()
