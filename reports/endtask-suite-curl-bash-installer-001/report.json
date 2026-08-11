@@ -1,0 +1,148 @@
+{
+  "manifest": {
+    "run_id": "endtask-suite-curl-bash-installer-001",
+    "started_at": "2026-08-11T03:42:29Z",
+    "finished_at": "2026-08-11T05:02:26Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.8.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/configs/endtask-suite/curl-bash-installer/ancestor.md",
+        "sha256": "sha256:c6db47a75b839c4c55255906ac9fd567d0cc4291146571eed98ecf2926259813",
+        "source": "worktree",
+        "git_commit": "f9061184019ae15972d811c419aab0bd037b19c7",
+        "git_path": "configs/endtask-suite/curl-bash-installer/ancestor.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:58291952bd2adb2b0dc3589874ad09dac80b3775a2987886267f6da45ad57ae0",
+        "source": "worktree",
+        "git_commit": "19f69611810b5f3e22a2c7d2ef4ce8a017f4e524",
+        "git_path": "claude/skills-local/curl-bash-installer/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "endtask"
+  },
+  "endtask": {
+    "delta": 0.1,
+    "baseline": "ancestor",
+    "candidate": "current",
+    "halted_on_budget": true,
+    "cases_scored": 6,
+    "per_case": [
+      {
+        "case": "build-from-source-consent",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "checksum-signature-supply-chain",
+        "baseline": 0.8333333333333334,
+        "candidate": 0.9166666666666667
+      },
+      {
+        "case": "daemon-service-uninstall-guard",
+        "baseline": 1.0,
+        "candidate": 0.9166666666666667
+      },
+      {
+        "case": "idempotent-hook-merge",
+        "baseline": 0.9166666666666667,
+        "candidate": 0.9166666666666667
+      },
+      {
+        "case": "no-sudo-atomic-lock",
+        "baseline": 0.9285714285714286,
+        "candidate": 0.9285714285714286
+      },
+      {
+        "case": "proxy-airgap-checksum",
+        "baseline": 1.0,
+        "candidate": 1.0
+      }
+    ],
+    "verdict": {
+      "verdict": "not_worse",
+      "delta": 0.1,
+      "documents": [
+        "build-from-source-consent",
+        "checksum-signature-supply-chain",
+        "daemon-service-uninstall-guard",
+        "idempotent-hook-merge",
+        "no-sudo-atomic-lock",
+        "proxy-airgap-checksum"
+      ],
+      "excluded": [],
+      "n": 6,
+      "baseline_total": 5.678571428571429,
+      "candidate_total": 5.678571428571429,
+      "per_document": [
+        {
+          "target_file": "build-from-source-consent",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "checksum-signature-supply-chain",
+          "baseline": 0.8333333333333334,
+          "candidate": 0.9166666666666667,
+          "diff": 0.08333333333333337
+        },
+        {
+          "target_file": "daemon-service-uninstall-guard",
+          "baseline": 1.0,
+          "candidate": 0.9166666666666667,
+          "diff": -0.08333333333333326
+        },
+        {
+          "target_file": "idempotent-hook-merge",
+          "baseline": 0.9166666666666667,
+          "candidate": 0.9166666666666667,
+          "diff": 0.0
+        },
+        {
+          "target_file": "no-sudo-atomic-lock",
+          "baseline": 0.9285714285714286,
+          "candidate": 0.9285714285714286,
+          "diff": 0.0
+        },
+        {
+          "target_file": "proxy-airgap-checksum",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        }
+      ],
+      "mean_diff": 1.850371707708594e-17,
+      "sd": 0.052704627669472974,
+      "se": 0.021516574145596757,
+      "ci_low": -0.05531911212832925,
+      "ci_high": 0.05531911212832929,
+      "regression_confirmed": false,
+      "bootstrap_ci_low": -0.04166666666666663,
+      "bootstrap_ci_high": 0.041666666666666685,
+      "sign_test_p": 1.0,
+      "effect_size_dz": 3.5108334685767017e-16,
+      "documents_won": 1,
+      "documents_lost": 1,
+      "documents_tied": 4,
+      "passes_legacy_count_rule": true,
+      "n_for_delta": 6,
+      "source": "endtask",
+      "metric": "pass_rate",
+      "baseline_config": "ancestor",
+      "candidate_config": "current",
+      "warnings": []
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "uses sshpass",
+      "ok": true
+    },
+    {
+      "name": "sshpass in env mode (-e), not -p on the command line",
+      "ok": true
+    },
+    {
+      "name": "SSHPASS wired from DEPLOY_PASS",
+      "ok": true
+    },
+    {
+      "name": "ConnectTimeout set (bounded wait)",
+      "ok": true
+    },
+    {
+      "name": "StrictHostKeyChecking=accept-new",
+      "ok": true
+    },
+    {
+      "name": "password-auth options present (PreferredAuthentications=password + PubkeyAuthentication=no)",
+      "ok": true
+    },
+    {
+      "name": "no BatchMode=yes (it disables password prompting entirely, breaking sshpass)",
+      "ok": true
+    },
+    {
+      "name": "no ssh -p <password> anti-pattern (-p is the PORT flag, not a password flag)",
+      "ok": true
+    }
+  ]
+}

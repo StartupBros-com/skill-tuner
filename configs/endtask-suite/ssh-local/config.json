@@ -1,0 +1,39 @@
+{
+  "model": "claude-sonnet-5",
+  "trials": 2,
+  "conditions": {
+    "ancestor": "ancestor.md",
+    "current": "/home/will/dotfiles/claude/skills-local/ssh-local/SKILL.md"
+  },
+  "baseline_condition": "ancestor",
+  "cases": [
+    {
+      "id": "password-env-basic",
+      "prompt": "Write the exact non-interactive shell command an unattended agent should run to SSH into a password-only host at 203.0.113.50 as user \"svc\" and execute `uptime`. There is no SSH key configured for this account \u2014 password auth is the only option. The password is available in the shell variable DEPLOY_PASS. The command must not hang if the host is slow or unreachable, must never prompt interactively under any circumstance, and must not expose the password to anyone running `ps` on the box. Output just the command, no explanation needed."
+    },
+    {
+      "id": "mac-mini-reachability",
+      "prompt": "Before kicking off a longer job, you need a fast, non-interactive reachability check against this machine's known mac-mini host to confirm it's up right now. Use this machine's documented host inventory and its agent-safe password-auth pattern \u2014 the mac-mini's password lives in the secret store, reference it via the shell variable MACMINI_PW. Give the single command to run."
+    },
+    {
+      "id": "scp-password-copy",
+      "prompt": "Copy the local file ./report.csv to /home/ops/incoming/ on a password-only host at 198.51.100.9 as user \"ops\", non-interactively, from an unattended script. The password is in the env var OPS_PW. No SSH key exists for this account. Give the exact command(s)."
+    },
+    {
+      "id": "config-include-alias-resolution",
+      "prompt": "This machine's ~/.ssh/config is just a stub containing `Include config.d/*.conf`; the real host definitions (HostName, User, Port, IdentityFile) for an alias called \"stagingbox\" live somewhere inside those included files. Without opening or grepping through every file by hand, and without actually connecting to the host, give the single command that shows exactly what ssh would resolve for \"stagingbox\"."
+    },
+    {
+      "id": "first-connect-key-auth",
+      "prompt": "An automation script must SSH, for the very first time, into a freshly provisioned box at 198.51.100.20 (its host key is not yet in ~/.ssh/known_hosts) as user \"deployer\" using the private key ~/.ssh/deploy_key, and run `cat /etc/os-release`. It must not hang waiting on a yes/no host-key prompt, but it also must not blindly disable host-key verification altogether (that would silently accept a spoofed host on every future connection too). Give the exact command."
+    },
+    {
+      "id": "cron-password-no-tty",
+      "prompt": "This exact command will run from cron (no controlling terminal; stdin is whatever cron happens to give it, which may not be closed). It connects over password auth (no key configured) to a host at 203.0.113.80 as user \"batch\", with the password in env var BATCH_PW, and runs `/opt/scripts/nightly.sh`. Besides the normal non-interactive ssh flags, add whatever extra precaution guarantees this can never block waiting on input, and give the full command line."
+    },
+    {
+      "id": "restricted-deploy-key-setup",
+      "prompt": "Set up a brand-new, passphrase-free Ed25519 key dedicated to an automation account (no human will ever type a passphrase for it), install the public key on remote host 203.0.113.99 for user \"runner\" restricted so that key can ONLY ever run /usr/local/bin/backup.sh \u2014 even if someone connects with it interactively and tries something else \u2014 and then give the exact non-interactive command that verifies the key works. Give every command needed, in order."
+    }
+  ]
+}

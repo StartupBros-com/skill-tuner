@@ -1,0 +1,21 @@
+{
+  "pass_rate": 0.75,
+  "expectations": [
+    {
+      "name": "identifies this as an IP-flag/rate-limit situation",
+      "ok": true
+    },
+    {
+      "name": "explicitly says to stop rather than auto-retry",
+      "ok": false
+    },
+    {
+      "name": "does not propose a retry loop",
+      "ok": true
+    },
+    {
+      "name": "does not silently fall back to Whisper audio transcription",
+      "ok": true
+    }
+  ]
+}

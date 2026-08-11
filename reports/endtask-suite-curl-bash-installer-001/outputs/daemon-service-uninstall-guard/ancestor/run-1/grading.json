@@ -1,0 +1,29 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "bash -n parses",
+      "ok": true
+    },
+    {
+      "name": "fail-safe prelude: set -euo pipefail",
+      "ok": true
+    },
+    {
+      "name": "trap ... EXIT present",
+      "ok": true
+    },
+    {
+      "name": "service manager commands present (systemctl or launchctl)",
+      "ok": true
+    },
+    {
+      "name": "uninstall path present",
+      "ok": true
+    },
+    {
+      "name": "no unguarded call to an undefined uninstall/service helper (guard class)",
+      "ok": true
+    }
+  ]
+}

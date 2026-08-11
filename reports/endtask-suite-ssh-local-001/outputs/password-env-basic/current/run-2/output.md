@@ -1,0 +1,1 @@
+SSHPASS="$DEPLOY_PASS" sshpass -e ssh -o BatchMode=no -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o PreferredAuthentications=password -o PubkeyAuthentication=no svc@203.0.113.50 'uptime'

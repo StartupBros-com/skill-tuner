@@ -1,0 +1,160 @@
+{
+  "manifest": {
+    "run_id": "endtask-suite-youtube-transcript-001",
+    "started_at": "2026-08-11T05:02:26Z",
+    "finished_at": "2026-08-11T05:05:21Z",
+    "cli_version": "2.1.224",
+    "tool_version": "0.8.1",
+    "model_pin": "claude-sonnet-5",
+    "resolved_models": [],
+    "adapter_shape": "claude-p-user-message",
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/outclass-campaign/configs/endtask-suite/youtube-transcript/ancestor.md",
+        "sha256": "sha256:60de363d7df25564a029680e3ca5d2a4382af93b6f2743ca3b5e70d1dbe22a93",
+        "source": "worktree",
+        "git_commit": "f9061184019ae15972d811c419aab0bd037b19c7",
+        "git_path": "configs/endtask-suite/youtube-transcript/ancestor.md",
+        "dirty": true,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/youtube-transcript/SKILL.md",
+        "sha256": "sha256:5f8fed810347d42fd434320ca19706bd4008f46fad5559df9ed7160780a04fdc",
+        "source": "worktree",
+        "git_commit": "50cc5be25fa30ae491674b79fda03606f01e90b6",
+        "git_path": "claude/skills-local/youtube-transcript/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "endtask"
+  },
+  "endtask": {
+    "delta": 0.1,
+    "baseline": "ancestor",
+    "candidate": "current",
+    "halted_on_budget": false,
+    "cases_scored": 7,
+    "per_case": [
+      {
+        "case": "explicit-output-dir",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "non-english-list-subs-first",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "nonsensical-cwd-root",
+        "baseline": 1.0,
+        "candidate": 1.0
+      },
+      {
+        "case": "rate-limit-429-stop",
+        "baseline": 1.0,
+        "candidate": 0.875
+      },
+      {
+        "case": "short-clip-print-text",
+        "baseline": 0.8,
+        "candidate": 0.9
+      },
+      {
+        "case": "very-long-transcript-path-only",
+        "baseline": 0.9,
+        "candidate": 0.8
+      },
+      {
+        "case": "yt-dlp-invocation-correctness",
+        "baseline": 1.0,
+        "candidate": 1.0
+      }
+    ],
+    "verdict": {
+      "verdict": "not_worse",
+      "delta": 0.1,
+      "documents": [
+        "explicit-output-dir",
+        "non-english-list-subs-first",
+        "nonsensical-cwd-root",
+        "rate-limit-429-stop",
+        "short-clip-print-text",
+        "very-long-transcript-path-only",
+        "yt-dlp-invocation-correctness"
+      ],
+      "excluded": [],
+      "n": 7,
+      "baseline_total": 6.7,
+      "candidate_total": 6.575,
+      "per_document": [
+        {
+          "target_file": "explicit-output-dir",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "non-english-list-subs-first",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "nonsensical-cwd-root",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "rate-limit-429-stop",
+          "baseline": 1.0,
+          "candidate": 0.875,
+          "diff": -0.125
+        },
+        {
+          "target_file": "short-clip-print-text",
+          "baseline": 0.8,
+          "candidate": 0.9,
+          "diff": 0.09999999999999998
+        },
+        {
+          "target_file": "very-long-transcript-path-only",
+          "baseline": 0.9,
+          "candidate": 0.8,
+          "diff": -0.09999999999999998
+        },
+        {
+          "target_file": "yt-dlp-invocation-correctness",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        }
+      ],
+      "mean_diff": -0.017857142857142856,
+      "sd": 0.0746021192090157,
+      "se": 0.028196950672207167,
+      "ci_low": -0.0868550811520338,
+      "ci_high": 0.051140795437748084,
+      "regression_confirmed": false,
+      "bootstrap_ci_low": -0.06785714285714285,
+      "bootstrap_ci_high": 0.028571428571428564,
+      "sign_test_p": 1.0,
+      "effect_size_dz": -0.2393650883711734,
+      "documents_won": 1,
+      "documents_lost": 2,
+      "documents_tied": 4,
+      "passes_legacy_count_rule": false,
+      "n_for_delta": 7,
+      "source": "endtask",
+      "metric": "pass_rate",
+      "baseline_config": "ancestor",
+      "candidate_config": "current",
+      "warnings": []
+    }
+  }
+}

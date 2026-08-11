@@ -1,0 +1,1 @@
+SSHPASS="$MACMINI_PW" sshpass -e ssh -o BatchMode=no -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o PreferredAuthentications=password -o PubkeyAuthentication=no mac-mini 'hostname'

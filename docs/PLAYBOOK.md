@@ -41,10 +41,15 @@ receipt is cited where it was.
    `max_findings` findings hit the cap, not the floor — treat it as "more
    remains" and re-probe it (the cross-judge recall pilot found 10
    endorsed defects past one at-cap doc's reported 5).
-6. **Behavioral doubt gets an `endtask` A/B.** Same briefs under both skill
-   versions, deterministic grader, paired verdict. The
-   compliance-via-repetition worry about deduplication was tested this
-   way and did not materialize (curl-bash A/B: exact tie).
+6. **Behavioral doubt gets an `endtask` A/B — and the standing suite runs
+   at every doctrine release.** Same briefs under both skill versions,
+   deterministic grader, paired verdict. The compliance-via-repetition
+   worry about deduplication was tested this way and did not materialize
+   (curl-bash A/B: exact tie) — but easy cases hit a ceiling, so
+   `configs/endtask-suite/` keeps hard-case entries (frozen ancestor vs
+   live current) for the most invasively tuned skills. Graders are
+   adversarially verified before their first paid run; that pass has
+   caught a grader biased toward the current version.
 7. **Doctrine changes go through the gate. All of them.** The campaign is
    two-for-two: every expert-endorsed doctrine addition ever gated —
    v3.1's four review-recommended sentences, and a live hot-patched rule —

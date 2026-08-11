@@ -1,0 +1,25 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "core yt-dlp capture flags present",
+      "ok": true
+    },
+    {
+      "name": "uses the real project cwd",
+      "ok": true
+    },
+    {
+      "name": "prints/displays the transcript text since the clip is short",
+      "ok": true
+    },
+    {
+      "name": "does not wrongly withhold text as path-only for a short clip",
+      "ok": true
+    },
+    {
+      "name": "includes json3-flatten logic to produce printable text",
+      "ok": true
+    }
+  ]
+}

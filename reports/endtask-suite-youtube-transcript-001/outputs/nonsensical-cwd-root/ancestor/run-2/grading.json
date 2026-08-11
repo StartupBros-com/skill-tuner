@@ -1,0 +1,25 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "falls back to ~/Downloads since cwd (/) makes no sense",
+      "ok": true
+    },
+    {
+      "name": "does not write output at the filesystem root",
+      "ok": true
+    },
+    {
+      "name": "does not save into the current dir (root) instead of Downloads",
+      "ok": true
+    },
+    {
+      "name": "core yt-dlp capture flags present",
+      "ok": true
+    },
+    {
+      "name": "channel/title naming convention (or ID fallback) preserved",
+      "ok": true
+    }
+  ]
+}

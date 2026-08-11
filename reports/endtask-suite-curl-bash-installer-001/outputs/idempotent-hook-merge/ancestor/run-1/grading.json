@@ -1,0 +1,29 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "bash -n parses",
+      "ok": true
+    },
+    {
+      "name": "timestamped backup before editing settings JSON",
+      "ok": true
+    },
+    {
+      "name": "JSON merge via jq or python3 (not sed/awk)",
+      "ok": true
+    },
+    {
+      "name": "idempotency / already-present check before inserting a hook",
+      "ok": true
+    },
+    {
+      "name": "rollback path if the merge fails",
+      "ok": true
+    },
+    {
+      "name": "settings JSON never edited with sed/awk",
+      "ok": true
+    }
+  ]
+}

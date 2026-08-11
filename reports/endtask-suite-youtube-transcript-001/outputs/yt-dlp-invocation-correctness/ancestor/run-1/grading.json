@@ -1,0 +1,33 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "invokes yt-dlp",
+      "ok": true
+    },
+    {
+      "name": "uses --skip-download (captions only, no video)",
+      "ok": true
+    },
+    {
+      "name": "requests both manual and auto subs",
+      "ok": true
+    },
+    {
+      "name": "uses json3 sub format (not vtt/srt)",
+      "ok": true
+    },
+    {
+      "name": "scopes sub language with --sub-langs",
+      "ok": true
+    },
+    {
+      "name": "no third-party/DeepAPI transcript call",
+      "ok": true
+    },
+    {
+      "name": "channel/title naming convention present",
+      "ok": true
+    }
+  ]
+}

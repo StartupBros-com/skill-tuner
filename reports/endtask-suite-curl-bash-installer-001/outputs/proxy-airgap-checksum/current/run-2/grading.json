@@ -1,0 +1,29 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "bash -n parses",
+      "ok": true
+    },
+    {
+      "name": "proxy array built from HTTPS_PROXY/HTTP_PROXY",
+      "ok": true
+    },
+    {
+      "name": "proxy honored on every curl invocation",
+      "ok": true
+    },
+    {
+      "name": "--offline flag present for airgapped installs",
+      "ok": true
+    },
+    {
+      "name": "sha256 checksum performed (sha256sum or shasum)",
+      "ok": true
+    },
+    {
+      "name": "checksum skip requires an explicit opt-out flag",
+      "ok": true
+    }
+  ]
+}

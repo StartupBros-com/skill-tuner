@@ -1,0 +1,1 @@
+ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy_key deployer@198.51.100.20 'cat /etc/os-release'

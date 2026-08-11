@@ -1,0 +1,37 @@
+{
+  "pass_rate": 1.0,
+  "expectations": [
+    {
+      "name": "sshpass in env mode (-e)",
+      "ok": true
+    },
+    {
+      "name": "SSHPASS wired from BATCH_PW",
+      "ok": true
+    },
+    {
+      "name": "StrictHostKeyChecking=accept-new",
+      "ok": true
+    },
+    {
+      "name": "password-auth options present (PreferredAuthentications=password + PubkeyAuthentication=no)",
+      "ok": true
+    },
+    {
+      "name": "ConnectTimeout set",
+      "ok": true
+    },
+    {
+      "name": "stdin explicitly closed/redirected (</dev/null) so it can never block under cron",
+      "ok": true
+    },
+    {
+      "name": "no BatchMode=yes (breaks password auth)",
+      "ok": true
+    },
+    {
+      "name": "runs the requested remote command (/opt/scripts/nightly.sh)",
+      "ok": true
+    }
+  ]
+}
