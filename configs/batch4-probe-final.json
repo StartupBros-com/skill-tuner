@@ -1,0 +1,14 @@
+{
+  "model": "claude-sonnet-5",
+  "max_findings": 5,
+  "verify_trials": 3,
+  "target_files": [
+    "/home/will/dotfiles/claude/skills-local/goal-brief/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/google-safe-browsing/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/harness-vet/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/measure/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/youtube-transcript/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/simplify-and-refactor-code-isomorphically-local/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/design-drift/SKILL.md"
+  ]
+}
