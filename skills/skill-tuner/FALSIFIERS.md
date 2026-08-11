@@ -163,6 +163,20 @@ applied):
   **better** — bootstrap CI agrees, sign test alone would not resolve; a
   near-boundary win, published with the same calibration as the losses
   (`reports/swapgate6-summary.md`).
+- **v3 replication** (15 docs, 2026-08-10, post-tuning corpus,
+  system-prompt envelope): 34 vs 27, mean +0.467/doc, 95% CI
+  [−0.31, +1.25], **not_worse** — the near-boundary better did not survive
+  a corpus in which 51 defects (heavily v3's favorite duplication class)
+  had been fixed; direction held (`reports/rebank-sys-summary.md`).
+- **Cross-family judge audit** (2026-08-11): all 61 confirmed findings
+  from both replication legs re-adjudicated blind and adversarially by a
+  non-Claude frontier judge (gpt-5.6-sol). Survival 47% (v3) vs 48%
+  (ancestor), Fisher exact p = 1.000 — **no leg asymmetry**, so the
+  measured v3 advantage is not a claude-family judging artifact; the
+  paired re-verdict on surviving findings keeps v3's direction
+  (+0.200/doc, CI [−0.47, +0.87]). The recall direction found no family
+  blind spot beyond the probe's own `max_findings` cap, which does
+  truncate defect-dense docs (`experiments/cross-judge/README.md`).
 
 The incumbent in these gates was frozen from upstream on 2026-08-05 and
 includes upstream's 2026-07-23 rename/restructure and its last content

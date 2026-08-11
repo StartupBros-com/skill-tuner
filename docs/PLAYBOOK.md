@@ -37,7 +37,10 @@ receipt is cited where it was.
    genuine defects per pass on almost any document — that is its value on
    fresh corpora and its stopping problem on tuned ones. Stop on a clean
    pass or on findings disjoint from every earlier pass; report residuals
-   (one loop ran 8 passes learning this).
+   (one loop ran 8 passes learning this). A doc that returns exactly
+   `max_findings` findings hit the cap, not the floor — treat it as "more
+   remains" and re-probe it (the cross-judge recall pilot found 10
+   endorsed defects past one at-cap doc's reported 5).
 6. **Behavioral doubt gets an `endtask` A/B.** Same briefs under both skill
    versions, deterministic grader, paired verdict. The
    compliance-via-repetition worry about deduplication was tested this
