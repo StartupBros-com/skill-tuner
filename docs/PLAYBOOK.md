@@ -1,10 +1,11 @@
 # The campaign playbook
 
 How to run a full measured skill-improvement campaign with this tool —
-distilled from the August 2026 campaign that tuned 14 production skills,
-gated three doctrine candidates (shipping one, refusing two), and produced
-every receipt in `reports/`. Each rule below was paid for; the receipt is
-cited where it was.
+distilled from the August 2026 campaign that fixed 96 verified defects
+across four batches (covering every skill in the operator's canonical
+corpus), gated three doctrine candidates (shipping one, refusing two), and
+produced every receipt in `reports/`. Each rule below was paid for; the
+receipt is cited where it was.
 
 ## The loop
 
@@ -18,9 +19,14 @@ cited where it was.
    sentence, and check environment claims on disk first (the panel
    verifies text, not filesystems — it confirmed a false path claim
    twice before this rule existed).
-3. **Land canonical-first.** Edit where git owns the truth (dotfiles/repo)
-   and let syncs converge outward. The batch-2 campaign edited live copies
-   first and lost hours to a background sync reverting them mid-run.
+3. **Land canonical-first — and never point a fixer fleet at live paths.**
+   Edit where git owns the truth (dotfiles/repo) and let syncs converge
+   outward. Concretely: copy targets into sync-safe scratch, fleet edits the
+   scratch copies, land via PR, then converge live from merged canonical.
+   This rule existed in its weaker "edit canonical first" form after batch 2
+   and the batch-4 fleet still lost 5 of 6 edits — it targeted live
+   `~/.claude/skills/` paths and a background sync reverted them mid-run.
+   The race only closes when fleet prompts never contain a live path.
 4. **Descriptions only land at routing parity.** Battery per
    `routing-parity`; candidates that keep every concrete trigger noun and
    cut only identity clauses pass (batch-3 battery: 6/6 land); candidates
