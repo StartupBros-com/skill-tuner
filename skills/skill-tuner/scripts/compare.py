@@ -290,7 +290,9 @@ def compare_probe_reports(
         raise ComparisonError(
             f"runs used different adapter shapes ({base_shape} vs {cand_shape}); "
             "the model reads the same doctrine differently across prompt "
-            "envelopes, so the difference would measure the envelope, not the doctrines"
+            "envelopes, so the difference would measure the envelope, not the doctrines "
+            "(runs from before v0.8.2 carried the caller's CLAUDE.md and memory in the "
+            "envelope; re-run the older side under the current runner)"
         )
 
     base_cli = _manifest_field(baseline, "cli_version")

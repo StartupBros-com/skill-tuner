@@ -82,7 +82,7 @@ class DoctrineInSystemTest(unittest.TestCase):
                 self.assertNotIn("THE-DOCTRINE-SENTINEL", prompt)
             # The manifest records the new shape.
             report = json.loads(Path(result["report_json"]).read_text())
-            self.assertEqual(provenance.ADAPTER_SHAPE_DOCTRINE_SYSTEM,
+            self.assertEqual(provenance.ADAPTER_SHAPE_DOCTRINE_SYSTEM_ISOLATED,
                              report["manifest"]["adapter_shape"])
 
     def test_doctrine_in_system_without_adapter_refuses(self):

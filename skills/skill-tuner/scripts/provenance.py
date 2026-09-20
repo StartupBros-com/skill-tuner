@@ -267,6 +267,14 @@ ADAPTER_SHAPE_USER_MESSAGE = "claude-p-user-message"
 # instructions stay in the user message. Adopted at the v0.6.0 re-baseline
 # boundary per docs/COSTS.md's rule.
 ADAPTER_SHAPE_DOCTRINE_SYSTEM = "claude-p-doctrine-system-prompt"
+# From v0.8.2 every call runs with CLAUDE_CODE_DISABLE_CLAUDE_MDS=1, so the
+# model no longer sees the caller's CLAUDE.md, project CLAUDE.md or auto
+# memory. That is a different envelope (the same document was previously
+# judged with the host's doctrine in context), so it is a re-baseline
+# boundary per docs/COSTS.md's rule: new runs record these shapes and
+# `compare` refuses to pair them with the two shapes above.
+ADAPTER_SHAPE_USER_MESSAGE_ISOLATED = "claude-p-user-message-isolated"
+ADAPTER_SHAPE_DOCTRINE_SYSTEM_ISOLATED = "claude-p-doctrine-system-prompt-isolated"
 
 
 def build_manifest(
@@ -279,7 +287,7 @@ def build_manifest(
     cli_version: str | None,
     resolved_models: Sequence[str] = (),
     tool_version: str | None = None,
-    adapter_shape: str = ADAPTER_SHAPE_USER_MESSAGE,
+    adapter_shape: str = ADAPTER_SHAPE_USER_MESSAGE_ISOLATED,
     extra: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Assemble the block that makes a report self-describing.

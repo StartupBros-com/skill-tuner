@@ -70,7 +70,7 @@ Two steps, from inside Claude Code:
 /plugin install skill-tuner@hov
 ```
 
-The runner shells out to the `claude` CLI, so that needs to be installed too.
+The runner shells out to the `claude` CLI, so that needs to be installed too. Every call runs with `CLAUDE_CODE_DISABLE_CLAUDE_MDS=1`, so your CLAUDE.md, project instructions and auto-memory never reach an arm (before v0.8.2 they did: a confound, and about ten times the per-call cost, measured in [`docs/COSTS.md`](docs/COSTS.md)). Your login is untouched, which is why the runner does not use `--bare`.
 
 ## Using it
 
