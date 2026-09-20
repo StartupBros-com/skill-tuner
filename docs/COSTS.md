@@ -105,6 +105,31 @@ When the headline claim matters, run the full leg; the gate's fixed-n
 verdict on collected pairs is always printed beside the sequential one and
 remains the verdict of record.
 
+## Arms no longer carry the caller's CLAUDE.md and memory (v0.8.2 re-baseline boundary)
+
+Measured 2026-09-20 (Claude Code 2.1.278, Sonnet, three calls per condition,
+cwd with a CLAUDE.md and an auto-memory index): with the adapter's flags as
+they were, the agent under test reported the host's memory index loaded every
+time and calls cost $0.0593, $0.0598 and $0.0283; the same calls with
+`CLAUDE_CODE_DISABLE_CLAUDE_MDS=1` reported nothing loaded and cost $0.0045,
+$0.0041, $0.0005 (bare) and $0.0062 (env switch alone). `--setting-sources ""`
+selects settings files only; it never governed CLAUDE.md, project instructions
+or auto memory, so every probe, routing and endtask call before v0.8.2 judged
+its target with the caller's doctrine in context. That is a confound (the
+host's rules are not the document under test) and roughly an order of
+magnitude of per-call cost.
+
+From v0.8.2 every adapter call runs with `CLAUDE_CODE_DISABLE_CLAUDE_MDS=1`.
+`--bare` was rejected: it strips the same files, but the CLI reads no OAuth
+credentials or keychain in bare mode, so it would break subscription-auth
+adopters. Per the rule above this is an envelope change: new manifests record
+`claude-p-user-message-isolated` / `claude-p-doctrine-system-prompt-isolated`,
+and `compare` refuses to pair them with earlier shapes. Every figure in the
+sections above was measured with the caller's files loaded and is stale as a
+per-call cost until a re-baseline leg is run under the new shape; the
+direction of each finding (caching, the envelope trade, sequential gating)
+does not depend on it.
+
 ## What to do meanwhile
 
 - Keep `verify_trials: 3`. Caching makes the panel nearly free and it is the

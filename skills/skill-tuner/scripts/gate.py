@@ -195,9 +195,9 @@ def run_gate(
         finished_at=provenance.utc_now(),
         cli_version=provenance.cli_version(),
         tool_version=provenance.tool_version(),
-        adapter_shape=(provenance.ADAPTER_SHAPE_DOCTRINE_SYSTEM
+        adapter_shape=(provenance.ADAPTER_SHAPE_DOCTRINE_SYSTEM_ISOLATED
                        if doctrine_in_system
-                       else provenance.ADAPTER_SHAPE_USER_MESSAGE),
+                       else provenance.ADAPTER_SHAPE_USER_MESSAGE_ISOLATED),
         extra={"eval": "gate", "pin": probe_config.pin},
     )
 

@@ -64,6 +64,10 @@ receipt is cited where it was.
 - `--doctrine-system` saves ~6–11% per leg (not the microbenchmark's
   25–30% — cache TTL expires between probe calls). Opt-in;
   `adapter_shape` keeps cross-envelope runs from ever being compared.
+- Since v0.8.2 every arm runs with `CLAUDE_CODE_DISABLE_CLAUDE_MDS=1`
+  (shapes `*-isolated`): the caller's CLAUDE.md and memory are out of the
+  envelope. Runs from before it are a different shape; `compare` refuses
+  the pair, so re-run the older side rather than mixing.
 - Single-target probe: ~$0.30–0.70. Routing battery: ~$0.05/call, ~$2–5.
   Endtask generation through `call_adapter`: ~$0.04–0.15/call — an ad-hoc
   `claude -p` without the guarded envelope runs agentically at ~10x.

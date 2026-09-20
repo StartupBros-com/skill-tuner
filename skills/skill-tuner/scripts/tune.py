@@ -115,6 +115,28 @@ def detect_auth_mode(env: Mapping[str, str] | None = None) -> str:
 # --------------------------------------------------------------------------
 
 
+# Every arm runs with the caller's instruction files stripped. Without this,
+# `claude -p` loads the user's CLAUDE.md, the project's CLAUDE.md and the
+# auto-memory index into every probe, routing and endtask call: a confound
+# (the host's doctrine is in the judged context, and it is not the document
+# under test) measured at roughly an order of magnitude of per-call cost
+# (three calls each way on 2026-09-20: $0.028-0.060 with them loaded,
+# $0.0005-0.0062 without). `--bare` would strip the same files but the CLI
+# never reads OAuth credentials or the keychain in bare mode, so it would
+# break every subscription-auth adopter; the documented env switch strips
+# the files and leaves auth alone. Runs made with it record an `-isolated`
+# adapter_shape, and compare refuses to pair them with earlier runs.
+ADAPTER_ENV_OVERRIDES: dict[str, str] = {"CLAUDE_CODE_DISABLE_CLAUDE_MDS": "1"}
+
+
+def adapter_env(base: Mapping[str, str] | None = None) -> dict[str, str]:
+    """The environment every adapter call runs under: the caller's, plus the
+    isolation overrides. Pure so tests can inspect it without a subprocess."""
+    merged = dict(os.environ if base is None else base)
+    merged.update(ADAPTER_ENV_OVERRIDES)
+    return merged
+
+
 def build_adapter_command(
     prompt: str, model: str, system_prompt: str | None = None
 ) -> list[str]:
@@ -162,7 +184,9 @@ def call_adapter(
 
     for attempt in range(retries + 1):
         try:
-            completed = run(command, capture_output=True, text=True, check=False)
+            completed = run(
+                command, capture_output=True, text=True, check=False, env=adapter_env()
+            )
         except OSError as exc:
             last_error = exc
         else:

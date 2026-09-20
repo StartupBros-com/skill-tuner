@@ -490,3 +490,32 @@ class ManifestGuardTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AdapterIsolationTest(unittest.TestCase):
+    """Every arm runs with the caller's instruction files stripped, without
+    touching auth (v0.8.2; see docs/COSTS.md)."""
+
+    def test_adapter_env_strips_instruction_files_and_keeps_the_callers_env(self):
+        env = tune.adapter_env({"ANTHROPIC_API_KEY": "k", "PATH": "/bin"})
+        self.assertEqual("1", env["CLAUDE_CODE_DISABLE_CLAUDE_MDS"])
+        self.assertEqual("k", env["ANTHROPIC_API_KEY"])
+        self.assertEqual("/bin", env["PATH"])
+
+    def test_call_adapter_passes_the_isolation_env_to_the_subprocess(self):
+        seen: dict = {}
+
+        def fake_run(command, **kwargs):
+            seen.update(kwargs)
+            return subprocess.CompletedProcess(
+                command, 0, stdout=json.dumps({"result": "ok", "total_cost_usd": 0}), stderr=""
+            )
+
+        tune.call_adapter("prompt", "m", retries=0, run=fake_run, backoff=lambda d: None)
+        self.assertEqual("1", seen["env"]["CLAUDE_CODE_DISABLE_CLAUDE_MDS"])
+
+    def test_adapter_command_never_uses_bare_mode(self):
+        # --bare would strip the same files, but the CLI reads no OAuth
+        # credentials or keychain in bare mode, so it would break every
+        # subscription-auth adopter. The env switch is the deliberate choice.
+        self.assertNotIn("--bare", tune.build_adapter_command("p", "m"))
