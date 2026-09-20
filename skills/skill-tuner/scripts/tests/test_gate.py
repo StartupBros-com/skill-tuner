@@ -19,6 +19,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 import compare  # noqa: E402
 import gate  # noqa: E402
+import provenance  # noqa: E402
 import tune  # noqa: E402
 
 
@@ -150,6 +151,9 @@ class RunGateTest(unittest.TestCase):
             report = json.loads(Path(result["report_json"]).read_text())
             self.assertEqual("worse", report["gate"]["sequential_verdict"])
             self.assertEqual(3, len(report["gate"]["trace"]))
+            # The gate's default envelope is the isolated user-message shape.
+            self.assertEqual(provenance.ADAPTER_SHAPE_USER_MESSAGE_ISOLATED,
+                             report["manifest"]["adapter_shape"])
 
     def test_target_missing_from_baseline_refuses_before_spend(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -1031,6 +1031,23 @@ def _cmd_endtask(args: argparse.Namespace) -> int:
     return 0 if result["verdict"] in ("better", "not_worse") else 1
 
 
+# The compare subcommand's external sources, in precedence order. Each is a
+# flag on the subcommand and at most one may be set; the mutual-exclusion
+# check and the compare log's `source` field both read this table, so a new
+# source is one row here rather than an edit in two chains.
+COMPARE_SOURCES: tuple[tuple[str, str], ...] = (
+    ("plugin_eval", "plugin-eval"),
+    ("paired_json", "paired-json"),
+    ("skill_creator", "skill-creator"),
+)
+
+
+def _selected_compare_sources(args: argparse.Namespace) -> list[str]:
+    """The source labels whose flag is set on this invocation, in table order;
+    empty means the default probe-report source."""
+    return [label for attr, label in COMPARE_SOURCES if getattr(args, attr, None)]
+
+
 def _cmd_compare(args: argparse.Namespace) -> int:
     """Judge one probe run against another, paired by document.
 
@@ -1039,11 +1056,9 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     """
     import compare as compare_mod
 
-    if args.paired_json and args.skill_creator is not None:
-        print("--paired-json and --skill-creator are different sources; pick one")
-        return 2
-    if args.plugin_eval and (args.paired_json or args.skill_creator is not None):
-        print("--plugin-eval, --paired-json and --skill-creator are different sources; pick one")
+    selected = _selected_compare_sources(args)
+    if len(selected) > 1:
+        print(" and ".join(f"--{label}" for label in selected) + " are different sources; pick one")
         return 2
     if args.plugin_eval:
         import plugineval
@@ -1170,10 +1185,7 @@ def _log_compare_invocation(args: argparse.Namespace, result: Mapping[str, Any])
         "delta": args.delta,
         "metric": getattr(args, "metric", None),
         "exclude": list(args.exclude or ()),
-        "source": ("plugin-eval" if getattr(args, "plugin_eval", False)
-                   else "paired-json" if getattr(args, "paired_json", False)
-                   else "skill-creator" if getattr(args, "skill_creator", None)
-                   else "probe"),
+        "source": (_selected_compare_sources(args) or ["probe"])[0],
         "verdict": result["verdict"],
     })
     if prior:

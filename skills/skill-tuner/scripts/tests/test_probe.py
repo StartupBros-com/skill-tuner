@@ -41,6 +41,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 import probe  # noqa: E402
+import provenance  # noqa: E402
 import tune  # noqa: E402
 
 
@@ -933,6 +934,9 @@ class ProbeManifestTest(unittest.TestCase):
             self.assertEqual(["claude-sonnet-5-x"], manifest["resolved_models"])
             self.assertTrue(manifest["started_at"])
             self.assertTrue(manifest["finished_at"])
+            # The default envelope is the isolated user-message shape (v0.8.2):
+            # the doctrine-in-system path is asserted in test_envelope.py.
+            self.assertEqual(provenance.ADAPTER_SHAPE_USER_MESSAGE_ISOLATED, manifest["adapter_shape"])
 
             roles = {item["role"]: item for item in manifest["inputs"]}
             self.assertEqual({"doctrine", "target"}, set(roles))

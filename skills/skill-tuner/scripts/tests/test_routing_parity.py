@@ -152,6 +152,89 @@ def _regressing_router_adapter(prompt: str, model: str) -> tune.AdapterResult:
     return _correct_router_adapter(prompt, model)
 
 
+_ALPHA_MARKERS = (
+    "quarterly alpha report",
+    "alpha summary built",
+    "condense these alpha figures",
+)
+
+
+class NeutralIdsTest(unittest.TestCase):
+    """``neutral_ids: true`` hides every skill id from the router: the listing
+    shows ``skill-<n>``, the expected answers and the scoring follow the alias,
+    shared-pool cases are untouched, and the manifest records the map. Added
+    after review of v0.9.0, where the aliasing block shipped with no test."""
+
+    def test_neutral_ids_hides_real_ids_from_the_router_and_still_scores(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            target_path = _write_skill(
+                base,
+                "alpha",
+                "Alpha handles alpha reporting and alpha summaries end to end.",
+                "This skill turns raw alpha numbers into alpha reports and alpha summaries.",
+            )
+            distractors = _write_distractors(base)
+            config = _base_config(base, target_path, distractors, neutral_ids=True)
+            run_dir = base / "run"
+            prompts: list[str] = []
+
+            def neutral_router(prompt: str, model: str) -> tune.AdapterResult:
+                prompts.append(prompt)
+                if any(marker in prompt for marker in _ALPHA_MARKERS):
+                    return tune.AdapterResult(text="skill-1", cost_usd=0.0, raw={})
+                return tune.AdapterResult(text="none", cost_usd=0.0, raw={})
+
+            result = routing_parity.run_routing_parity_eval(
+                config, adapter=neutral_router, run_dir=run_dir, base_dir=base
+            )
+
+            self.assertTrue(prompts)
+            for prompt in prompts:
+                # The listing line is `- <id>: <description>`; no real id may
+                # appear in that position, and the alias must.
+                self.assertNotIn("- alpha:", prompt)
+                self.assertIn("- skill-1:", prompt)
+                for index in range(5):
+                    self.assertNotIn(f"- distractor-{index}:", prompt)
+            self.assertEqual("land", result["verdict"])
+            self.assertEqual([], result["failing_case_ids"])
+            self.assertEqual(1.0, result["scores"]["original"]["accuracy"])
+            self.assertEqual(1.0, result["scores"]["pruned"]["accuracy"])
+
+            report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+            alias = report["manifest"]["neutral_ids"]
+            self.assertEqual("skill-1", alias["alpha"])
+            self.assertEqual(6, len(alias))
+            self.assertEqual({f"skill-{n}" for n in range(1, 7)}, set(alias.values()))
+
+    def test_without_neutral_ids_the_router_sees_the_real_ids(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            target_path = _write_skill(
+                base,
+                "alpha",
+                "Alpha handles alpha reporting and alpha summaries end to end.",
+                "This skill turns raw alpha numbers into alpha reports and alpha summaries.",
+            )
+            distractors = _write_distractors(base)
+            config = _base_config(base, target_path, distractors)
+            prompts: list[str] = []
+
+            def recording_router(prompt: str, model: str) -> tune.AdapterResult:
+                prompts.append(prompt)
+                return _correct_router_adapter(prompt, model)
+
+            result = routing_parity.run_routing_parity_eval(
+                config, adapter=recording_router, run_dir=base / "run", base_dir=base
+            )
+
+            self.assertEqual("land", result["verdict"])
+            self.assertTrue(all("- alpha:" in prompt for prompt in prompts))
+            report = json.loads((base / "run" / "report.json").read_text(encoding="utf-8"))
+            self.assertIsNone(report["manifest"]["neutral_ids"])
+
+
 # --------------------------------------------------------------------------
 # Scenario 1 (AE1): equal-or-better -> land verdict, both scores recorded.
 # --------------------------------------------------------------------------

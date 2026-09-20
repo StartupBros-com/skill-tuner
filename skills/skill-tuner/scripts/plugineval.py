@@ -24,17 +24,22 @@ So this module extracts and ``compare.compare_paired`` decides. Two pairings:
 
 Integration is at the file boundary, deliberately, as with skillcreator.py:
 the document is read as data, unknown fields are ignored, and nothing here
-depends on the CLI's internals. Two deliberate refusals: a ``partial: true``
+depends on the CLI's internals. Deliberate refusals: a ``partial: true``
 document (cost ceiling, interruption or auth failure cut the suite short) is
-not a series, and ``tracePath`` is never read (it points at a temp directory
-the runner deletes unless ``--keep-temp`` was passed).
+not a series; a document whose ``aggregates.casesTotal`` disagrees with its
+case list did not finish either; a case with an errored run in the requested
+arm carries a degraded mean, not a score, so it is refused unless the caller
+excludes it; and two spellings of one result file are the same run, so the
+same-arm check cannot be bypassed with a relative path or a symlink.
+``tracePath`` is never read (it points at a temp directory the runner deletes
+unless ``--keep-temp`` was passed).
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 import compare
 
@@ -63,6 +68,13 @@ def load_result(path: Path) -> dict[str, Any]:
             f"{path}: the runner marked this document partial ({reason}); "
             "a suite that did not finish is not a paired series"
         )
+    declared = (data.get("aggregates") or {}).get("casesTotal")
+    if isinstance(declared, int) and not isinstance(declared, bool) and declared != len(data["cases"]):
+        raise PluginEvalError(
+            f"{path}: the document lists {len(data['cases'])} case(s) but its aggregates say "
+            f"casesTotal is {declared}; the suite did not finish or the file was edited, and "
+            "either way it is not a paired series"
+        )
     return data
 
 
@@ -77,13 +89,19 @@ def schema_warnings(path: Path, data: Mapping[str, Any]) -> list[str]:
     return []
 
 
-def arm_scores(data: Mapping[str, Any], arm: str, *, source: str = "") -> dict[str, float]:
+def arm_scores(
+    data: Mapping[str, Any], arm: str, *, source: str = "", exclude: Sequence[str] = ()
+) -> dict[str, float]:
     """The per-case series for one arm: ``aggregates.score`` for the with-arm,
     ``aggregates.scoreWithout`` for the without-arm. The with-arm mean is the
     runner's own case score; the without-arm field exists only when the run
     had a baseline arm (``--ablation with-without``, the default when a plugin
     resolves), so a single-arm run refuses here rather than pairing against
-    nothing."""
+    nothing. A case with an errored run in the requested arm is refused too:
+    the runner still averages it, and that mean is indistinguishable from a
+    genuine low score once it reaches the verdict. ``exclude`` names the cases
+    the caller has already chosen to drop from both sides, which is the
+    documented way past that refusal."""
     if arm not in ARMS:
         raise PluginEvalError(f"{source}: unknown arm {arm!r}; expected one of {', '.join(ARMS)}")
     key = "score" if arm == "with" else "scoreWithout"
@@ -94,6 +112,15 @@ def arm_scores(data: Mapping[str, Any], arm: str, *, source: str = "") -> dict[s
         value = aggregates.get(key)
         if not isinstance(name, str) or not name:
             raise PluginEvalError(f"{source}: a case has no name")
+        runs = (case.get("arms") or {}).get(arm) or []
+        errored = [run for run in runs if isinstance(run, dict) and run.get("error")]
+        if errored and not any(pattern and pattern in name for pattern in exclude):
+            first = str(errored[0].get("error"))[:120]
+            raise PluginEvalError(
+                f"{source}: case {name!r} has {len(errored)} errored run(s) in the {arm}-arm "
+                f"({first}); its mean is a degraded aggregate, not a score. Re-run the suite, "
+                f"or pass --exclude {name} to drop the case from both sides"
+            )
         if isinstance(value, bool) or not isinstance(value, (int, float)):
             if arm == "without":
                 raise PluginEvalError(
@@ -142,10 +169,14 @@ def compare_results(
     """Pair two arm series (from one or two result files) and decide."""
     base_path, base_arm = parse_ref(baseline_ref)
     cand_path, cand_arm = parse_ref(candidate_ref)
+    # Identity is the file on disk, not its spelling: a relative path, a
+    # `..` segment or a `latest` symlink naming the same run must reach the
+    # same-arm refusal below, not the two-runs branch.
+    same_file = base_path.resolve() == cand_path.resolve()
     base_doc = load_result(base_path)
-    cand_doc = load_result(cand_path) if cand_path != base_path else base_doc
+    cand_doc = base_doc if same_file else load_result(cand_path)
     warnings = schema_warnings(base_path, base_doc)
-    if cand_path != base_path:
+    if not same_file:
         warnings += schema_warnings(cand_path, cand_doc)
         base_cli, cand_cli = base_doc.get("claudeVersion"), cand_doc.get("claudeVersion")
         if base_cli and cand_cli and base_cli != cand_cli:
@@ -158,8 +189,8 @@ def compare_results(
             f"{base_path}: both sides name the {base_arm}-arm of the same run; "
             "pair @without against @with, or two different result files"
         )
-    baseline = arm_scores(base_doc, base_arm, source=f"{base_path}@{base_arm}")
-    candidate = arm_scores(cand_doc, cand_arm, source=f"{cand_path}@{cand_arm}")
+    baseline = arm_scores(base_doc, base_arm, source=f"{base_path}@{base_arm}", exclude=exclude)
+    candidate = arm_scores(cand_doc, cand_arm, source=f"{cand_path}@{cand_arm}", exclude=exclude)
     return compare.compare_paired(
         baseline,
         candidate,
@@ -168,6 +199,11 @@ def compare_results(
         warnings=warnings,
         extra={
             "source": "plugin-eval",
+            # The flat keys are what compare.render() prints in the text
+            # report's "(candidate vs baseline)" line; the dicts carry the
+            # richer description for JSON consumers.
+            "baseline_path": f"{base_path}@{base_arm}",
+            "candidate_path": f"{cand_path}@{cand_arm}",
             "baseline": _describe(base_path, base_arm, base_doc),
             "candidate": _describe(cand_path, cand_arm, cand_doc),
         },
