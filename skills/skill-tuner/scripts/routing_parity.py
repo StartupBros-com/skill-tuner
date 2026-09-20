@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import json
 import re
+import dataclasses
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
@@ -699,6 +700,23 @@ def run_routing_parity_eval(
     battery = build_battery(
         targets, config, adapter=adapter, model=model, base_dir=resolved_base_dir, read=read
     )
+    # A skill's id routes on its own: on 2026-09-20 a destroyed description
+    # still routed 3/3 through `claude plugin eval` until the name was
+    # neutralised. The battery shows `- {id}: {description}`, so a parity
+    # verdict can be name-carried. `neutral_ids: true` in the config replaces
+    # every id with skill-<n> in the listing, the expected answers and the
+    # scoring, so only the descriptions can route; the alias map lands in
+    # the manifest.
+    alias: dict[str, str] = {}
+    if config.get("neutral_ids"):
+        ordered = [t.id for t in targets] + [d.id for d in distractors]
+        alias = {real: f"skill-{n}" for n, real in enumerate(ordered, start=1)}
+        targets = [dataclasses.replace(t, id=alias[t.id]) for t in targets]
+        distractors = [dataclasses.replace(d, id=alias[d.id]) for d in distractors]
+        battery = [
+            dataclasses.replace(c, target_id=alias[c.target_id]) if c.target_id in alias else c
+            for c in battery
+        ]
     specs = build_router_trial_specs(battery, targets, distractors, trials_n)
 
     execute_result = tune.execute_battery(
@@ -738,7 +756,7 @@ def run_routing_parity_eval(
         finished_at=provenance.utc_now(),
         cli_version=provenance.cli_version(),
         tool_version=provenance.tool_version(),
-        extra={"eval": "routing-parity", "pin": pin},
+        extra={"eval": "routing-parity", "pin": pin, "neutral_ids": alias or None},
     )
 
     json_path, md_path = write_routing_parity_report(

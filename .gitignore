@@ -2,4 +2,5 @@ __pycache__/
 *.pyc
 .venv/
 reports/*/tmp/
+evals/results/
 .DS_Store

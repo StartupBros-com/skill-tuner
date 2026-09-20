@@ -1042,7 +1042,32 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     if args.paired_json and args.skill_creator is not None:
         print("--paired-json and --skill-creator are different sources; pick one")
         return 2
-    if args.paired_json:
+    if args.plugin_eval and (args.paired_json or args.skill_creator is not None):
+        print("--plugin-eval, --paired-json and --skill-creator are different sources; pick one")
+        return 2
+    if args.plugin_eval:
+        import plugineval
+
+        if args.metric is not None:
+            print("--metric is a grading.json concept; it does not apply to --plugin-eval")
+            return 2
+        if args.delta is None:
+            print(
+                "--delta is required with --plugin-eval: the series is a per-case "
+                "score in 0..1 (the runner's mean over its runs), and the margin "
+                "that matters is yours to state (e.g. 0.1)."
+            )
+            return 2
+        try:
+            result = plugineval.compare_results(
+                args.baseline, args.candidate,
+                delta=args.delta,
+                exclude=tuple(args.exclude or ()),
+            )
+        except (plugineval.PluginEvalError, compare_mod.ComparisonError) as exc:
+            print(f"cannot compare: {exc}")
+            return 2
+    elif args.paired_json:
         if args.metric is not None:
             print("--metric is a grading.json concept; it does not apply to --paired-json")
             return 2
@@ -1145,7 +1170,8 @@ def _log_compare_invocation(args: argparse.Namespace, result: Mapping[str, Any])
         "delta": args.delta,
         "metric": getattr(args, "metric", None),
         "exclude": list(args.exclude or ()),
-        "source": ("paired-json" if getattr(args, "paired_json", False)
+        "source": ("plugin-eval" if getattr(args, "plugin_eval", False)
+                   else "paired-json" if getattr(args, "paired_json", False)
                    else "skill-creator" if getattr(args, "skill_creator", None)
                    else "probe"),
         "verdict": result["verdict"],
@@ -1275,6 +1301,17 @@ def build_parser() -> argparse.ArgumentParser:
             "Read two flat {case: number} JSON files instead of this repo's "
             "probe reports. --baseline/--candidate then name the score files "
             "(any external tool with paired per-case scores can produce them)."
+        ),
+    )
+    compare_cmd.add_argument(
+        "--plugin-eval",
+        action="store_true",
+        help=(
+            "Read `claude plugin eval` aggregate-result.json documents instead of "
+            "this repo's probe reports. --baseline/--candidate then name result "
+            "files, each optionally suffixed @with or @without (default @with): "
+            "r.json@without vs r.json@with pairs the arms of one run; a.json vs "
+            "b.json pairs two runs of the same suite by case."
         ),
     )
     compare_cmd.add_argument(
