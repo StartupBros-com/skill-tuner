@@ -86,8 +86,11 @@ and clearly right, and report the rest as residuals.
 
 A reworded description is a routing change, and routing is the one thing here
 that can be measured properly on a single document. Build a battery config
-following `${CLAUDE_PLUGIN_ROOT}/configs/receipts-routing-001.json`, with the original description
-as `original` and yours as `pruned`, then:
+following `${CLAUDE_PLUGIN_ROOT}/configs/receipts-routing-001-neutral.json`, with the original
+description as `original` and yours as `pruned`, and keep its `"neutral_ids": true`: the
+battery lists each skill's id beside its description, and an id routes on its own, so with
+the id visible a parity verdict can be carried by the name rather than by the description
+you are testing (the doctrine's routing-parity rule records the measurement). Then:
 
 ```
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/skill-tuner/scripts/tune.py routing-parity \

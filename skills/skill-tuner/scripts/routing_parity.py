@@ -706,7 +706,10 @@ def run_routing_parity_eval(
     # verdict can be name-carried. `neutral_ids: true` in the config replaces
     # every id with skill-<n> in the listing, the expected answers and the
     # scoring, so only the descriptions can route; the alias map lands in
-    # the manifest.
+    # the manifest. The contract is blinding, not anonymity: the router never
+    # sees a real id, while the persisted report keeps the map and the real
+    # case ids on purpose, because the human reading the receipt needs to
+    # know which skill failed (decided 2026-09-20 after review, issue #55).
     alias: dict[str, str] = {}
     if config.get("neutral_ids"):
         ordered = [t.id for t in targets] + [d.id for d in distractors]
