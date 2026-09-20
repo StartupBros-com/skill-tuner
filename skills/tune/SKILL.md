@@ -54,6 +54,12 @@ Fix the defect, not the sentence containing it. A finding about a vague
 completion bound is asking for a bound that can be checked, not for the word
 "clearly" to be deleted.
 
+Before each edit, one question: would a competent agent with the current
+instructions still be expected to fail this way? If yes, there is a gap. If
+no, defer — the text already required the behavior. When nothing clears that
+bar, opening no change is the correct outcome, and the report says so per
+finding; a speculative change is worse than none.
+
 One check before acting: the skeptic panel verifies text against text — it
 cannot see the filesystem. A finding that asserts an environment fact (a
 path resolves, a file exists, a config value holds) needs that fact checked

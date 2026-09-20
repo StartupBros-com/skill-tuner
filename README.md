@@ -6,7 +6,7 @@ It does not help you write skills. Plenty of guides do that. What nothing does i
 
 ## The problem, with receipts
 
-Eval harnesses report deltas. Anthropic's own [skill-creator](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator) runs a proper experiment — eval cases, an isolated subagent per run, graded expectations, `with_skill` vs `without_skill` benchmarking — and `aggregate_benchmark.py` reports mean and stddev. Its improvement record stores a bare `grading_result: "won" | "lost" | "tie"` beside a pass rate.
+Eval harnesses report deltas. Anthropic's own [skill-creator](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator) runs a proper experiment — eval cases, an isolated subagent per run, graded expectations, `with_skill` vs `without_skill` benchmarking — and `aggregate_benchmark.py` reports mean and stddev. Its improvement record stores a bare `grading_result: "won" | "lost" | "tie"` beside a pass rate. Claude Code's own [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals) (v2.1.269, 2026-09) does the same for any plugin: three runs per case, a `meanDelta`, and a pass/fail against `--threshold` — no interval, no margin, and no way to compare two versions of the same plugin.
 
 **A threshold with no interval behind it cannot say *we could not tell*, so it answers every time — and on a noisy measurement most of those answers are luck.**
 
@@ -25,6 +25,16 @@ Two of three were wrong. The same rule produced both. That cost ~$30 and a day t
 ```
 tune.py compare --skill-creator <benchmark-dir> \
   --baseline without_skill --candidate with_skill --delta 0.05
+```
+
+A `claude plugin eval` run is read the same way, straight from its
+`aggregate-result.json` (the arms of one run, or two runs of the same suite
+by case):
+
+```
+tune.py compare --plugin-eval \
+  --baseline evals/results/<run>/aggregate-result.json@without \
+  --candidate evals/results/<run>/aggregate-result.json@with --delta 0.1
 ```
 
 The same verdict engine accepts any external paired series — two flat
@@ -55,7 +65,7 @@ mistake above.
 
 On that benchmark `with_skill` averages 0.550 against 0.533. A total comparison calls it a win. It is not distinguishable from zero, and you would need about 68 cases before it could be.
 
-Three things, none of which a first-party harness gives you:
+Three things, none of which a first-party harness gives you (skill-creator and `claude plugin eval` both stop at the delta):
 
 - **A verdict, not a delta** — paired by case, 95% interval, a non-inferiority margin *you* state, and four outcomes including `inconclusive`. A percentile bootstrap, an exact sign test, and a paired effect size print beside the t-interval, so a verdict leaning on a normality assumption is visible too. It prints what a bare comparison would have concluded next to its own, so the difference is visible rather than argued.
 - **Provenance** — every input content-hashed and git-pinned, model and CLI version recorded. `tune.py verify <run>` re-checks a finished run for **$0** and tells you what drifted. It caught a real input change within hours of being written.
@@ -88,11 +98,13 @@ For a one-off, without the loop:
 python3 skills/skill-tuner/scripts/tune.py probe --target path/to/SKILL.md --yes --budget-usd 3 --verify-trials 3
 ```
 
-## Works with skill-creator, not against it
+## Works with skill-creator and `claude plugin eval`, not against them
 
-skill-creator runs the experiment; skill-tuner decides what it means. Integration is at the **file** boundary — it reads `grading.json` / the benchmark tree and never imports their code, because their scripts have no API contract and the marketplace bumps plugin SHAs nightly.
+They run the experiment; skill-tuner decides what it means. Integration is at the **file** boundary — it reads `grading.json` / the benchmark tree, or `aggregate-result.json`, and never imports their code, because their scripts have no API contract and the marketplace bumps plugin SHAs nightly. `aggregate-result.json` is the friendlier input: a versioned schema with per-case, per-arm scores.
 
-Use theirs for eval cases, grading, trigger tuning and benchmarking. Use this for the verdict.
+Use theirs for eval cases, grading, trigger tuning and benchmarking. Use this for the verdict. This repo ships its own `evals/` suite (a natural-phrasing routing case, an unrelated-request control, and one output case whose rubric only the doctrine satisfies); `claude plugin eval .` from the plugin root runs it, about $0.50 at one run per arm.
+
+One routing caveat measured while building it: a skill's **name** routes on its own. With the description replaced by `Internal notes.`, `skill-tuner` still fired 3/3 on a "fix my SKILL.md" prompt; with a neutral name the same change went 0/3 to 3/3. The routing-parity battery shows the id beside the description, so `neutral_ids: true` in a config hides it. Re-running the receipts battery that way (`reports/route-neutral-20260920/`, $2.60): original descriptions 26/26, pruned 23/26, near-miss rejection 8/8 both, verdict refuse — the same verdict and the same failing skill (agent-swarm) as the id-visible run (`reports/receipts-routing-001/`, 24/26 vs 23/26). Hiding the id did not rescue the prune, and it did not hurt the originals; the 2026-08-06 30/30 run predates the option and has not been re-run under it.
 
 ## What this does not measure
 
