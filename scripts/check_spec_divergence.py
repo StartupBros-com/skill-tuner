@@ -43,29 +43,31 @@ def main():
         print(f"FAIL: doctrine skill no longer validates as spec-clean:\n{out}")
         return 1
 
-    rc, out = validate(REPO / "skills" / "tune")
-    if rc == 0:
-        print(
-            "FAIL (good news): skills/tune now PASSES the reference validator - "
-            "the spec or validator moved. Revisit the single-file dual-format "
-            "decision (PR #38); the divergence can likely be retired.\n" + out
-        )
-        return 1
+    # Every user-invoked skill carries the same two Claude-only keys.
+    for name in ("tune", "portfolio"):
+        rc, out = validate(REPO / "skills" / name)
+        if rc == 0:
+            print(
+                f"FAIL (good news): skills/{name} now PASSES the reference validator - "
+                "the spec or validator moved. Revisit the single-file dual-format "
+                "decision (PR #38); the divergence can likely be retired.\n" + out
+            )
+            return 1
 
-    match = re.search(r"Unexpected fields in frontmatter: ([^.]+)\.", out)
-    if not match:
-        print(f"FAIL: skills/tune was rejected for an unexpected reason:\n{out}")
-        return 1
+        match = re.search(r"Unexpected fields in frontmatter: ([^.]+)\.", out)
+        if not match:
+            print(f"FAIL: skills/{name} was rejected for an unexpected reason:\n{out}")
+            return 1
 
-    fields = {f.strip() for f in match.group(1).split(",")}
-    if fields != EXPECTED_DIVERGENCE:
-        print(
-            f"FAIL: divergence set changed: {sorted(fields)} != "
-            f"{sorted(EXPECTED_DIVERGENCE)}\n{out}"
-        )
-        return 1
+        fields = {f.strip() for f in match.group(1).split(",")}
+        if fields != EXPECTED_DIVERGENCE:
+            print(
+                f"FAIL: skills/{name} divergence set changed: {sorted(fields)} != "
+                f"{sorted(EXPECTED_DIVERGENCE)}\n{out}"
+            )
+            return 1
 
-    print(f"known divergence confirmed: {sorted(EXPECTED_DIVERGENCE)}")
+    print(f"known divergence confirmed for tune and portfolio: {sorted(EXPECTED_DIVERGENCE)}")
     return 0
 
 
