@@ -113,30 +113,85 @@ def skill_tier(
     return "on", "default", notes
 
 
+def _checkout_parts(parts: Sequence[str]) -> list[str]:
+    """Drop every `.claude/worktrees/<task>` hop, mapping a worktree copy onto its checkout."""
+    kept: list[str] = []
+    index = 0
+    while index < len(parts):
+        if tuple(parts[index : index + 2]) == (".claude", "worktrees") and index + 2 < len(
+            parts
+        ):
+            index += 3
+            continue
+        kept.append(parts[index])
+        index += 1
+    return kept
+
+
+def _project_usage_keys(name: str, project: Path, usage: Mapping[str, Any]) -> list[str]:
+    """Keys a project skill's worktree copies and ancestor-directory sessions record.
+
+    Claude Code names a skill found below the session's directory
+    `<relative path>:<name>`, so one project skill fragments into keys such as
+    `.claude/worktrees/<task>:name` and `SITES/<repo>:name`. Only prefixes that
+    contain a `/` are read: a one-segment prefix cannot be told apart from a
+    plugin's `plugin:name` key.
+    """
+    project_parts = _checkout_parts(project.parts)
+    keys = []
+    for key in usage:
+        prefix, _, suffix = key.rpartition(":")
+        if suffix != name or "/" not in prefix:
+            continue
+        relative = _checkout_parts(prefix.split("/"))
+        if not relative or project_parts[-len(relative) :] == relative:
+            keys.append(key)
+    return sorted(keys)
+
+
 def skill_usage(
-    name: str, source: str, usage: Mapping[str, Any]
-) -> tuple[int | None, str | None, str | None]:
-    """Read exact usage names, with a bare-name fallback only for synced skills."""
-    key = name if name in usage else None
-    if key is None and source == "synced":
+    name: str,
+    source: str,
+    usage: Mapping[str, Any],
+    project: Path | None = None,
+) -> tuple[int | None, str | None, list[str]]:
+    """Read exact usage names, with a bare-name fallback only for synced skills.
+
+    Project skills and commands also sum the keys their worktree copies record.
+    """
+    keys = [name] if name in usage else []
+    if not keys and source == "synced":
         bare_name = name.removeprefix("anthropic-skills:")
         if bare_name in usage:
-            key = bare_name
-    entry = usage.get(key) if key is not None else None
-    if not isinstance(entry, Mapping):
-        return None, None, None
-    count = entry.get("usageCount")
-    uses = count if isinstance(count, int) and not isinstance(count, bool) else None
+            keys = [bare_name]
+    if project is not None and source in ("project", "project-command"):
+        keys.extend(_project_usage_keys(name, project, usage))
+    keys = [key for key in keys if isinstance(usage[key], Mapping)]
+    entries = [usage[key] for key in keys]
+    if not entries:
+        return None, None, []
+    counts = [
+        entry.get("usageCount")
+        for entry in entries
+        if isinstance(entry.get("usageCount"), int)
+        and not isinstance(entry.get("usageCount"), bool)
+    ]
+    uses = sum(counts) if counts else None
     last_used = None
-    timestamp = entry.get("lastUsedAt")
-    if isinstance(timestamp, (int, float)) and not isinstance(timestamp, bool):
+    timestamps = [
+        entry.get("lastUsedAt")
+        for entry in entries
+        if isinstance(entry.get("lastUsedAt"), (int, float))
+        and not isinstance(entry.get("lastUsedAt"), bool)
+    ]
+    if timestamps:
         try:
             last_used = datetime.fromtimestamp(
-                timestamp / 1000, timezone.utc
+                max(timestamps) / 1000, timezone.utc
             ).isoformat()
         except (OverflowError, OSError, ValueError):
             pass
-    return uses, last_used, key
+    return uses, last_used, keys
 
 
 def _source(name: str, path: Path) -> dict[str, Any]:
@@ -279,6 +334,7 @@ def _read_skills(
     usage: Mapping[str, Any],
     *,
     plugin: str | None = None,
+    project: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Inventory (file, fallback name, frontmatter-name-wins) entries from one source."""
     skills: list[dict[str, Any]] = []
@@ -304,7 +360,12 @@ def _read_skills(
         tier, reason, notes = skill_tier(
             name, metadata, plugin, overrides, override_layers
         )
-        uses, last_used, usage_key = skill_usage(name, source_name, usage)
+        uses, last_used, usage_keys = skill_usage(name, source_name, usage, project)
+        if len(usage_keys) > 1:
+            notes.append(
+                f"uses summed over {len(usage_keys)} usage keys "
+                "(worktree copies or ancestor-directory sessions)"
+            )
         skills.append(
             {
                 "name": name,
@@ -318,7 +379,8 @@ def _read_skills(
                 "listing_chars": listing_chars(name, description, when_to_use, tier),
                 "uses": uses,
                 "last_used": last_used,
-                "usage_key": usage_key,
+                "usage_key": usage_keys[0] if usage_keys else None,
+                "usage_keys": usage_keys,
                 "notes": notes,
             }
         )
@@ -407,7 +469,13 @@ def run_portfolio(
             ]
         skills.extend(
             _read_skills(
-                _skill_files(directories), source, name, overrides, override_layers, usage
+                _skill_files(directories),
+                source,
+                name,
+                overrides,
+                override_layers,
+                usage,
+                project=project,
             )
         )
 
@@ -419,7 +487,13 @@ def run_portfolio(
         sources.append(source)
         skills.extend(
             _read_skills(
-                _command_files(path, source), source, name, overrides, override_layers, usage
+                _command_files(path, source),
+                source,
+                name,
+                overrides,
+                override_layers,
+                usage,
+                project=project,
             )
         )
 

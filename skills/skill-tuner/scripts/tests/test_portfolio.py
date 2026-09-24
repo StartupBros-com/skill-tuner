@@ -816,6 +816,62 @@ class PortfolioTest(unittest.TestCase):
             self.assertIn("Subfolder not inventoried: nested", sources["user-command"]["notes"])
             self.assertEqual(sources["plugin-commands:tools@m"]["count"], 2)
 
+    def test_project_usage_sums_worktree_and_ancestor_keys_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            checkout = base / "repo"
+            worktree = checkout / ".claude" / "worktrees" / "wt"
+            for root in (checkout, worktree):
+                _write_skill(root / ".claude" / "skills" / "verify", "description: Verify.")
+                (root / ".claude" / "commands").mkdir(parents=True)
+                (root / ".claude" / "commands" / "ship.md").write_text(
+                    "---\ndescription: Ship.\n---\n", encoding="utf-8"
+                )
+            _write_skill(base / "home" / "skills" / "lint", "description: Lint.")
+            summed = {
+                "verify": {"usageCount": 50, "lastUsedAt": 1704067200000},
+                ".claude/worktrees/task-a:verify": {"usageCount": 1, "lastUsedAt": 1706745600000},
+                ".claude/worktrees/task-b/repo:verify": {"usageCount": 2},
+                f"{base.name}/repo:verify": {"usageCount": 3},
+            }
+            ignored = {
+                # One segment reads as a plugin key; the others are other directories.
+                "repo:verify": {"usageCount": 100},
+                "other/.claude/worktrees/task-c:verify": {"usageCount": 100},
+                ".claude/worktrees/task-d/apps/web:verify": {"usageCount": 100},
+                ".claude/worktrees/task-a:lint": {"usageCount": 100},
+            }
+            _write_json(
+                base / "claude.json",
+                {
+                    "skillUsage": {
+                        **summed,
+                        **ignored,
+                        ".claude/worktrees/task-a:ship": {"usageCount": 4},
+                    }
+                },
+            )
+
+            for project in (checkout, worktree):
+                with self.subTest(project=project):
+                    skills = _skills(_run(base, project=project))
+                    verify = skills["verify"]
+                    self.assertEqual(verify["uses"], 56)
+                    self.assertEqual(verify["usage_key"], "verify")
+                    self.assertEqual(set(verify["usage_keys"]), set(summed))
+                    self.assertEqual(
+                        datetime.fromisoformat(verify["last_used"]),
+                        datetime(2024, 2, 1, tzinfo=timezone.utc),
+                    )
+                    self.assertIn(
+                        "uses summed over 4 usage keys "
+                        "(worktree copies or ancestor-directory sessions)",
+                        verify["notes"],
+                    )
+                    self.assertEqual(skills["ship"]["uses"], 4)
+                    self.assertEqual(skills["ship"]["usage_key"], ".claude/worktrees/task-a:ship")
+                    self.assertIsNone(skills["lint"]["uses"])
+
 
 if __name__ == "__main__":
     unittest.main()
