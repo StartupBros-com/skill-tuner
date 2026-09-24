@@ -775,6 +775,50 @@ def _run_probe_config(
     return 0
 
 
+def _cmd_portfolio(args: argparse.Namespace) -> int:
+    """Inventory local skills, writing only the requested report artifacts."""
+    # Importing sibling modules normally creates __pycache__ files. Even those
+    # writes are outside portfolio's contract, including in --json mode.
+    previous_bytecode = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        from datetime import datetime, timezone
+
+        import portfolio
+
+        report = portfolio.run_portfolio(
+            claude_home=args.claude_home,
+            claude_json=args.claude_json,
+            project=args.project,
+            context_tokens=args.context_tokens,
+            bytes_per_token=args.bytes_per_token,
+        )
+        document = json.dumps(report, indent=2, ensure_ascii=False) + "\n"
+        if args.json:
+            print(document, end="")
+            return 0
+
+        markdown = portfolio.render_report(report)
+        reports_dir = args.reports_dir.expanduser()
+        while True:
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+            run_dir = reports_dir / f"portfolio-{stamp}"
+            try:
+                run_dir.mkdir(parents=True)
+                break
+            except FileExistsError:
+                # Keep the timestamp-only directory format without overwriting
+                # another run (or following an existing directory symlink).
+                time.sleep(0.05)
+        (run_dir / "report.json").write_text(document, encoding="utf-8")
+        md_path = run_dir / "report.md"
+        md_path.write_text(markdown, encoding="utf-8")
+        print(md_path)
+        return 0
+    finally:
+        sys.dont_write_bytecode = previous_bytecode
+
+
 def _cmd_routing_parity(args: argparse.Namespace) -> int:
     if args.config is not None:
         return _run_routing_parity_config(args)
@@ -1204,6 +1248,24 @@ def _resolve_run_path(args: argparse.Namespace, value: str) -> Path:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="tune.py", description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    portfolio_cmd = subparsers.add_parser(
+        "portfolio", help="Inventory local skills and their model listing budget"
+    )
+    portfolio_cmd.add_argument(
+        "--claude-home", type=Path, default=Path.home() / ".claude"
+    )
+    portfolio_cmd.add_argument(
+        "--claude-json", type=Path, default=Path.home() / ".claude.json"
+    )
+    portfolio_cmd.add_argument("--project", type=Path, default=Path.cwd())
+    portfolio_cmd.add_argument("--context-tokens", type=int, default=200000)
+    portfolio_cmd.add_argument("--bytes-per-token", type=float, default=3)
+    portfolio_cmd.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
+    portfolio_cmd.add_argument(
+        "--json", action="store_true", help="Print JSON without writing files"
+    )
+    portfolio_cmd.set_defaults(handler=_cmd_portfolio)
 
     routing_parity = subparsers.add_parser(
         "routing-parity", help="Run the routing-parity blind-battery eval"

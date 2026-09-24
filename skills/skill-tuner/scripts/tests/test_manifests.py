@@ -137,6 +137,26 @@ class TestSkillLayout(unittest.TestCase):
         keys = _frontmatter_keys(REPO_ROOT / "skills" / "tune" / "SKILL.md")
         self.assertEqual(keys - AGENTSKILLS_SPEC_FIELDS, KNOWN_CLAUDE_ONLY_FIELDS)
 
+    def test_portfolio_stays_user_invoked(self):
+        # The walk changes what the model is shown; the human starts it, and
+        # a model-invoked portfolio would pay the very listing cost it audits.
+        portfolio_md = REPO_ROOT / "skills" / "portfolio" / "SKILL.md"
+        self.assertEqual(_frontmatter_value(portfolio_md, "disable-model-invocation"), "true")
+
+    def test_portfolio_codex_gate_pins_no_implicit_invocation(self):
+        agent_yaml = REPO_ROOT / "skills" / "portfolio" / "agents" / "openai.yaml"
+        self.assertTrue(agent_yaml.exists(), "skills/portfolio/agents/openai.yaml missing")
+        self.assertIn("allow_implicit_invocation: false", agent_yaml.read_text())
+
+    def test_portfolio_shell_blocks_carry_no_substitution_placeholder(self):
+        body = (REPO_ROOT / "skills" / "portfolio" / "SKILL.md").read_text()
+        self.assertNotIn('"$ARGUMENTS"', body)
+        self.assertNotRegex(body, r"\$1\b")
+
+    def test_portfolio_spec_divergence_is_exactly_the_known_set(self):
+        keys = _frontmatter_keys(REPO_ROOT / "skills" / "portfolio" / "SKILL.md")
+        self.assertEqual(keys - AGENTSKILLS_SPEC_FIELDS, KNOWN_CLAUDE_ONLY_FIELDS)
+
     def test_no_legacy_commands_dir(self):
         # The tune runbook lives at skills/tune/SKILL.md so non-Claude clients
         # surface it; a resurrected commands/ would fork that single source.

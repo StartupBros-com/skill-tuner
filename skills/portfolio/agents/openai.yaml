@@ -1,0 +1,5 @@
+interface:
+  display_name: Portfolio
+  short_description: Inventory every listed skill's per-turn cost, usage and visibility knob, then decide one skill at a time whether the model should start it.
+policy:
+  allow_implicit_invocation: false
