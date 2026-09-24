@@ -81,6 +81,7 @@ def _run(base: Path, **overrides) -> dict:
         "claude_home": base / "home",
         "claude_json": base / "claude.json",
         "project": base / "project",
+        "env": {},
     }
     options.update(overrides)
     return portfolio.run_portfolio(**options)
@@ -1676,13 +1677,13 @@ class PortfolioTest(unittest.TestCase):
             self.assertEqual(skills["verify"]["uses"], 3)
             self.assertEqual(skills["verify"]["usage_keys"], ["verify"])
             self.assertIn(
-                "12 uses under 2 worktree key(s) that cannot be traced to a project are not counted",
+                "12 uses under 2 worktree or ancestor-directory key(s) that cannot be traced to a project are not counted",
                 skills["verify"]["notes"],
             )
             self.assertIsNone(skills["ship"]["uses"])
             self.assertEqual(skills["ship"]["usage_keys"], [])
             self.assertIn(
-                "4 uses under 1 worktree key(s) that cannot be traced to a project are not counted",
+                "4 uses under 1 worktree or ancestor-directory key(s) that cannot be traced to a project are not counted",
                 skills["ship"]["notes"],
             )
 
@@ -1863,8 +1864,11 @@ class PortfolioTest(unittest.TestCase):
             _write_json(
                 base / "claude.json",
                 {
+                    # The session directories that recorded the ancestor keys.
                     "projects": {
-                        str(checkout / ".claude" / "worktrees" / "task-a"): {}
+                        str(checkout / ".claude" / "worktrees" / "task-a"): {},
+                        str(base): {},
+                        str(base.parent): {},
                     },
                     "skillUsage": {
                         **summed,
@@ -1895,6 +1899,175 @@ class PortfolioTest(unittest.TestCase):
                         skills["ship"]["usage_key"], ".claude/worktrees/task-a:ship"
                     )
                     self.assertIsNone(skills["lint"]["uses"])
+
+    def test_ancestor_key_counts_only_where_its_session_directory_is_known(self):
+        untraced = (
+            "999 uses under 1 worktree or ancestor-directory key(s) that cannot "
+            "be traced to a project are not counted"
+        )
+        shared = (
+            "usage key SITES/backend:verify may also hold uses from 1 other "
+            "project(s) at the same relative path"
+        )
+        for known, expected in (
+            # Only workA's session could have recorded SITES/backend:verify.
+            (("work-a",), {"work-a": (999, []), "work-b": (None, [])}),
+            (
+                ("work-a", "work-b"),
+                {"work-a": (999, [shared]), "work-b": (999, [shared])},
+            ),
+            ((), {"work-a": (None, [untraced]), "work-b": (None, [untraced])}),
+        ):
+            with self.subTest(known=known):
+                with tempfile.TemporaryDirectory() as tmp:
+                    base = Path(tmp)
+                    for root in ("work-a", "work-b"):
+                        _write_skill(
+                            base
+                            / root
+                            / "SITES"
+                            / "backend"
+                            / ".claude"
+                            / "skills"
+                            / "verify",
+                            "description: Verify.",
+                        )
+                    _write_json(
+                        base / "claude.json",
+                        {
+                            "projects": {str(base / root): {} for root in known},
+                            "skillUsage": {"SITES/backend:verify": {"usageCount": 999}},
+                        },
+                    )
+                    for root, (uses, notes) in expected.items():
+                        row = _skills(
+                            _run(base, project=base / root / "SITES" / "backend")
+                        )["verify"]
+                        self.assertEqual(row["uses"], uses)
+                        for note in (shared, untraced):
+                            self.assertEqual(note in row["notes"], note in notes)
+
+    def test_worktree_key_two_checkouts_could_record_is_counted_and_noted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            for root in ("first", "second"):
+                for directory in (
+                    base / root,
+                    base / root / ".claude" / "worktrees" / "fix",
+                ):
+                    _write_skill(
+                        directory / ".claude" / "skills" / "verify",
+                        "description: Verify.",
+                    )
+            _write_json(
+                base / "claude.json",
+                {
+                    "projects": {str(base / "first"): {}, str(base / "second"): {}},
+                    "skillUsage": {".claude/worktrees/fix:verify": {"usageCount": 6}},
+                },
+            )
+            for root in ("first", "second"):
+                row = _skills(_run(base, project=base / root))["verify"]
+                self.assertEqual(row["uses"], 6)
+                self.assertIn(
+                    "usage key .claude/worktrees/fix:verify may also hold uses "
+                    "from 1 other project(s) at the same relative path",
+                    row["notes"],
+                )
+
+    def test_env_budget_reads_the_value_as_claude_code_does(self):
+        for raw, expected in (
+            ("30000", 30000),
+            (" 30000 ", 30000),
+            ("30,000", 30000),
+            ("30_000", 30000),
+            ("1e3", 1000),
+            ("0x10", 16),
+            ("5000.7", 5000.7),
+            ("-5", -5),
+            (5000, 5000),
+            ("Infinity", math.inf),
+            ("", None),
+            ("0", None),
+            ("-0", None),
+            ("abc", None),
+            ("-0x10", None),
+            ("30,00", None),
+            ("infinity", None),
+        ):
+            with self.subTest(raw=raw):
+                self.assertEqual(portfolio.env_budget(raw), expected)
+
+    def test_budget_env_replaces_the_formula_in_claude_codes_precedence(self):
+        key = portfolio.BUDGET_ENV
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            _write_skill(base / "home" / "skills" / "long", "description: " + "x" * 300)
+            settings = {
+                "user": base / "home" / "settings.json",
+                "project": base / "project" / ".claude" / "settings.json",
+                "local": base / "project" / ".claude" / "settings.local.json",
+            }
+            cases = (
+                ({}, {}, {}, None, 6000, "formula"),
+                ({}, {}, {key: "40"}, None, 40, f"{key} (environment)"),
+                ({}, {key: "50"}, {key: "40"}, None, 50, f"{key} (~/.claude.json env)"),
+                (
+                    {"user": "60"},
+                    {key: "50"},
+                    {key: "40"},
+                    None,
+                    60,
+                    f"{key} (user settings env)",
+                ),
+                (
+                    {"user": "60", "project": "70"},
+                    {},
+                    {},
+                    None,
+                    70,
+                    f"{key} (project settings env)",
+                ),
+                (
+                    {"project": "70", "local": "80.9"},
+                    {},
+                    {},
+                    None,
+                    80,
+                    f"{key} (local settings env)",
+                ),
+                ({"local": "0"}, {}, {key: "40"}, None, 6000, "formula"),
+                ({}, {}, {key: "Infinity"}, "is not finite", 6000, "formula"),
+            )
+            for layers, global_env, environ, note, chars, source in cases:
+                with self.subTest(
+                    layers=layers, global_env=global_env, environ=environ
+                ):
+                    for layer, path in settings.items():
+                        _write_json(
+                            path,
+                            {"env": {key: layers[layer]}} if layer in layers else {},
+                        )
+                    _write_json(base / "claude.json", {"env": global_env})
+                    report = _run(base, env=environ)
+                    budget = report["budget"]
+                    self.assertEqual(
+                        (budget["chars"], budget["source"]), (chars, source)
+                    )
+                    # One entry: len("long") + 4 + 300 description chars.
+                    self.assertEqual(budget["demand_chars"], 308)
+                    self.assertEqual(budget["over_budget"], 308 > chars)
+                    if note:
+                        self.assertTrue(any(note in text for text in budget["notes"]))
+                    else:
+                        self.assertEqual(budget["notes"], [])
+                    markdown = portfolio.render_report(report)
+                    if source == "formula":
+                        self.assertIn(
+                            f"Budget: {chars} chars = max(1, floor(", markdown
+                        )
+                    else:
+                        self.assertIn(f"Budget: {chars} chars from {source};", markdown)
 
 
 if __name__ == "__main__":

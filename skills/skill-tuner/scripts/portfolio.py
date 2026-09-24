@@ -11,6 +11,7 @@ from __future__ import annotations
 import html
 import json
 import math
+import os
 import re
 import stat
 from datetime import datetime, timezone
@@ -34,6 +35,10 @@ BUDGET_NOTE = (
     "An entry's or a plugin's listing chars are what it demands, not what "
     "removing it saves."
 )
+BUDGET_ENV = "SLASH_COMMAND_TOOL_CHAR_BUDGET"
+_JS_DECIMAL = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
+_JS_RADIX = re.compile(r"0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)")
+_THOUSANDS = re.compile(r"[+-]?\d{1,3}([_,   ])\d{3}(?:\1\d{3})*")
 QUESTION = "Should the model start this skill on its own?"
 DISPOSITIONS = (
     "keep",
@@ -105,6 +110,28 @@ def _finite_number(value: Any) -> bool:
         return False
 
 
+def env_budget(raw: Any) -> float | None:
+    """Read SLASH_COMMAND_TOOL_CHAR_BUDGET as Claude Code 2.1.280 does.
+
+    JavaScript's `Number(raw)`, else a thousands-separated integer; any nonzero
+    result replaces the budget formula. None means the formula applies.
+    """
+    text = str(raw).strip()
+    if not text:
+        number = 0.0
+    elif _JS_DECIMAL.fullmatch(text):
+        number = float(text)
+    elif _JS_RADIX.fullmatch(text):
+        number = float(int(text, 0))
+    elif text in ("Infinity", "+Infinity", "-Infinity"):
+        number = float(text.replace("Infinity", "inf"))
+    elif len(text) <= 32 and _THOUSANDS.fullmatch(text):
+        number = float(re.sub(r"[_,   ]", "", text))
+    else:
+        return None
+    return number or None
+
+
 def skill_tier(
     name: str,
     metadata: Mapping[str, str],
@@ -137,43 +164,83 @@ def _checkout_parts(parts: Sequence[str]) -> list[str]:
     return kept
 
 
+def _defines(directory: Path, name: str) -> bool:
+    try:
+        return (directory / ".claude" / "skills" / name / "SKILL.md").is_file() or (
+            directory / ".claude" / "commands" / f"{name}.md"
+        ).is_file()
+    except OSError:
+        return False
+
+
+def _other_checkouts(
+    name: str, prefix: str, checkout: Path, known_projects: set[Path]
+) -> set[Path]:
+    """Other checkouts a `<prefix>:<name>` key could have been recorded for.
+
+    Evidence is a known session directory whose `<prefix>` is itself a known
+    directory or defines the skill.
+    """
+    others: set[Path] = set()
+    for known in known_projects:
+        origin = known / prefix
+        if origin in known_projects or _defines(origin, name):
+            other = Path(*_checkout_parts(origin.parts))
+            if other != checkout:
+                others.add(other)
+    return others
+
+
 def _project_usage_attribution(
     name: str,
     project: Path,
     usage: Mapping[str, Any],
     known_projects: Sequence[Path],
-) -> tuple[list[str], list[str]]:
+) -> tuple[list[str], list[str], dict[str, int]]:
     """Keys a project skill's worktree copies and ancestor-directory sessions record.
 
     Claude Code names a skill found below the session's directory
     `<relative path>:<name>`, so one project skill fragments into keys such as
     `.claude/worktrees/<task>:name` and `SITES/<repo>:name`. Only prefixes that
     contain a `/` are read: a one-segment prefix cannot be told apart from a
-    plugin's `plugin:name` key.
+    plugin's `plugin:name` key. An ancestor key is this project's only when the
+    session directory that would have recorded it is a known project, and a
+    worktree key only when its worktree is known or still on disk. Returns the
+    counted keys, the untraceable keys, and, per counted key, how many other
+    checkouts could have recorded it too.
     """
     project_parts = _checkout_parts(project.parts)
     checkout = Path(*project_parts)
+    known = set(known_projects)
     keys: list[str] = []
     unattributed: list[str] = []
+    shared: dict[str, int] = {}
     for key in usage:
         prefix, _, suffix = key.rpartition(":")
         if suffix != name or "/" not in prefix:
             continue
         relative = _checkout_parts(prefix.split("/"))
         if relative:
-            if project_parts[-len(relative) :] == relative:
-                keys.append(key)
-            continue
-        candidate = checkout / prefix
-        try:
-            traced = candidate in known_projects or candidate.exists()
-        except OSError:
-            traced = False
+            if (
+                len(relative) >= len(project_parts)
+                or project_parts[-len(relative) :] != relative
+            ):
+                continue
+            traced = Path(*project_parts[: -len(relative)]) in known
+        else:
+            candidate = checkout / prefix
+            try:
+                traced = candidate in known or candidate.exists()
+            except OSError:
+                traced = False
+        others = _other_checkouts(name, prefix, checkout, known)
         if traced:
             keys.append(key)
-        elif not any(str(known).endswith("/" + prefix) for known in known_projects):
+            if others:
+                shared[key] = len(others)
+        elif not others:
             unattributed.append(key)
-    return sorted(keys), sorted(unattributed)
+    return sorted(keys), sorted(unattributed), shared
 
 
 def _project_usage_keys(
@@ -197,9 +264,14 @@ def skill_usage_context(
         return 0, []
     notes: list[str] = []
     if source in ("project", "project-command"):
-        _, unattributed = _project_usage_attribution(
+        _, unattributed, shared_keys = _project_usage_attribution(
             name, project, usage, known_projects
         )
+        for key, others in sorted(shared_keys.items()):
+            notes.append(
+                f"usage key {key} may also hold uses from {others} other "
+                "project(s) at the same relative path"
+            )
         if unattributed:
             counts = [
                 usage[key].get("usageCount")
@@ -216,8 +288,9 @@ def skill_usage_context(
                 else "unknown"
             )
             notes.append(
-                f"{uses} uses under {len(unattributed)} worktree key(s) "
-                "that cannot be traced to a project are not counted"
+                f"{uses} uses under {len(unattributed)} worktree or "
+                "ancestor-directory key(s) that cannot be traced to a project "
+                "are not counted"
             )
     shared = 0
     if source in ("user", "project", "user-command", "project-command"):
@@ -391,11 +464,18 @@ def _skill_files(directories: Sequence[Path]) -> list[tuple[Path, str, bool]]:
 
 def _load_settings(
     claude_home: Path, project: Path, sources: list[dict[str, Any]]
-) -> tuple[dict[str, tuple[str, str]], dict[str, tuple[bool, str]], float, int]:
+) -> tuple[
+    dict[str, tuple[str, str]],
+    dict[str, tuple[bool, str]],
+    float,
+    int,
+    tuple[Any, str] | None,
+]:
     overrides: dict[str, tuple[str, str]] = {}
     enabled_plugins: dict[str, tuple[bool, str]] = {}
     fraction = 0.01
     max_desc_chars = 1536
+    budget_env: tuple[Any, str] | None = None
     for layer, path in (
         ("user", claude_home / "settings.json"),
         ("project", project / ".claude" / "settings.json"),
@@ -434,7 +514,12 @@ def _load_settings(
                 max_desc_chars = value
             else:
                 source["notes"].append("Ignored invalid skillListingMaxDescChars.")
-    return overrides, enabled_plugins, fraction, max_desc_chars
+        env = settings.get("env", {})
+        if not isinstance(env, dict):
+            source["notes"].append("Ignored env: expected an object.")
+        elif BUDGET_ENV in env:
+            budget_env = (env[BUDGET_ENV], f"{layer} settings env")
+    return overrides, enabled_plugins, fraction, max_desc_chars, budget_env
 
 
 def _read_skills(
@@ -652,11 +737,13 @@ def run_portfolio(
     project: Path | None = None,
     context_tokens: int = 200000,
     bytes_per_token: float = 3,
+    env: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Read the current portfolio; missing or unreadable sources remain in the report.
 
     No paths are created or modified. Callers own serialization and any report
     persistence, so the same inventory supports a completely read-only JSON CLI.
+    `env` is the process environment (default `os.environ`).
     """
     if (
         not _finite_number(context_tokens)
@@ -671,12 +758,20 @@ def run_portfolio(
     claude_json = Path(claude_json or "~/.claude.json").expanduser().resolve()
     project = Path(project or Path.cwd()).expanduser().resolve()
     sources: list[dict[str, Any]] = []
-    overrides, enabled, fraction, max_desc_chars = _load_settings(
+    overrides, enabled, fraction, max_desc_chars, budget_env = _load_settings(
         claude_home, project, sources
     )
     usage_source = _source("usage", claude_json)
     sources.append(usage_source)
     state = _read_json(claude_json, usage_source)
+    # Claude Code applies ~/.claude.json's env, then each settings layer's,
+    # over the process environment; the last layer that sets the key wins.
+    global_env = state.get("env", {})
+    if budget_env is None and isinstance(global_env, dict) and BUDGET_ENV in global_env:
+        budget_env = (global_env[BUDGET_ENV], "~/.claude.json env")
+    environ = os.environ if env is None else env
+    if budget_env is None and BUDGET_ENV in environ:
+        budget_env = (environ[BUDGET_ENV], "environment")
     usage = state.get("skillUsage", {})
     if not isinstance(usage, dict):
         usage_source["notes"].append("Ignored skillUsage: expected an object.")
@@ -844,13 +939,27 @@ def run_portfolio(
         skills.extend(plugin_skills)
 
     total_chars, bare_floor_chars, listed = _listing_totals(skills)
-    try:
-        budget_chars = context_tokens * bytes_per_token * fraction
-    except OverflowError as exc:
-        raise ValueError("The computed listing budget must be finite") from exc
-    if not _finite_number(budget_chars):
-        raise ValueError("The computed listing budget must be finite")
-    budget_chars = max(1, math.floor(budget_chars))
+    budget_source = "formula"
+    budget_notes: list[str] = []
+    override = env_budget(budget_env[0]) if budget_env is not None else None
+    if override is not None and math.isfinite(override):
+        # Listing lengths are integers, so the floor compares identically.
+        budget_chars = math.floor(override)
+        budget_source = f"{BUDGET_ENV} ({budget_env[1]})"
+    else:
+        if override is not None:
+            budget_notes.append(
+                f"{BUDGET_ENV}={budget_env[0]!r} ({budget_env[1]}) is not finite; "
+                "Claude Code uses it as the budget, which this report does not "
+                "model, so the formula is shown instead."
+            )
+        try:
+            budget_chars = context_tokens * bytes_per_token * fraction
+        except OverflowError as exc:
+            raise ValueError("The computed listing budget must be finite") from exc
+        if not _finite_number(budget_chars):
+            raise ValueError("The computed listing budget must be finite")
+        budget_chars = max(1, math.floor(budget_chars))
     rendered_max_chars = _rendered_max(total_chars, bare_floor_chars, budget_chars)
     for row in plugins:
         remaining_demand, remaining_floor, _ = _listing_totals(
@@ -879,6 +988,8 @@ def run_portfolio(
             "context_tokens": context_tokens,
             "bytes_per_token": bytes_per_token,
             "fraction": fraction,
+            "source": budget_source,
+            "notes": budget_notes,
             "chars": budget_chars,
             "demand_chars": total_chars,
             "bare_floor_chars": bare_floor_chars,
@@ -905,15 +1016,22 @@ def render_report(report: Mapping[str, Any]) -> str:
     totals = report["totals"]
     budget = report["budget"]
     tier_counts = ", ".join(f"{tier}: {totals['tiers'][tier]}" for tier in TIERS)
+    if budget["source"] == "formula":
+        origin = (
+            f"= max(1, floor({budget['context_tokens']} context tokens "
+            f"× {budget['bytes_per_token']:g} bytes/token × {budget['fraction']:g}))"
+        )
+    else:
+        origin = f"from {budget['source']}"
     lines = [
         "# Skill portfolio",
         "",
         f"Skills: {totals['skills']} | Listed: {totals['listed']} | "
         f"Demand: {totals['listing_chars']} chars | {tier_counts}",
         "",
-        f"Budget: {budget['chars']} chars = max(1, floor({budget['context_tokens']} context tokens "
-        f"× {budget['bytes_per_token']:g} bytes/token × {budget['fraction']:g})); "
+        f"Budget: {budget['chars']} chars {_cell(origin)}; "
         f"over budget: {'yes' if budget['over_budget'] else 'no'}.",
+        *(_cell(note) for note in budget["notes"]),
         f"Rendered max: {budget['rendered_max_chars']} chars; "
         f"bare floor: {budget['bare_floor_chars']} chars.",
         "",
