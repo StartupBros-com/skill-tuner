@@ -24,9 +24,16 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/skill-tuner/scripts/tune.py portfolio --pro
 It reads skill and command files (Claude Code lists commands beside skills),
 settings at user, project and project-local scope, installed plugins and the
 usage counters, and makes no model calls. Read the
-`report.md` it names. Tell the human three things before the walk: the total
-listing characters every turn pays, the budget line, and every source the
-report marks missing or unreadable.
+`report.md` it names. Tell the human three things before the walk: what every
+turn pays, the budget line, and every source the report marks missing or
+unreadable, including plugin rows marked incomplete. What a turn pays is the
+demand when it fits the budget. Over budget, Claude Code shortens descriptions
+to bare names until the listing fits, so a turn pays at most the rendered
+maximum, and demand is not what the model sees.
+
+Each row is named by its runtime name: the name Claude Code lists, keys
+`skillOverrides` on, and counts usage under. A skill whose frontmatter `name`
+differs keeps that only as its `display_name`.
 
 ## 2. Walk the costliest model-visible skills, one at a time
 
@@ -48,7 +55,10 @@ For each, show its row and ask one question first:
 
 Usage counts inform the conversation and never decide it: a skill at zero may
 have a description that never matches the human's real work, and fixing the
-trigger is as valid an answer as hiding it. Record the human's answer for each
+trigger is as valid an answer as hiding it. Claude Code's usage keys carry no
+project, so read a row's usage notes aloud with its count: a key shared with
+other projects may include their uses, and uncounted worktree keys are named.
+Record the human's answer for each
 skill before showing the next. Each skill gets its own answer; a batch
 approval covers nothing.
 
@@ -70,16 +80,26 @@ Use the knob that actually governs the skill:
 - **A plugin skill**: Claude Code ignores `skillOverrides` for plugin skills,
   so no per-skill knob exists. Say so. The human's choices are the whole plugin
   off for this project (`"enabledPlugins": {"<plugin>@<marketplace>": false}`
-  in the project's `.claude/settings.json`; the report's plugin table shows what
-  that removes) or a request to the plugin's author.
+  in the project's `.claude/settings.json`; the plugin table's `saves` column
+  estimates what that removes) or a request to the plugin's author.
 
-Copy a settings file aside before editing it, and change only the keys the
-human chose.
+Settings merge key by key, and the later layer wins: user, then project, then
+project-local (`.claude/settings.local.json`). Write each change where it
+decides the value. When the report says a local setting decided it (`enabled
+by` is `local`, or a tier reason of `override:local`), a change in the project
+file loses to it, so make the change in `.claude/settings.local.json`. Copy a
+settings file aside before editing it, and change only the keys the human
+chose.
 
 ## 4. Measure
 
-Re-run step 1. The step is done when you can state the listing characters
-before and after and name each change behind the difference. Changes take
+Re-run step 1. Confirm that each change now shows as the effective state: the
+skill's tier and the setting that decided it, or the plugin's enabled value and
+its layer. A change that does not show there did not land; say so rather than
+counting it. The step is done when you can state what a turn pays before and
+after and name each change behind the difference. Over budget, removing
+entries lowers demand but can leave what the model sees unchanged until demand
+falls under the budget, because other descriptions fill the room. Changes take
 effect in the next session, not this one.
 
 ## What you may not claim
@@ -89,9 +109,15 @@ and no quality, so a smaller listing is the whole measured result: do not
 report that the agent now routes or works better. The listing formula and
 budget come from one Claude Code release, named in the report; bundled skills
 are compiled into Claude Code, are not on disk, and are outside the total.
+Over budget, which descriptions survive depends on usage and on an internal
+order the inventory cannot see, so the rendered maximum and a plugin's `saves`
+are bounds, not measurements. Command subfolders and skills or commands that
+only a marketplace entry declares are not inventoried; a plugin row marked
+incomplete undercounts.
 
 ## Report
 
-- Listing characters before and after, and the budget line
+- What a turn pays before and after (demand, or the rendered maximum when over
+  budget), and the budget line
 - Each skill walked: the answer, and what changed
 - Skills left as they were, and why

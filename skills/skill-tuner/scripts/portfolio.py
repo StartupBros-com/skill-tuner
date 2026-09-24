@@ -26,8 +26,13 @@ PLUGIN_OVERRIDE_NOTE = (
     "(Claude Code docs; measured 2.1.280)"
 )
 BUDGET_NOTE = (
-    "Over budget, Claude Code keeps full descriptions for the highest-usage "
-    "skills and renders the rest as bare names."
+    "While over budget, the model sees at most rendered_max_chars, keeping "
+    "every listed name. Descriptions are restored when they fit, in descending "
+    "usage score; the rest render as bare names. Scores use only the exact "
+    "runtime-name key: usageCount × max(0.5 ** (days_since_last_use / 7), 0.1), "
+    "or 0 when absent. Ties follow an internal order this inventory cannot see. "
+    "An entry's or a plugin's listing chars are what it demands, not what "
+    "removing it saves."
 )
 QUESTION = "Should the model start this skill on its own?"
 DISPOSITIONS = (
@@ -77,10 +82,13 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return values
 
 
-def listing_chars(name: str, description: str, when_to_use: str, tier: str) -> int:
+def listing_chars(
+    name: str, description: str, when_to_use: str, tier: str, max_desc_chars: int = 1536
+) -> int:
     """Apply the listing formula measured in Claude Code 2.1.280."""
     if tier == "on":
-        return len(name) + 4 + min(len(description) + len(when_to_use), 1536)
+        text = f"{description} - {when_to_use}" if when_to_use else description
+        return len(name) + 4 + min(len(text), max_desc_chars)
     if tier == "name-only":
         return len(name) + 2
     return 0
@@ -101,15 +109,15 @@ def skill_tier(
     name: str,
     metadata: Mapping[str, str],
     plugin: str | None,
-    overrides: Mapping[str, str],
-    override_layers: Mapping[str, str],
+    overrides: Mapping[str, tuple[str, str]],
 ) -> tuple[str, str, list[str]]:
     """Resolve frontmatter before overrides; plugin overrides never apply."""
     notes = [PLUGIN_OVERRIDE_NOTE] if plugin and name in overrides else []
     if metadata.get("disable-model-invocation", "").lower() == "true":
         return "user-invocable-only", "frontmatter", notes
     if not plugin and name in overrides:
-        return overrides[name], f"override:{override_layers[name]}", notes
+        tier, layer = overrides[name]
+        return tier, f"override:{layer}", notes
     return "on", "default", notes
 
 
@@ -118,9 +126,10 @@ def _checkout_parts(parts: Sequence[str]) -> list[str]:
     kept: list[str] = []
     index = 0
     while index < len(parts):
-        if tuple(parts[index : index + 2]) == (".claude", "worktrees") and index + 2 < len(
-            parts
-        ):
+        if tuple(parts[index : index + 2]) == (
+            ".claude",
+            "worktrees",
+        ) and index + 2 < len(parts):
             index += 3
             continue
         kept.append(parts[index])
@@ -128,7 +137,12 @@ def _checkout_parts(parts: Sequence[str]) -> list[str]:
     return kept
 
 
-def _project_usage_keys(name: str, project: Path, usage: Mapping[str, Any]) -> list[str]:
+def _project_usage_attribution(
+    name: str,
+    project: Path,
+    usage: Mapping[str, Any],
+    known_projects: Sequence[Path],
+) -> tuple[list[str], list[str]]:
     """Keys a project skill's worktree copies and ancestor-directory sessions record.
 
     Claude Code names a skill found below the session's directory
@@ -138,15 +152,103 @@ def _project_usage_keys(name: str, project: Path, usage: Mapping[str, Any]) -> l
     plugin's `plugin:name` key.
     """
     project_parts = _checkout_parts(project.parts)
-    keys = []
+    checkout = Path(*project_parts)
+    keys: list[str] = []
+    unattributed: list[str] = []
     for key in usage:
         prefix, _, suffix = key.rpartition(":")
         if suffix != name or "/" not in prefix:
             continue
         relative = _checkout_parts(prefix.split("/"))
-        if not relative or project_parts[-len(relative) :] == relative:
+        if relative:
+            if project_parts[-len(relative) :] == relative:
+                keys.append(key)
+            continue
+        candidate = checkout / prefix
+        try:
+            traced = candidate in known_projects or candidate.exists()
+        except OSError:
+            traced = False
+        if traced:
             keys.append(key)
-    return sorted(keys)
+        elif not any(str(known).endswith("/" + prefix) for known in known_projects):
+            unattributed.append(key)
+    return sorted(keys), sorted(unattributed)
+
+
+def _project_usage_keys(
+    name: str,
+    project: Path,
+    usage: Mapping[str, Any],
+    known_projects: Sequence[Path] = (),
+) -> list[str]:
+    return _project_usage_attribution(name, project, usage, known_projects)[0]
+
+
+def skill_usage_context(
+    name: str,
+    source: str,
+    usage: Mapping[str, Any],
+    project: Path | None,
+    known_projects: Sequence[Path],
+) -> tuple[int, list[str]]:
+    """Describe usage that cannot be isolated to this project's runtime name."""
+    if project is None:
+        return 0, []
+    notes: list[str] = []
+    if source in ("project", "project-command"):
+        _, unattributed = _project_usage_attribution(
+            name, project, usage, known_projects
+        )
+        if unattributed:
+            counts = [
+                usage[key].get("usageCount")
+                if isinstance(usage[key], Mapping)
+                else None
+                for key in unattributed
+            ]
+            uses = (
+                sum(counts)
+                if all(
+                    isinstance(count, int) and not isinstance(count, bool)
+                    for count in counts
+                )
+                else "unknown"
+            )
+            notes.append(
+                f"{uses} uses under {len(unattributed)} worktree key(s) "
+                "that cannot be traced to a project are not counted"
+            )
+    shared = 0
+    if source in ("user", "project", "user-command", "project-command"):
+        checkout = Path(*_checkout_parts(project.parts))
+        # A repository's worktrees are one project, not one per worktree.
+        sharing: set[Path] = set()
+        for known in known_projects:
+            known_checkout = Path(*_checkout_parts(known.parts))
+            if (
+                known == checkout
+                or checkout in known.parents
+                or known_checkout == checkout
+                or known_checkout in sharing
+            ):
+                continue
+            try:
+                if (known / ".claude" / "skills" / name / "SKILL.md").is_file() or (
+                    known / ".claude" / "commands" / f"{name}.md"
+                ).is_file():
+                    sharing.add(known_checkout)
+            except OSError as exc:
+                notes.append(
+                    f"Cannot inspect shared usage key {name} in {known}: {exc}"
+                )
+        shared = len(sharing)
+        if shared:
+            notes.append(
+                f"usage key {name} is shared with {shared} other project(s) "
+                "that define it; uses may include theirs"
+            )
+    return shared, notes
 
 
 def skill_usage(
@@ -154,6 +256,7 @@ def skill_usage(
     source: str,
     usage: Mapping[str, Any],
     project: Path | None = None,
+    known_projects: Sequence[Path] = (),
 ) -> tuple[int | None, str | None, list[str]]:
     """Read exact usage names, with a bare-name fallback only for synced skills.
 
@@ -165,23 +268,25 @@ def skill_usage(
         if bare_name in usage:
             keys = [bare_name]
     if project is not None and source in ("project", "project-command"):
-        keys.extend(_project_usage_keys(name, project, usage))
-    keys = [key for key in keys if isinstance(usage[key], Mapping)]
+        keys.extend(_project_usage_keys(name, project, usage, known_projects))
     entries = [usage[key] for key in keys]
     if not entries:
         return None, None, []
     counts = [
         entry.get("usageCount")
         for entry in entries
-        if isinstance(entry.get("usageCount"), int)
+        if isinstance(entry, Mapping)
+        and isinstance(entry.get("usageCount"), int)
         and not isinstance(entry.get("usageCount"), bool)
+        and entry["usageCount"] >= 0
     ]
-    uses = sum(counts) if counts else None
+    uses = sum(counts) if len(counts) == len(entries) else None
     last_used = None
     timestamps = [
         entry.get("lastUsedAt")
         for entry in entries
-        if isinstance(entry.get("lastUsedAt"), (int, float))
+        if isinstance(entry, Mapping)
+        and isinstance(entry.get("lastUsedAt"), (int, float))
         and not isinstance(entry.get("lastUsedAt"), bool)
     ]
     if timestamps:
@@ -196,6 +301,11 @@ def skill_usage(
 
 def _source(name: str, path: Path) -> dict[str, Any]:
     return {"name": name, "path": str(path), "status": "ok", "count": 0, "notes": []}
+
+
+def _unreadable(source: dict[str, Any], note: str) -> None:
+    source["status"] = "unreadable"
+    source["notes"].append(note)
 
 
 def _read_json(path: Path, source: dict[str, Any]) -> dict[str, Any]:
@@ -217,12 +327,12 @@ def _read_json(path: Path, source: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
-def _directories(
+def _directory_entries(
     path: Path, source: dict[str, Any], *, root: bool = False
 ) -> list[Path]:
-    """Enumerate one directory level, following links and retaining read failures."""
+    """List a directory once, retaining missing paths and read failures."""
     try:
-        entries = sorted(path.iterdir())
+        return sorted(path.iterdir())
     except FileNotFoundError:
         if root:
             source["status"] = "missing"
@@ -232,8 +342,14 @@ def _directories(
         source["status"] = "unreadable"
         source["notes"].append(f"Cannot list {path}: {exc}")
         return []
+
+
+def _directories(
+    path: Path, source: dict[str, Any], *, root: bool = False
+) -> list[Path]:
+    """Enumerate one directory level, following links and retaining read failures."""
     directories: list[Path] = []
-    for entry in entries:
+    for entry in _directory_entries(path, source, root=root):
         try:
             if stat.S_ISDIR(entry.stat().st_mode):
                 directories.append(entry)
@@ -245,50 +361,41 @@ def _directories(
     return directories
 
 
-def _command_files(
-    path: Path, source: dict[str, Any], *, root: bool = True
-) -> list[tuple[Path, str, bool]]:
+def _command_files(path: Path, source: dict[str, Any]) -> list[tuple[Path, str, bool]]:
     """Top-level ``*.md`` commands, listed by file stem; subfolders are noted, not read.
 
     Claude Code puts commands in the same listing as skills, so a command costs
     listing characters exactly like a skill of the same description.
     """
-    try:
-        entries = sorted(path.iterdir())
-    except FileNotFoundError:
-        if root:
-            source["status"] = "missing"
-        source["notes"].append(f"Missing directory: {path}")
-        return []
-    except (OSError, ValueError) as exc:
-        source["status"] = "unreadable"
-        source["notes"].append(f"Cannot list {path}: {exc}")
-        return []
     files: list[tuple[Path, str, bool]] = []
-    for entry in entries:
+    for entry in _directory_entries(path, source, root=True):
         try:
-            if entry.suffix == ".md" and entry.is_file():
+            mode = entry.stat().st_mode
+            if entry.suffix == ".md" and stat.S_ISREG(mode):
                 files.append((entry, entry.stem, False))
-            elif entry.is_dir():
+            elif stat.S_ISDIR(mode):
                 source["notes"].append(f"Subfolder not inventoried: {entry.name}")
+        except FileNotFoundError:
+            source["notes"].append(f"Broken symlink or missing entry: {entry}")
         except OSError as exc:
-            source["notes"].append(f"Cannot inspect {entry}: {exc}")
+            _unreadable(source, f"Cannot inspect {entry}: {exc}")
     return files
 
 
 def _skill_files(directories: Sequence[Path]) -> list[tuple[Path, str, bool]]:
-    """Each skill directory's SKILL.md, named by frontmatter first, then the directory."""
-    return [(directory / "SKILL.md", directory.name, True) for directory in directories]
+    """Each skill directory's SKILL.md, named by the directory."""
+    return [
+        (directory / "SKILL.md", directory.name, False) for directory in directories
+    ]
 
 
 def _load_settings(
     claude_home: Path, project: Path, sources: list[dict[str, Any]]
-) -> tuple[dict[str, str], dict[str, str], dict[str, bool], dict[str, str], float]:
-    overrides: dict[str, str] = {}
-    override_layers: dict[str, str] = {}
-    enabled_plugins: dict[str, bool] = {}
-    enabled_layers: dict[str, str] = {}
+) -> tuple[dict[str, tuple[str, str]], dict[str, tuple[bool, str]], float, int]:
+    overrides: dict[str, tuple[str, str]] = {}
+    enabled_plugins: dict[str, tuple[bool, str]] = {}
     fraction = 0.01
+    max_desc_chars = 1536
     for layer, path in (
         ("user", claude_home / "settings.json"),
         ("project", project / ".claude" / "settings.json"),
@@ -297,9 +404,9 @@ def _load_settings(
         source = _source(f"settings:{layer}", path)
         sources.append(source)
         settings = _read_json(path, source)
-        for key, merged, provenance in (
-            ("skillOverrides", overrides, override_layers),
-            ("enabledPlugins", enabled_plugins, enabled_layers),
+        for key, merged in (
+            ("skillOverrides", overrides),
+            ("enabledPlugins", enabled_plugins),
         ):
             values = settings.get(key, {})
             if not isinstance(values, dict):
@@ -312,36 +419,43 @@ def _load_settings(
                     else isinstance(value, bool)
                 )
                 if valid:
-                    merged[name] = value
-                    provenance[name] = layer
+                    merged[name] = (value, layer)
                 else:
                     source["notes"].append(f"Ignored invalid {key} value for {name}.")
         if "skillListingBudgetFraction" in settings:
             value = settings["skillListingBudgetFraction"]
-            if _finite_number(value):
+            if _finite_number(value) and 0 < value <= 1:
                 fraction = value
             else:
                 source["notes"].append("Ignored invalid skillListingBudgetFraction.")
-    return overrides, override_layers, enabled_plugins, enabled_layers, fraction
+        if "skillListingMaxDescChars" in settings:
+            value = settings["skillListingMaxDescChars"]
+            if isinstance(value, int) and not isinstance(value, bool) and value > 0:
+                max_desc_chars = value
+            else:
+                source["notes"].append("Ignored invalid skillListingMaxDescChars.")
+    return overrides, enabled_plugins, fraction, max_desc_chars
 
 
 def _read_skills(
     files: Sequence[tuple[Path, str, bool]],
     source: dict[str, Any],
     source_name: str,
-    overrides: Mapping[str, str],
-    override_layers: Mapping[str, str],
+    overrides: Mapping[str, tuple[str, str]],
     usage: Mapping[str, Any],
     *,
     plugin: str | None = None,
     project: Path | None = None,
+    known_projects: Sequence[Path] = (),
+    max_desc_chars: int = 1536,
 ) -> list[dict[str, Any]]:
-    """Inventory (file, fallback name, frontmatter-name-wins) entries from one source."""
+    """Inventory (file, directory or stem name, plugin single-skill root) entries."""
     skills: list[dict[str, Any]] = []
-    for path, fallback, frontmatter_name in files:
+    for path, fallback, single_skill_root in files:
         try:
             text = path.read_text(encoding="utf-8")
         except FileNotFoundError:
+            # Claude Code skips a dangling SKILL.md too, so nothing listed is missing.
             if path.is_symlink():
                 source["notes"].append(f"Broken symlink: {path}")
             continue
@@ -350,18 +464,32 @@ def _read_skills(
             source["notes"].append(f"Cannot read {path}: {exc}")
             continue
         metadata = parse_frontmatter(text)
-        name = (metadata.get("name") if frontmatter_name else None) or fallback
+        name = fallback
         if source_name == "synced":
             name = f"anthropic-skills:{name}"
         elif plugin:
-            name = f"{plugin.split('@', 1)[0]}:{name}"
+            short_name = plugin.split("@", 1)[0]
+            if single_skill_root:
+                name = metadata.get("name", "").strip().removeprefix(f"{short_name}:")
+                name = name or fallback
+            if path.name == "SKILL.md":
+                name = re.sub(r"[^A-Za-z0-9_-]", "-", name)
+            name = f"{short_name}:{name}"
         description = metadata.get("description", "")
         when_to_use = metadata.get("when_to_use", "")
-        tier, reason, notes = skill_tier(
-            name, metadata, plugin, overrides, override_layers
+        tier, reason, notes = skill_tier(name, metadata, plugin, overrides)
+        uses, last_used, usage_keys = skill_usage(
+            name, source_name, usage, project, known_projects
         )
-        uses, last_used, usage_keys = skill_usage(name, source_name, usage, project)
-        if len(usage_keys) > 1:
+        shared_key_projects, usage_notes = skill_usage_context(
+            name, source_name, usage, project, known_projects
+        )
+        notes.extend(usage_notes)
+        if usage_keys and uses is None:
+            notes.append(
+                "Usage count is unknown for one or more attributed keys; uses are unknown."
+            )
+        elif len(usage_keys) > 1:
             notes.append(
                 f"uses summed over {len(usage_keys)} usage keys "
                 "(worktree copies or ancestor-directory sessions)"
@@ -369,6 +497,9 @@ def _read_skills(
         skills.append(
             {
                 "name": name,
+                "display_name": metadata.get("name")
+                if "name" in metadata and metadata["name"] != name
+                else None,
                 "source": source_name,
                 "path": str(path),
                 "plugin": plugin,
@@ -376,11 +507,14 @@ def _read_skills(
                 "when_to_use": when_to_use,
                 "tier": tier,
                 "tier_reason": reason,
-                "listing_chars": listing_chars(name, description, when_to_use, tier),
+                "listing_chars": listing_chars(
+                    name, description, when_to_use, tier, max_desc_chars
+                ),
                 "uses": uses,
                 "last_used": last_used,
                 "usage_key": usage_keys[0] if usage_keys else None,
                 "usage_keys": usage_keys,
+                "shared_key_projects": shared_key_projects,
                 "notes": notes,
             }
         )
@@ -396,21 +530,119 @@ def _choose_install(
         return None
     user_entry = None
     project_entry = None
+    local_entry = None
     for entry in entries:
         if not isinstance(entry, dict):
             notes.append("Ignored an install entry that is not an object.")
             continue
         if entry.get("scope") == "user" and user_entry is None:
             user_entry = entry
-        if entry.get("scope") == "project" and isinstance(
+        if entry.get("scope") in ("local", "project") and isinstance(
             entry.get("projectPath"), str
         ):
             try:
                 if Path(entry["projectPath"]).expanduser().resolve() == project:
-                    project_entry = project_entry or entry
+                    if entry["scope"] == "local":
+                        local_entry = local_entry or entry
+                    else:
+                        project_entry = project_entry or entry
             except (OSError, RuntimeError, ValueError) as exc:
                 notes.append(f"Cannot resolve plugin projectPath: {exc}")
-    return project_entry or user_entry
+    return local_entry or project_entry or user_entry
+
+
+def _plugin_files(
+    install: Path, kind: str, manifest: Mapping[str, Any], source: dict[str, Any]
+) -> list[tuple[Path, str, bool]]:
+    """Read default and declared paths, keeping the first copy of each file."""
+    default = install / kind
+    paths: list[Path] = []
+    try:
+        default.lstat()
+        paths.append(default)
+    except FileNotFoundError:
+        if kind == "skills" and kind not in manifest:
+            try:
+                if (install / "SKILL.md").is_file():
+                    paths.append(install)
+            except OSError as exc:
+                _unreadable(source, f"Cannot inspect {install / 'SKILL.md'}: {exc}")
+    except OSError as exc:
+        _unreadable(source, f"Cannot inspect {default}: {exc}")
+
+    declared = manifest.get(kind, [])
+    if isinstance(declared, str):
+        declared = [declared]
+    if not isinstance(declared, list):
+        _unreadable(
+            source,
+            f"Manifest {kind} not inventoried: expected a string or list of strings.",
+        )
+        declared = []
+    for value in declared:
+        if not isinstance(value, str):
+            _unreadable(
+                source,
+                f"Manifest {kind} entry not inventoried: expected a path string.",
+            )
+            continue
+        try:
+            path = (install / value).resolve()
+            if not path.is_relative_to(install):
+                _unreadable(
+                    source,
+                    f"Manifest {kind} path outside install directory, not inventoried: {value}",
+                )
+                continue
+            if path != default.resolve() and not (kind == "skills" and path == install):
+                paths.append(path)
+        except (OSError, RuntimeError, ValueError) as exc:
+            _unreadable(source, f"Manifest {kind} path not inventoried: {value}: {exc}")
+
+    files: list[tuple[Path, str, bool]] = []
+    seen: set[Path] = set()
+    for path in paths:
+        try:
+            mode = path.stat().st_mode
+            if stat.S_ISDIR(mode):
+                if kind == "commands":
+                    candidates = _command_files(path, source)
+                elif (path / "SKILL.md").is_file():
+                    candidates = [(path / "SKILL.md", path.name, True)]
+                else:
+                    previous_notes = len(source["notes"])
+                    candidates = _skill_files(_directories(path, source))
+                    if len(source["notes"]) > previous_notes:
+                        source["status"] = "unreadable"
+            elif kind == "commands" and path.suffix == ".md" and stat.S_ISREG(mode):
+                candidates = [(path, path.stem, False)]
+            else:
+                _unreadable(source, f"Manifest {kind} path not inventoried: {path}")
+                continue
+            for candidate in candidates:
+                resolved = candidate[0].resolve()
+                if resolved not in seen:
+                    seen.add(resolved)
+                    files.append(candidate)
+        except FileNotFoundError:
+            _unreadable(
+                source, f"Missing directory or broken symlink, not inventoried: {path}"
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            _unreadable(source, f"Cannot inventory {path}: {exc}")
+    return files
+
+
+def _listing_totals(skills: Sequence[Mapping[str, Any]]) -> tuple[int, int, int]:
+    listed = [skill for skill in skills if skill["tier"] in ("on", "name-only")]
+    separators = max(0, len(listed) - 1)
+    demand = sum(skill["listing_chars"] for skill in listed) + separators
+    bare_floor = sum(len(skill["name"]) + 2 for skill in listed) + separators
+    return demand, bare_floor, len(listed)
+
+
+def _rendered_max(demand: int, bare_floor: int, budget: int) -> int:
+    return min(demand, max(budget, bare_floor))
 
 
 def run_portfolio(
@@ -439,16 +671,36 @@ def run_portfolio(
     claude_json = Path(claude_json or "~/.claude.json").expanduser().resolve()
     project = Path(project or Path.cwd()).expanduser().resolve()
     sources: list[dict[str, Any]] = []
-    overrides, override_layers, enabled, enabled_layers, fraction = _load_settings(
+    overrides, enabled, fraction, max_desc_chars = _load_settings(
         claude_home, project, sources
     )
     usage_source = _source("usage", claude_json)
     sources.append(usage_source)
-    usage = _read_json(claude_json, usage_source).get("skillUsage", {})
+    state = _read_json(claude_json, usage_source)
+    usage = state.get("skillUsage", {})
     if not isinstance(usage, dict):
         usage_source["notes"].append("Ignored skillUsage: expected an object.")
         usage = {}
     usage_source["count"] = len(usage)
+    projects = state.get("projects", {})
+    known_projects: list[Path] = []
+    if not isinstance(projects, dict):
+        usage_source["notes"].append("Ignored projects: expected an object.")
+    else:
+        for name in projects:
+            try:
+                path = Path(name)
+                if not path.is_absolute():
+                    usage_source["notes"].append(
+                        f"Ignored non-absolute project path: {name}"
+                    )
+                else:
+                    known_projects.append(path.resolve())
+            except (OSError, RuntimeError, ValueError) as exc:
+                usage_source["notes"].append(
+                    f"Cannot resolve project path {name}: {exc}"
+                )
+    known_projects = sorted(set(known_projects))
 
     skills: list[dict[str, Any]] = []
     for name, path in (
@@ -473,9 +725,10 @@ def run_portfolio(
                 source,
                 name,
                 overrides,
-                override_layers,
                 usage,
                 project=project,
+                known_projects=known_projects,
+                max_desc_chars=max_desc_chars,
             )
         )
 
@@ -491,9 +744,10 @@ def run_portfolio(
                 source,
                 name,
                 overrides,
-                override_layers,
                 usage,
                 project=project,
+                known_projects=known_projects,
+                max_desc_chars=max_desc_chars,
             )
         )
 
@@ -509,75 +763,102 @@ def run_portfolio(
     for key, entries in sorted(installed.items()):
         notes: list[str] = []
         entry = _choose_install(entries, project, notes)
+        enabled_value, enabled_by = enabled.get(key, (None, None))
         row = {
             "plugin": key,
-            "enabled": enabled.get(key),
-            "enabled_by": enabled_layers.get(key),
+            "enabled": enabled_value,
+            "enabled_by": enabled_by,
             "visible_skills": 0,
             "listing_chars": 0,
+            "complete": True,
             "notes": notes,
         }
         plugins.append(row)
         if entry is None:
-            notes.append("No user or matching project installation.")
+            row["complete"] = False
+            notes.append(
+                "Incomplete: no matching local or project installation, or user installation."
+            )
             continue
         install_path = entry.get("installPath")
         if not isinstance(install_path, str) or not install_path:
-            notes.append("Install entry has no valid installPath.")
+            row["complete"] = False
+            notes.append("Incomplete: install entry has no valid installPath.")
             continue
         try:
-            path = Path(install_path).expanduser() / "skills"
+            install = Path(install_path).expanduser().resolve()
+            if not stat.S_ISDIR(install.stat().st_mode):
+                raise ValueError("installPath is not a directory")
         except (OSError, RuntimeError, ValueError) as exc:
-            notes.append(f"Cannot resolve installPath: {exc}")
+            row["complete"] = False
+            notes.append(f"Incomplete: cannot read installPath: {exc}")
             continue
-        source = _source(f"plugin:{key}", path)
+        manifest_path = install / ".claude-plugin" / "plugin.json"
+        manifest_source = _source(f"plugin-manifest:{key}", manifest_path)
+        manifest = _read_json(manifest_path, manifest_source)
+        if manifest_source["status"] == "unreadable" or (
+            manifest_source["status"] == "missing" and manifest_path.is_symlink()
+        ):
+            row["complete"] = False
+            notes.extend(
+                f"Incomplete plugin manifest: {note}"
+                for note in manifest_source["notes"]
+            )
+            # Root fallback requires knowing the manifest has no skills field.
+            manifest = {"skills": []}
+        source = _source(f"plugin:{key}", install / "skills")
         sources.append(source)
-        if enabled.get(key) is not True:
+        if enabled_value is not True:
             note = (
                 "Skills not listed: plugin is disabled."
-                if enabled.get(key) is False
+                if enabled_value is False
                 else "Skills not listed: plugin enabled state is unknown."
             )
             notes.append(note)
             source["notes"].append(note)
             # Source existence is useful even when its skills do not participate.
-            _directories(path, source, root=True)
+            _directories(install / "skills", source, root=True)
             continue
-        plugin_skills = _read_skills(
-            _skill_files(_directories(path, source, root=True)),
-            source,
-            "plugin",
-            overrides,
-            override_layers,
-            usage,
-            plugin=key,
-        )
-        commands_path = path.parent / "commands"
-        if commands_path.is_dir():
-            commands_source = _source(f"plugin-commands:{key}", commands_path)
-            sources.append(commands_source)
+        commands_source = _source(f"plugin-commands:{key}", install / "commands")
+        sources.append(commands_source)
+        plugin_skills = []
+        for kind, plugin_source in (("skills", source), ("commands", commands_source)):
             plugin_skills += _read_skills(
-                _command_files(commands_path, commands_source),
-                commands_source,
+                _plugin_files(install, kind, manifest, plugin_source),
+                plugin_source,
                 "plugin",
                 overrides,
-                override_layers,
                 usage,
                 plugin=key,
+                max_desc_chars=max_desc_chars,
             )
+            if plugin_source["status"] != "ok":
+                row["complete"] = False
+            notes.extend(plugin_source["notes"])
+        if not row["complete"]:
+            notes.append("Incomplete plugin inventory.")
         row["visible_skills"] = sum(
             skill["tier"] in ("on", "name-only") for skill in plugin_skills
         )
         row["listing_chars"] = sum(skill["listing_chars"] for skill in plugin_skills)
         skills.extend(plugin_skills)
 
-    total_chars = sum(skill["listing_chars"] for skill in skills)
+    total_chars, bare_floor_chars, listed = _listing_totals(skills)
     try:
         budget_chars = context_tokens * bytes_per_token * fraction
     except OverflowError as exc:
         raise ValueError("The computed listing budget must be finite") from exc
     if not _finite_number(budget_chars):
         raise ValueError("The computed listing budget must be finite")
+    budget_chars = max(1, math.floor(budget_chars))
+    rendered_max_chars = _rendered_max(total_chars, bare_floor_chars, budget_chars)
+    for row in plugins:
+        remaining_demand, remaining_floor, _ = _listing_totals(
+            [skill for skill in skills if skill["plugin"] != row["plugin"]]
+        )
+        row["saving_chars"] = rendered_max_chars - _rendered_max(
+            remaining_demand, remaining_floor, budget_chars
+        )
     return {
         "formula_source": FORMULA_SOURCE,
         "project": str(project),
@@ -589,6 +870,7 @@ def run_portfolio(
         "totals": {
             "skills": len(skills),
             "listing_chars": total_chars,
+            "listed": listed,
             "tiers": {
                 tier: sum(skill["tier"] == tier for skill in skills) for tier in TIERS
             },
@@ -598,6 +880,9 @@ def run_portfolio(
             "bytes_per_token": bytes_per_token,
             "fraction": fraction,
             "chars": budget_chars,
+            "demand_chars": total_chars,
+            "bare_floor_chars": bare_floor_chars,
+            "rendered_max_chars": rendered_max_chars,
             "over_budget": total_chars > budget_chars,
             "note": BUDGET_NOTE,
         },
@@ -616,18 +901,21 @@ def _cell(value: Any) -> str:
 
 
 def render_report(report: Mapping[str, Any]) -> str:
-    """Render inventory facts and the four dispositions, without recommendations."""
+    """Render facts without recommendations, preserving run_portfolio's skill order."""
     totals = report["totals"]
     budget = report["budget"]
     tier_counts = ", ".join(f"{tier}: {totals['tiers'][tier]}" for tier in TIERS)
     lines = [
         "# Skill portfolio",
         "",
-        f"Skills: {totals['skills']} | Listing chars: {totals['listing_chars']} | {tier_counts}",
+        f"Skills: {totals['skills']} | Listed: {totals['listed']} | "
+        f"Demand: {totals['listing_chars']} chars | {tier_counts}",
         "",
-        f"Budget: {budget['chars']:g} chars = {budget['context_tokens']} context tokens "
-        f"× {budget['bytes_per_token']:g} bytes/token × {budget['fraction']:g}; "
+        f"Budget: {budget['chars']} chars = max(1, floor({budget['context_tokens']} context tokens "
+        f"× {budget['bytes_per_token']:g} bytes/token × {budget['fraction']:g})); "
         f"over budget: {'yes' if budget['over_budget'] else 'no'}.",
+        f"Rendered max: {budget['rendered_max_chars']} chars; "
+        f"bare floor: {budget['bare_floor_chars']} chars.",
         "",
         f"Formula source: {report['formula_source']}.",
         "",
@@ -647,8 +935,8 @@ def render_report(report: Mapping[str, Any]) -> str:
             "",
             "## Plugins",
             "",
-            "| plugin | enabled | enabled by | visible skills | chars | notes |",
-            "| --- | --- | --- | ---: | ---: | --- |",
+            "| plugin | enabled | enabled by | visible skills | chars | saves | notes |",
+            "| --- | --- | --- | ---: | ---: | ---: | --- |",
         ]
     )
     for plugin in report["plugins"]:
@@ -661,6 +949,7 @@ def render_report(report: Mapping[str, Any]) -> str:
             plugin["enabled_by"] or "unknown",
             plugin["visible_skills"],
             plugin["listing_chars"],
+            plugin["saving_chars"],
             "; ".join(plugin["notes"]),
         )
         lines.append("| " + " | ".join(_cell(value) for value in cells) + " |")
@@ -673,9 +962,7 @@ def render_report(report: Mapping[str, Any]) -> str:
             "| --- | --- | --- | ---: | ---: | --- | --- |",
         ]
     )
-    for skill in sorted(
-        report["skills"], key=lambda item: (-item["listing_chars"], item["name"])
-    ):
+    for skill in report["skills"]:
         cells = (
             skill["name"],
             skill["source"],
