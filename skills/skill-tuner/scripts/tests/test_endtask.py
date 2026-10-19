@@ -6,6 +6,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
@@ -97,6 +98,55 @@ class EndtaskTest(unittest.TestCase):
                 delta=0.05, base_dir=base, budget_usd=0.045,
             )
             self.assertTrue(result["halted_on_budget"])
+
+    def test_manifest_records_distinct_resolved_models(self):
+        self._assert_resolved_models(
+            ["model-z", "model-a", "model-z", None] * 4,
+            ["model-a", "model-z"],
+        )
+
+    def test_manifest_keeps_unknown_models_empty(self):
+        self._assert_resolved_models([None] * 16, [])
+
+    def test_budget_halt_keeps_completed_model_provenance(self):
+        self._assert_resolved_models(
+            ["model-z", None, "model-a", "model-z", "model-a"],
+            ["model-a", "model-z"],
+            budget_usd=0.045,
+        )
+
+    def _assert_resolved_models(self, models, expected, *, budget_usd=None):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            config, grader = _setup(base)
+            returned = iter(models)
+            calls = []
+
+            def adapter(prompt, model):
+                resolved = next(returned)
+                calls.append(resolved)
+                return tune.AdapterResult(
+                    text="output GOOD", cost_usd=0.01, raw={},
+                    model_resolved=resolved,
+                )
+
+            # No provider, grader process or git/CLI subprocess is needed.
+            with patch("endtask.run_grader", return_value={"pass_rate": 1.0}), \
+                 patch("endtask.provenance._git", return_value=(127, "", "")), \
+                 patch("endtask.provenance.cli_version", return_value="test-cli"):
+                result = endtask.run_endtask(
+                    config, adapter, base / "run", grader,
+                    delta=0.05, base_dir=base, budget_usd=budget_usd,
+                )
+
+            report = json.loads(Path(result["report_json"]).read_text())
+            trials = tune.read_jsonl(base / "run" / "trials.jsonl")
+            self.assertEqual(models, calls)
+            self.assertEqual(models, [row["model_resolved"] for row in trials])
+            self.assertEqual(expected, report["manifest"]["resolved_models"])
+            self.assertEqual("test-model", report["manifest"]["model_pin"])
+            self.assertEqual(round(len(models) * 0.01, 6), result["spent_usd"])
+            self.assertEqual(budget_usd is not None, result["halted_on_budget"])
 
 
 if __name__ == "__main__":
