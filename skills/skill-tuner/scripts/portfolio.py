@@ -389,12 +389,10 @@ def _read_json(path: Path, source: dict[str, Any]) -> dict[str, Any]:
         source["notes"].append("Source file is missing.")
         return {}
     except (OSError, UnicodeError, ValueError) as exc:
-        source["status"] = "unreadable"
-        source["notes"].append(f"Cannot read JSON: {exc}")
+        _unreadable(source, f"Cannot read JSON: {exc}")
         return {}
     if not isinstance(value, dict):
-        source["status"] = "unreadable"
-        source["notes"].append("Expected a JSON object.")
+        _unreadable(source, "Expected a JSON object.")
         return {}
     source["count"] = len(value)
     return value
@@ -412,8 +410,7 @@ def _directory_entries(
         source["notes"].append(f"Missing directory or broken symlink: {path}")
         return []
     except (OSError, ValueError) as exc:
-        source["status"] = "unreadable"
-        source["notes"].append(f"Cannot list {path}: {exc}")
+        _unreadable(source, f"Cannot list {path}: {exc}")
         return []
 
 
@@ -429,8 +426,7 @@ def _directories(
         except FileNotFoundError:
             source["notes"].append(f"Broken symlink or missing entry: {entry}")
         except OSError as exc:
-            source["status"] = "unreadable"
-            source["notes"].append(f"Cannot inspect {entry}: {exc}")
+            _unreadable(source, f"Cannot inspect {entry}: {exc}")
     return directories
 
 
@@ -545,8 +541,7 @@ def _read_skills(
                 source["notes"].append(f"Broken symlink: {path}")
             continue
         except (OSError, UnicodeError) as exc:
-            source["status"] = "unreadable"
-            source["notes"].append(f"Cannot read {path}: {exc}")
+            _unreadable(source, f"Cannot read {path}: {exc}")
             continue
         metadata = parse_frontmatter(text)
         name = fallback
