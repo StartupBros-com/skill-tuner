@@ -279,6 +279,17 @@ def quote_present(quote: str, target_text: str) -> bool:
 # --------------------------------------------------------------------------
 
 
+_PROBE_OUTPUT_INSTRUCTIONS = (
+    "Return ONLY a JSON array. Each element is an object with keys "
+    '"rule" (the doctrine rule violated), "target_quote" (the exact, '
+    "verbatim text from the target document that shows the defect), "
+    '"issue" (why it violates the rule), and "proposed_fix" (a concrete '
+    "fix). An empty array `[]` is a legitimate, expected answer when the "
+    "target document has no genuine defects under the doctrine -- do "
+    "not manufacture findings just to fill the list. No other text."
+)
+
+
 def build_probe_prompt(
     doctrine_text: str, target_text: str, *, doctrine_in_system: bool = False
 ) -> str:
@@ -294,13 +305,7 @@ def build_probe_prompt(
             "that doctrine.\n\n"
             "=== TARGET DOCUMENT ===\n"
             f"{target_text}\n\n"
-            "Return ONLY a JSON array. Each element is an object with keys "
-            '"rule" (the doctrine rule violated), "target_quote" (the exact, '
-            "verbatim text from the target document that shows the defect), "
-            '"issue" (why it violates the rule), and "proposed_fix" (a concrete '
-            "fix). An empty array `[]` is a legitimate, expected answer when the "
-            "target document has no genuine defects under the doctrine -- do "
-            "not manufacture findings just to fill the list. No other text."
+            + _PROBE_OUTPUT_INSTRUCTIONS
         )
     return (
         "You are auditing a target document against a doctrine's checks. "
@@ -311,13 +316,7 @@ def build_probe_prompt(
         f"{doctrine_text}\n\n"
         "=== TARGET DOCUMENT ===\n"
         f"{target_text}\n\n"
-        "Return ONLY a JSON array. Each element is an object with keys "
-        '"rule" (the doctrine rule violated), "target_quote" (the exact, '
-        "verbatim text from the target document that shows the defect), "
-        '"issue" (why it violates the rule), and "proposed_fix" (a concrete '
-        "fix). An empty array `[]` is a legitimate, expected answer when the "
-        "target document has no genuine defects under the doctrine -- do "
-        "not manufacture findings just to fill the list. No other text."
+        + _PROBE_OUTPUT_INSTRUCTIONS
     )
 
 
