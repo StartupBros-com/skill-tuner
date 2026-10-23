@@ -312,6 +312,11 @@ def compare_probe_reports(
     )
 
 
+def matches_exclusion(name: str, patterns: Sequence[str]) -> bool:
+    """Match the same non-empty substring policy at ingestion and pairing."""
+    return any(pattern and pattern in name for pattern in patterns)
+
+
 def compare_paired(
     baseline: Mapping[str, float],
     candidate: Mapping[str, float],
@@ -336,7 +341,7 @@ def compare_paired(
     excluded: list[str] = []
     if exclude:
         def dropped(name: str) -> bool:
-            return any(pattern and pattern in name for pattern in exclude)
+            return matches_exclusion(name, exclude)
 
         excluded = sorted({n for n in {**base_counts, **cand_counts} if dropped(n)})
         base_counts = {k: v for k, v in base_counts.items() if not dropped(k)}
