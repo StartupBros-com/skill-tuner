@@ -30,31 +30,12 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 import routing_parity  # noqa: E402
 import tune  # noqa: E402
+from _test_skill import write_skill as _write_skill  # noqa: E402
 
 
 # --------------------------------------------------------------------------
 # Shared fixture builders
 # --------------------------------------------------------------------------
-
-
-def _write_skill(base: Path, slug: str, description: str, body: str) -> Path:
-    skill_dir = base / slug
-    skill_dir.mkdir(parents=True, exist_ok=True)
-    skill_md = skill_dir / "SKILL.md"
-    skill_md.write_text(
-        textwrap.dedent(
-            f"""\
-            ---
-            name: {slug}
-            description: {description}
-            ---
-
-            {body}
-            """
-        ),
-        encoding="utf-8",
-    )
-    return skill_md
 
 
 def _write_distractors(base: Path, n: int = 5) -> list[Path]:

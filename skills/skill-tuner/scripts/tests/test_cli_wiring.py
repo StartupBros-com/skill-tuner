@@ -16,7 +16,6 @@ from __future__ import annotations
 import json
 import sys
 import tempfile
-import textwrap
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -25,26 +24,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 import tune  # noqa: E402
-
-
-def _write_skill(base: Path, slug: str, description: str, body: str) -> Path:
-    skill_dir = base / slug
-    skill_dir.mkdir(parents=True, exist_ok=True)
-    skill_md = skill_dir / "SKILL.md"
-    skill_md.write_text(
-        textwrap.dedent(
-            f"""\
-            ---
-            name: {slug}
-            description: {description}
-            ---
-
-            {body}
-            """
-        ),
-        encoding="utf-8",
-    )
-    return skill_md
+from _test_skill import write_skill as _write_skill  # noqa: E402
 
 
 def _write_distractors(base: Path, n: int = 5) -> list[str]:

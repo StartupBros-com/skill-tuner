@@ -12,8 +12,6 @@ same walls a probe report does.
 
 from __future__ import annotations
 
-import contextlib
-import io
 import json
 import sys
 import tempfile
@@ -25,20 +23,13 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 import compare  # noqa: E402
-import tune  # noqa: E402
+from _test_cli import run_cli as _run_cli  # noqa: E402
 
 
 def _scores_file(base: Path, name: str, scores: dict) -> Path:
     path = base / name
     path.write_text(json.dumps(scores), encoding="utf-8")
     return path
-
-
-def _run_cli(*argv: str) -> tuple[int, str]:
-    out = io.StringIO()
-    with contextlib.redirect_stdout(out):
-        code = tune.main(list(argv))
-    return code, out.getvalue()
 
 
 class LoadPairedScoresTest(unittest.TestCase):

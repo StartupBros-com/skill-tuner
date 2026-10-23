@@ -114,7 +114,7 @@ def arm_scores(
             raise PluginEvalError(f"{source}: a case has no name")
         runs = (case.get("arms") or {}).get(arm) or []
         errored = [run for run in runs if isinstance(run, dict) and run.get("error")]
-        if errored and not any(pattern and pattern in name for pattern in exclude):
+        if errored and not compare.matches_exclusion(name, exclude):
             first = str(errored[0].get("error"))[:120]
             raise PluginEvalError(
                 f"{source}: case {name!r} has {len(errored)} errored run(s) in the {arm}-arm "
