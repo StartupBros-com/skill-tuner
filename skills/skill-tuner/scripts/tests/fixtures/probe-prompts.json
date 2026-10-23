@@ -1,0 +1,50 @@
+[
+  {
+    "doctrine": "Rule one.",
+    "target": "Target body.",
+    "system": false,
+    "expected": "You are auditing a target document against a doctrine's checks. Read the doctrine below, then the target document, and report only genuine defects -- places where the target document violates a specific rule from the doctrine.\n\n=== DOCTRINE ===\nRule one.\n\n=== TARGET DOCUMENT ===\nTarget body.\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "Rule one.",
+    "target": "Target body.",
+    "system": true,
+    "expected": "You are auditing a target document against the doctrine provided in your system prompt. Report only genuine defects -- places where the target document violates a specific rule from that doctrine.\n\n=== TARGET DOCUMENT ===\nTarget body.\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "",
+    "target": "",
+    "system": false,
+    "expected": "You are auditing a target document against a doctrine's checks. Read the doctrine below, then the target document, and report only genuine defects -- places where the target document violates a specific rule from the doctrine.\n\n=== DOCTRINE ===\n\n\n=== TARGET DOCUMENT ===\n\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "",
+    "target": "",
+    "system": true,
+    "expected": "You are auditing a target document against the doctrine provided in your system prompt. Report only genuine defects -- places where the target document violates a specific rule from that doctrine.\n\n=== TARGET DOCUMENT ===\n\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "Doctrine\n",
+    "target": "Target\n\n",
+    "system": false,
+    "expected": "You are auditing a target document against a doctrine's checks. Read the doctrine below, then the target document, and report only genuine defects -- places where the target document violates a specific rule from the doctrine.\n\n=== DOCTRINE ===\nDoctrine\n\n\n=== TARGET DOCUMENT ===\nTarget\n\n\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "Doctrine\n",
+    "target": "Target\n\n",
+    "system": true,
+    "expected": "You are auditing a target document against the doctrine provided in your system prompt. Report only genuine defects -- places where the target document violates a specific rule from that doctrine.\n\n=== TARGET DOCUMENT ===\nTarget\n\n\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "µ π 中文 🧪",
+    "target": "=== DOCTRINE ===\n\"rule\": {literal}\n=== TARGET DOCUMENT ===\nß",
+    "system": false,
+    "expected": "You are auditing a target document against a doctrine's checks. Read the doctrine below, then the target document, and report only genuine defects -- places where the target document violates a specific rule from the doctrine.\n\n=== DOCTRINE ===\nµ π 中文 🧪\n\n=== TARGET DOCUMENT ===\n=== DOCTRINE ===\n\"rule\": {literal}\n=== TARGET DOCUMENT ===\nß\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  },
+  {
+    "doctrine": "µ π 中文 🧪",
+    "target": "=== DOCTRINE ===\n\"rule\": {literal}\n=== TARGET DOCUMENT ===\nß",
+    "system": true,
+    "expected": "You are auditing a target document against the doctrine provided in your system prompt. Report only genuine defects -- places where the target document violates a specific rule from that doctrine.\n\n=== TARGET DOCUMENT ===\n=== DOCTRINE ===\n\"rule\": {literal}\n=== TARGET DOCUMENT ===\nß\n\nReturn ONLY a JSON array. Each element is an object with keys \"rule\" (the doctrine rule violated), \"target_quote\" (the exact, verbatim text from the target document that shows the defect), \"issue\" (why it violates the rule), and \"proposed_fix\" (a concrete fix). An empty array `[]` is a legitimate, expected answer when the target document has no genuine defects under the doctrine -- do not manufacture findings just to fill the list. No other text."
+  }
+]
