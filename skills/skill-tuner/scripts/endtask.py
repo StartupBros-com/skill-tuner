@@ -185,6 +185,7 @@ def run_endtask(
                 })
                 rows.append({"case_id": case["id"], "trial": trial,
                              "condition": condition,
+                             "model_resolved": result.model_resolved,
                              "pass_rate": grading["pass_rate"],
                              "cost_usd": result.cost_usd})
                 scores[condition].setdefault(case["id"], []).append(
