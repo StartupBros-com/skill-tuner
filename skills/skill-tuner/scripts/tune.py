@@ -39,6 +39,9 @@ DEFAULT_EST_COST_PER_CALL = 0.05
 DEFAULT_RETRIES = 2
 DEFAULT_REPORTS_DIR = Path("reports")
 
+# Shared shell-success policy for compare, endtask and sequential gate verdicts.
+_PASSING_VERDICTS = ("better", "not_worse")
+
 
 # --------------------------------------------------------------------------
 # Data shapes
@@ -1017,12 +1020,12 @@ def _gate_exit_code(result: Mapping[str, Any]) -> int:
     record decides alone — the 2026-08-10 review reproduced the old AND
     policy failing an undecided leg whose fixed-n verdict passed."""
     fixed = result.get("fixed_n") or {}
-    fixed_ok = fixed.get("verdict") in ("better", "not_worse")
+    fixed_ok = fixed.get("verdict") in _PASSING_VERDICTS
     if result.get("halted_on_budget"):
         return 1
     if result["sequential_verdict"] == "undecided":
         return 0 if fixed_ok else 1
-    sequential_ok = result["sequential_verdict"] in ("better", "not_worse")
+    sequential_ok = result["sequential_verdict"] in _PASSING_VERDICTS
     return 0 if (sequential_ok and fixed_ok) else 1
 
 
@@ -1072,7 +1075,7 @@ def _cmd_endtask(args: argparse.Namespace) -> int:
         f"Run {run_id}: verdict={result['verdict']} "
         f"cases={result['cases_scored']} spent=${result['spent_usd']:.4f}"
     )
-    return 0 if result["verdict"] in ("better", "not_worse") else 1
+    return 0 if result["verdict"] in _PASSING_VERDICTS else 1
 
 
 # The compare subcommand's external sources, in precedence order. Each is a
@@ -1195,7 +1198,7 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     else:
         print(compare_mod.render(result))
     _log_compare_invocation(args, result)
-    return 0 if result["verdict"] in ("better", "not_worse") else 1
+    return 0 if result["verdict"] in _PASSING_VERDICTS else 1
 
 
 def _log_compare_invocation(args: argparse.Namespace, result: Mapping[str, Any]) -> None:
