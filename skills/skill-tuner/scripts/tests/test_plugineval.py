@@ -9,8 +9,6 @@ fixture is a trimmed copy of a real 3-case run from 2026-09-20 (Claude Code
 
 from __future__ import annotations
 
-import contextlib
-import io
 import json
 import sys
 import tempfile
@@ -22,7 +20,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 import compare  # noqa: E402
 import plugineval  # noqa: E402
-import tune  # noqa: E402
+from _test_cli import run_cli as _run_cli  # noqa: E402
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "plugin-eval-aggregate-result.json"
 
@@ -45,13 +43,6 @@ def _write(base: Path, name: str, doc: dict) -> Path:
     path = base / name
     path.write_text(json.dumps(doc), encoding="utf-8")
     return path
-
-
-def _run_cli(*argv: str) -> tuple[int, str]:
-    out = io.StringIO()
-    with contextlib.redirect_stdout(out):
-        code = tune.main(list(argv))
-    return code, out.getvalue()
 
 
 class FixtureTest(unittest.TestCase):
