@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "trials": 4,
+  "neutral_ids": true,
+  "battery_file": "trigger-improving-routing-battery.json",
+  "targets": [
+    {
+      "id": "skill-tuner",
+      "path": "../skills/skill-tuner/SKILL.md",
+      "pruned_description": "Evidence-tagged rules for writing documents agents consume. Use when creating, editing, improving, or shortening skills, AGENTS.md, or CLAUDE.md."
+    }
+  ],
+  "distractors": [
+    "/home/will/.claude/skills/de-slopify/SKILL.md",
+    "/home/will/.claude/skills/readme-writing/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+    "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+    "/home/will/.claude/skills/tdd/SKILL.md",
+    "/home/will/.claude/plugins/cache/claude-plugins-official/skill-creator/f8c5e7a1dcb7/skills/skill-creator/SKILL.md"
+  ]
+}
