@@ -1,0 +1,609 @@
+{
+  "conditions": {
+    "probe": {
+      "trials": 15,
+      "total_cost_usd": 0.7862385
+    },
+    "verify": {
+      "trials": 168,
+      "total_cost_usd": 1.9658257
+    }
+  },
+  "total_trials": 183,
+  "manifest": {
+    "run_id": "swapgate8-gate-combined",
+    "started_at": "2026-10-29T10:07:39Z",
+    "finished_at": "2026-10-29T10:32:52Z",
+    "cli_version": "2.1.312",
+    "tool_version": "0.10.0",
+    "model_pin": "claude-sonnet-5-5",
+    "resolved_models": [
+      "claude-sonnet-5-5"
+    ],
+    "adapter_shape": "claude-p-user-message-isolated",
+    "inputs": [
+      {
+        "role": "doctrine",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/doctrine-gate-68-69/configs/../experiments/doctrine-gate-2026-10-29/candidates/combined.SKILL.md",
+        "sha256": "sha256:62f3338b891464aa1abf49fe9fb17598b76acb33b4a6aeec173e43ab00195228",
+        "source": "worktree",
+        "git_commit": "c948837d09edaa2f01468ecb28adccd13134b1f0",
+        "git_path": "experiments/doctrine-gate-2026-10-29/candidates/combined.SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "sha256": "sha256:0de8b88822acf884f925509fb6bb06e410863767e824fac24b892811c539687e",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/agent-swarm/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "sha256": "sha256:ecf98ca2b55448bd44b9478f52c7c73c3ed3996d496e89cb778e9440d8a10419",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/animate/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "sha256": "sha256:ccd612736f52e7c47e97d629d0e0b61665b861593f9ec90a69590c7844e8ddb7",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/apple-design/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "sha256": "sha256:5d44a3ae63b759f29b90103cd1b11c297597b7e0235d369cc107f1e197283192",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/automating-your-automations-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "sha256": "sha256:4c9e0d44c9ad7d535116853c072dae69700bbd48a0ec798a4244abb62171dffe",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/branch-harmonization/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "sha256": "sha256:acfdd72cf108bd5293fef3fa3a4e8c46a1832e069808850f5c257ce6a19e69ae",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/brand-voice-builder/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "sha256": "sha256:81a324fa1a171eef3c2086c902908f8d47998ce56a4f6eccb97925d830a736d3",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/browser-console-setup/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "sha256": "sha256:0a247b43b2d1b01513469a93bca87940934c7d0ce077aa5fc95733a8cb42e3a8",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/cass-rerank-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "sha256": "sha256:042557dd3a8dfebd27cfe2e9132356e923e04d813109ad211a61a94633c1befb",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:e3eb80072a3c44b5eefd4dfdcfef3dfc15706226a124ddfc23d07a99c01998d9",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/cli-doctor-mode/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "sha256": "sha256:d1d441cdbb18a329e56c60d6d588e414e668163584f144ca1014d053b8882409",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/codex-consult/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "sha256": "sha256:58291952bd2adb2b0dc3589874ad09dac80b3775a2987886267f6da45ad57ae0",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/curl-bash-installer/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "sha256": "sha256:3cc23114e029d43298ea682c752718bc0770833f9ad58e9f344880e3adfc3966",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "sha256": "sha256:b8a9c77f0103eb8911f3bb2f6358b9633d22128cf99b8b0241c62dfd304ef74c",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/emil-design-eng/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "target",
+        "path": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "sha256": "sha256:b0da3320d5e603ad27f95f8226f1b0baf7eca2afc565c010e9522c5724712b3e",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/find-animation-opportunities/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "gate",
+    "pin": null
+  },
+  "gate": {
+    "delta": 1.0,
+    "alpha": 0.05,
+    "sigma0": 2.0,
+    "sequential_verdict": "undecided",
+    "sigma0_exceeded": false,
+    "stopped_early": false,
+    "halted_on_budget": false,
+    "targets_probed": 15,
+    "targets_total": 15,
+    "targets_skipped": 0,
+    "doctrine_sha256": "sha256:62f3338b891464aa1abf49fe9fb17598b76acb33b4a6aeec173e43ab00195228",
+    "trace": [
+      {
+        "n": 1,
+        "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "diff": 1.0,
+        "mean": 1.0,
+        "lambda_margin": 0.9079430793557843,
+        "lambda_zero": 0.7527112504363231,
+        "stop": null
+      },
+      {
+        "n": 2,
+        "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "diff": -1.0,
+        "mean": 0.0,
+        "lambda_margin": 0.682058752377948,
+        "lambda_zero": 0.5773502691896257,
+        "stop": null
+      },
+      {
+        "n": 3,
+        "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "diff": 2.0,
+        "mean": 0.6666666666666666,
+        "lambda_margin": 1.092100405407809,
+        "lambda_zero": 0.5665742265334132,
+        "stop": null
+      },
+      {
+        "n": 4,
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "diff": 0.0,
+        "mean": 0.5,
+        "lambda_margin": 1.0999679508433822,
+        "lambda_zero": 0.49424745991459984,
+        "stop": null
+      },
+      {
+        "n": 5,
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "diff": -1.0,
+        "mean": 0.2,
+        "lambda_margin": 0.8642616376940941,
+        "lambda_zero": 0.4168426771956841,
+        "stop": null
+      },
+      {
+        "n": 6,
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "diff": 2.0,
+        "mean": 0.5,
+        "lambda_margin": 1.605561431383764,
+        "lambda_zero": 0.44386234925696594,
+        "stop": null
+      },
+      {
+        "n": 7,
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "diff": -2.0,
+        "mean": 0.14285714285714285,
+        "lambda_margin": 0.9610577570397792,
+        "lambda_zero": 0.3591210463581713,
+        "stop": null
+      },
+      {
+        "n": 8,
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "diff": 3.0,
+        "mean": 0.5,
+        "lambda_margin": 2.46301869964355,
+        "lambda_zero": 0.416282956333894,
+        "stop": null
+      },
+      {
+        "n": 9,
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "diff": 1.0,
+        "mean": 0.5555555555555556,
+        "lambda_margin": 3.6645569948485663,
+        "lambda_zero": 0.43223210864444384,
+        "stop": null
+      },
+      {
+        "n": 10,
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "diff": 0.0,
+        "mean": 0.5,
+        "lambda_margin": 3.887905362647082,
+        "lambda_zero": 0.4005740132968306,
+        "stop": null
+      },
+      {
+        "n": 11,
+        "target_file": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "diff": 0.0,
+        "mean": 0.45454545454545453,
+        "lambda_margin": 4.154588315844649,
+        "lambda_zero": 0.3745474962767977,
+        "stop": null
+      },
+      {
+        "n": 12,
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "diff": -1.0,
+        "mean": 0.3333333333333333,
+        "lambda_margin": 3.251328827599518,
+        "lambda_zero": 0.3234765924375435,
+        "stop": null
+      },
+      {
+        "n": 13,
+        "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "diff": 1.0,
+        "mean": 0.38461538461538464,
+        "lambda_margin": 4.822673672211286,
+        "lambda_zero": 0.33410018393081486,
+        "stop": null
+      },
+      {
+        "n": 14,
+        "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "diff": 1.0,
+        "mean": 0.42857142857142855,
+        "lambda_margin": 7.237734425575531,
+        "lambda_zero": 0.3485320454315508,
+        "stop": null
+      },
+      {
+        "n": 15,
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "diff": -2.0,
+        "mean": 0.26666666666666666,
+        "lambda_margin": 4.195523564310604,
+        "lambda_zero": 0.2832871132667066,
+        "stop": null
+      }
+    ],
+    "per_target": [
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "findings_confirmed": 0,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "findings_confirmed": 5,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "findings_confirmed": 1,
+        "refuted_count": 1,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 6,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 0,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 9,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "findings_confirmed": 3,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "findings_confirmed": 5,
+        "refuted_count": 0,
+        "overflow": 2,
+        "probe_calls": 1,
+        "verify_calls": 15,
+        "complete": true
+      },
+      {
+        "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+        "findings_confirmed": 2,
+        "refuted_count": 2,
+        "overflow": 0,
+        "probe_calls": 1,
+        "verify_calls": 12,
+        "complete": true
+      }
+    ],
+    "fixed_n": {
+      "verdict": "not_worse",
+      "delta": 1.0,
+      "documents": [
+        "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+        "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md"
+      ],
+      "excluded": [],
+      "n": 15,
+      "baseline_total": 34.0,
+      "candidate_total": 38.0,
+      "per_document": [
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/agent-swarm/SKILL.md",
+          "baseline": 2.0,
+          "candidate": 3.0,
+          "diff": 1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/animate/SKILL.md",
+          "baseline": 3.0,
+          "candidate": 2.0,
+          "diff": -1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/apple-design/SKILL.md",
+          "baseline": 1.0,
+          "candidate": 3.0,
+          "diff": 2.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/automating-your-automations-local/SKILL.md",
+          "baseline": 2.0,
+          "candidate": 2.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/branch-harmonization/SKILL.md",
+          "baseline": 1.0,
+          "candidate": 0.0,
+          "diff": -1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/brand-voice-builder/SKILL.md",
+          "baseline": 0.0,
+          "candidate": 2.0,
+          "diff": 2.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/browser-console-setup/SKILL.md",
+          "baseline": 3.0,
+          "candidate": 1.0,
+          "diff": -2.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/cass-rerank-local/SKILL.md",
+          "baseline": 2.0,
+          "candidate": 5.0,
+          "diff": 3.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/cli-agent-ergonomics/SKILL.md",
+          "baseline": 2.0,
+          "candidate": 3.0,
+          "diff": 1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+          "baseline": 3.0,
+          "candidate": 3.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/codex-consult/SKILL.md",
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "diff": 0.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/curl-bash-installer/SKILL.md",
+          "baseline": 4.0,
+          "candidate": 3.0,
+          "diff": -1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/de-monolithize-your-codebase-isomorphically-local/SKILL.md",
+          "baseline": 2.0,
+          "candidate": 3.0,
+          "diff": 1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/emil-design-eng/SKILL.md",
+          "baseline": 4.0,
+          "candidate": 5.0,
+          "diff": 1.0
+        },
+        {
+          "target_file": "/home/will/dotfiles/claude/skills-local/find-animation-opportunities/SKILL.md",
+          "baseline": 4.0,
+          "candidate": 2.0,
+          "diff": -2.0
+        }
+      ],
+      "mean_diff": 0.26666666666666666,
+      "sd": 1.486446705914413,
+      "se": 0.38379888913542637,
+      "ci_low": -0.556581950528823,
+      "ci_high": 1.0899152838621562,
+      "regression_confirmed": false,
+      "bootstrap_ci_low": -0.4666666666666667,
+      "bootstrap_ci_high": 1.0,
+      "sign_test_p": 0.7744140625,
+      "effect_size_dz": 0.17939874036898087,
+      "documents_won": 7,
+      "documents_lost": 5,
+      "documents_tied": 3,
+      "passes_legacy_count_rule": true,
+      "n_for_delta": 15,
+      "warnings": []
+    }
+  }
+}
