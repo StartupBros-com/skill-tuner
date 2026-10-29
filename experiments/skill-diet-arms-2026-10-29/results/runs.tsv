@@ -1,0 +1,89 @@
+bare	t4	0	/tmp/ws-63855794	ok subtype=success turns=2 cost=0.050827000000000004 (exit 0)	ws-63855794 t4 2/2 T4-A=1 T4-B=1
+diet	t1	0	/tmp/ws-da60f0f5	ok subtype=success turns=7 cost=0.0542228 (exit 0)	ws-da60f0f5 t1 11/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=1 K1=0 K2=1 K3=1 K4=1 K5=1
+bare	t2	1	/tmp/ws-fe0372fa	ok subtype=success turns=4 cost=0.0413079 (exit 0)	ws-fe0372fa t2 5/7 D1=0 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+diet	t1	1	/tmp/ws-ff8b4f17	ok subtype=success turns=8 cost=0.060979599999999995 (exit 0)	ws-ff8b4f17 t1 11/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=1 K1=0 K2=1 K3=1 K4=1 K5=1
+re0	t1	1	/tmp/ws-16f4985f	ok subtype=success turns=6 cost=0.05188009999999999 (exit 0)	ws-16f4985f t1 9/12 D1=0 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t1	1	/tmp/ws-66f89c07	ok subtype=success turns=5 cost=0.047857500000000004 (exit 0)	ws-66f89c07 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner	t1	1	/tmp/ws-7d271fc0	ok subtype=success turns=4 cost=0.05591800000000001 (exit 0)	ws-7d271fc0 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+wfa	t1	1	/tmp/ws-67e02fe3	ok subtype=success turns=6 cost=0.056868300000000004 (exit 0)	ws-67e02fe3 t1 12/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=1 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t3	1	/tmp/ws-f3569baa	ok subtype=success turns=3 cost=0.025885300000000003 (exit 0)	ws-f3569baa t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+diet	t2	1	/tmp/ws-f57e9ac3	ok subtype=success turns=3 cost=0.0417128 (exit 0)	ws-f57e9ac3 t2 5/7 D1=0 D9=1 K1=1 K2=1 K3=1 K4=1 K5=0
+diet	t3	1	/tmp/ws-e6c0e21d	ok subtype=success turns=3 cost=0.027169000000000006 (exit 0)	ws-e6c0e21d t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+tuner	t2	1	/tmp/ws-0d65e642	ok subtype=success turns=4 cost=0.05493010000000001 (exit 0)	ws-0d65e642 t2 6/7 D1=1 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+re0	t2	1	/tmp/ws-ce493d2a	ok subtype=success turns=4 cost=0.0484455 (exit 0)	ws-ce493d2a t2 5/7 D1=0 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner	t3	1	/tmp/ws-1fd5f5c0	ok subtype=success turns=5 cost=0.0437281 (exit 0)	ws-1fd5f5c0 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+bare	t4	1	/tmp/ws-eefbd39e	ok subtype=success turns=3 cost=0.021820399999999997 (exit 0)	ws-eefbd39e t4 2/2 T4-A=1 T4-B=1
+diet	t4	1	/tmp/ws-73042f07	ok subtype=success turns=3 cost=0.0248278 (exit 0)	ws-73042f07 t4 2/2 T4-A=1 T4-B=1
+wfa	t3	1	/tmp/ws-20f15e1d	ok subtype=success turns=6 cost=0.047157 (exit 0)	ws-20f15e1d t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+tuner	t4	1	/tmp/ws-6671e6ac	ok subtype=success turns=2 cost=0.0322065 (exit 0)	ws-6671e6ac t4 2/2 T4-A=1 T4-B=1
+re0	t3	1	/tmp/ws-ff3ebd42	ok subtype=success turns=5 cost=0.0362462 (exit 0)	ws-ff3ebd42 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+re0	t4	1	/tmp/ws-699b70aa	ok subtype=success turns=2 cost=0.0241936 (exit 0)	ws-699b70aa t4 2/2 T4-A=1 T4-B=1
+wfa	t4	1	/tmp/ws-4aacb8d4	ok subtype=success turns=3 cost=0.033171 (exit 0)	ws-4aacb8d4 t4 2/2 T4-A=1 T4-B=1
+wfa	t2	1	/tmp/ws-f820750e	ok subtype=success turns=6 cost=0.06825239999999999 (exit 0)	ws-f820750e t2 6/7 D1=1 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t1	2	/tmp/ws-d5a3d191	ok subtype=success turns=5 cost=0.0475034 (exit 0)	ws-d5a3d191 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+diet	t1	2	/tmp/ws-825c128e	ok subtype=success turns=7 cost=0.0541319 (exit 0)	ws-825c128e t1 11/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=1 K1=1 K2=1 K3=0 K4=1 K5=1
+tuner	t1	2	/tmp/ws-71bf7c42	ok subtype=success turns=4 cost=0.0579162 (exit 0)	ws-71bf7c42 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+wfa	t1	2	/tmp/ws-b46a54d3	ok subtype=success turns=6 cost=0.05964830000000001 (exit 0)	ws-b46a54d3 t1 12/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=1 K1=1 K2=1 K3=1 K4=1 K5=1
+re0	t1	2	/tmp/ws-fe09b747	ok subtype=success turns=5 cost=0.050228100000000005 (exit 0)	ws-fe09b747 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t2	2	/tmp/ws-376a9a26	ok subtype=success turns=4 cost=0.0416509 (exit 0)	ws-376a9a26 t2 5/7 D1=0 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t3	2	/tmp/ws-f7f12d5c	ok subtype=success turns=4 cost=0.0266629 (exit 0)	ws-f7f12d5c t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+diet	t2	2	/tmp/ws-84645fd7	ok subtype=success turns=3 cost=0.044982999999999995 (exit 0)	ws-84645fd7 t2 7/7 D1=1 D9=1 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner	t2	2	/tmp/ws-beacf669	ok subtype=success turns=4 cost=0.0563106 (exit 0)	ws-beacf669 t2 6/7 D1=1 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+diet	t3	2	/tmp/ws-b48a1560	ok subtype=success turns=3 cost=0.0270093 (exit 0)	ws-b48a1560 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+wfa	t3	2	/tmp/ws-890255fa	ok subtype=success turns=6 cost=0.0440394 (exit 0)	ws-890255fa t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+tuner	t3	2	/tmp/ws-a3ce2ef6	ok subtype=success turns=3 cost=0.0381509 (exit 0)	ws-a3ce2ef6 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+bare	t4	2	/tmp/ws-9bb6f0dd	ok subtype=success turns=2 cost=0.0212785 (exit 0)	ws-9bb6f0dd t4 2/2 T4-A=1 T4-B=1
+wfa	t2	2	/tmp/ws-e8a1302d	ok subtype=success turns=5 cost=0.06918229999999999 (exit 0)	ws-e8a1302d t2 4/7 D1=0 D9=0 K1=1 K2=1 K3=1 K4=1 K5=0
+re0	t2	2	/tmp/ws-b7c53c78	ok subtype=success turns=4 cost=0.0481187 (exit 0)	ws-b7c53c78 t2 6/7 D1=0 D9=1 K1=1 K2=1 K3=1 K4=1 K5=1
+wfa	t4	2	/tmp/ws-2809dbe1	ok subtype=success turns=4 cost=0.0346142 (exit 0)	ws-2809dbe1 t4 2/2 T4-A=1 T4-B=1
+re0	t4	2	/tmp/ws-d75201ea	ok subtype=success turns=2 cost=0.0238236 (exit 0)	ws-d75201ea t4 2/2 T4-A=1 T4-B=1
+tuner	t4	2	/tmp/ws-86699852	ok subtype=success turns=2 cost=0.0322628 (exit 0)	ws-86699852 t4 2/2 T4-A=1 T4-B=1
+diet	t4	2	/tmp/ws-a29eabcf	ok subtype=success turns=3 cost=0.025880999999999998 (exit 0)	ws-a29eabcf t4 2/2 T4-A=1 T4-B=1
+re0	t3	2	/tmp/ws-8e23ca3d	ok subtype=success turns=5 cost=0.0364862 (exit 0)	ws-8e23ca3d t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+diet	t1	3	/tmp/ws-ae99743a	ok subtype=success turns=7 cost=0.054809500000000004 (exit 0)	ws-ae99743a t1 11/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t1	3	/tmp/ws-00378d58	ok subtype=success turns=4 cost=0.045492399999999995 (exit 0)	ws-00378d58 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t2	3	/tmp/ws-5d46d805	ok subtype=success turns=4 cost=0.039246300000000005 (exit 0)	ws-5d46d805 t2 5/7 D1=0 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+wfa	t1	3	/tmp/ws-4b261e46	ok subtype=success turns=6 cost=0.0578366 (exit 0)	ws-4b261e46 t1 11/12 D1=1 D2=1 D3=1 D4=1 D5=1 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+re0	t1	3	/tmp/ws-5ffd55cf	ok subtype=success turns=5 cost=0.051678400000000006 (exit 0)	ws-5ffd55cf t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner	t1	3	/tmp/ws-9b800d21	ok subtype=success turns=6 cost=0.0608506 (exit 0)	ws-9b800d21 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+diet	t2	3	/tmp/ws-56a759a1	ok subtype=success turns=4 cost=0.0435379 (exit 0)	ws-56a759a1 t2 7/7 D1=1 D9=1 K1=1 K2=1 K3=1 K4=1 K5=1
+bare	t3	3	/tmp/ws-822a5245	ok subtype=success turns=4 cost=0.0259958 (exit 0)	ws-822a5245 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+tuner	t2	3	/tmp/ws-e8f8df0c	ok subtype=success turns=4 cost=0.057288700000000005 (exit 0)	ws-e8f8df0c t2 6/7 D1=1 D9=0 K1=1 K2=1 K3=1 K4=1 K5=1
+wfa	t2	3	/tmp/ws-48c36f03	ok subtype=success turns=5 cost=0.0620406 (exit 0)	ws-48c36f03 t2 4/7 D1=0 D9=0 K1=1 K2=1 K3=1 K4=1 K5=0
+re0	t3	3	/tmp/ws-f3cf95ef	ok subtype=success turns=3 cost=0.030139799999999998 (exit 0)	ws-f3cf95ef t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+wfa	t3	3	/tmp/ws-456b2a39	ok subtype=success turns=5 cost=0.0400195 (exit 0)	ws-456b2a39 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+re0	t2	3	/tmp/ws-c1f256a3	ok subtype=success turns=5 cost=0.05476239999999999 (exit 0)	ws-c1f256a3 t2 7/7 D1=1 D9=1 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner	t3	3	/tmp/ws-a8dc6a45	ok subtype=success turns=6 cost=0.0474962 (exit 0)	ws-a8dc6a45 t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+diet	t3	3	/tmp/ws-b164248d	ok subtype=success turns=3 cost=0.0271628 (exit 0)	ws-b164248d t3 8/8 T3-A=1 T3-B=1 K1=1 K2=1 K3=1 K4=1 K5=1 T3-C=1
+bare	t4	3	/tmp/ws-7e77c8b8	ok subtype=success turns=3 cost=0.023746299999999998 (exit 0)	ws-7e77c8b8 t4 2/2 T4-A=1 T4-B=1
+tuner	t4	3	/tmp/ws-49082e7b	ok subtype=success turns=4 cost=0.03941119999999999 (exit 0)	ws-49082e7b t4 2/2 T4-A=1 T4-B=1
+wfa	t4	3	/tmp/ws-bf88dd1d	ok subtype=success turns=2 cost=0.0303298 (exit 0)	ws-bf88dd1d t4 2/2 T4-A=1 T4-B=1
+diet	t4	3	/tmp/ws-15f7e101	ok subtype=success turns=2 cost=0.0243057 (exit 0)	ws-15f7e101 t4 2/2 T4-A=1 T4-B=1
+re0	t4	3	/tmp/ws-c76f8f80	ok subtype=success turns=3 cost=0.028000300000000006 (exit 0)	ws-c76f8f80 t4 2/2 T4-A=1 T4-B=1
+probe-tuner	t4	1	/tmp/ws-75e22bfe	ok subtype=success turns=3 cost=0.022138699999999997 (exit 0)	-
+probe-diet	t4	1	/tmp/ws-9be3d8aa	ok subtype=success turns=3 cost=0.0225631 (exit 0)	-
+probe-re0	t4	1	/tmp/ws-7701c367	ok subtype=success turns=3 cost=0.022053500000000004 (exit 0)	-
+probe-wfa	t4	1	/tmp/ws-7d9ade5f	ok subtype=success turns=3 cost=0.0221808 (exit 0)	-
+probe-diet	t1	1	/tmp/ws-c5f99ad1	ok subtype=success turns=8 cost=0.0472794 (exit 0)	-
+probe-re0	t1	1	/tmp/ws-8d2458ee	ok subtype=success turns=4 cost=0.0446867 (exit 0)	-
+probe-tuner	t1	1	/tmp/ws-c0e4b90b	ok subtype=success turns=4 cost=0.043642200000000006 (exit 0)	-
+probe-wfa	t1	1	/tmp/ws-a6d271ee	ok subtype=success turns=7 cost=0.059390200000000004 (exit 0)	-
+probe-diet	t4	2	/tmp/ws-5b97ba26	ok subtype=success turns=3 cost=0.023896900000000002 (exit 0)	-
+collide	t1	1	/tmp/ws-70014345	ok subtype=success turns=8 cost=0.049354499999999996 (exit 0)	-
+probe-re0	t1	2	/tmp/ws-e26dd00a	ok subtype=success turns=4 cost=0.0436136 (exit 0)	-
+probe-tuner	t1	2	/tmp/ws-2e84ce22	ok subtype=success turns=5 cost=0.0453012 (exit 0)	-
+probe-wfa	t1	2	/tmp/ws-1d6913b5	ok subtype=success turns=7 cost=0.0587222 (exit 0)	-
+probe-re0	t4	2	/tmp/ws-251bd767	ok subtype=success turns=2 cost=0.021686 (exit 0)	-
+probe-wfa	t4	2	/tmp/ws-e641c3de	ok subtype=success turns=2 cost=0.0209702 (exit 0)	-
+probe-tuner	t4	2	/tmp/ws-f5f6b5bb	ok subtype=success turns=2 cost=0.0211368 (exit 0)	-
+probe-diet	t1	2	/tmp/ws-7e3ec9c8	ok subtype=success turns=10 cost=0.057893599999999996 (exit 0)	-
+collide	t1	2	/tmp/ws-035694f9	ok subtype=success turns=8 cost=0.050110499999999995 (exit 0)	-
+probe-diet	t4	3	/tmp/ws-bba68d85	ok subtype=success turns=2 cost=0.0211925 (exit 0)	-
+probe-wfa	t4	3	/tmp/ws-a71449b7	ok subtype=success turns=3 cost=0.022120200000000003 (exit 0)	-
+probe-tuner	t1	3	/tmp/ws-b7834fc8	ok subtype=success turns=5 cost=0.0458352 (exit 0)	-
+probe-diet	t1	3	/tmp/ws-abc5e50b	ok subtype=success turns=10 cost=0.0617172 (exit 0)	-
+probe-tuner	t4	3	/tmp/ws-f244edad	ok subtype=success turns=2 cost=0.021368099999999998 (exit 0)	-
+probe-wfa	t1	3	/tmp/ws-9e2d97b4	ok subtype=success turns=8 cost=0.06513100000000001 (exit 0)	-
+probe-re0	t1	3	/tmp/ws-debd74f4	ok subtype=success turns=5 cost=0.047156800000000006 (exit 0)	-
+probe-re0	t4	3	/tmp/ws-1457d4dc	ok subtype=success turns=3 cost=0.022871600000000002 (exit 0)	-
+collide	t1	3	/tmp/ws-e069f66c	ok subtype=success turns=8 cost=0.049894400000000005 (exit 0)	-

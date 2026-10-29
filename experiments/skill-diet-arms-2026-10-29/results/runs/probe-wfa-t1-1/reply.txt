@@ -1,0 +1,7 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 bytes to roughly half that, after checking its claims against the installed CLI.
+
+- **Fixed:** the old text said `shipit release --env staging` and `--env prod`. The CLI only accepts `--target`, so I corrected those commands.
+- **Cut:** the semver explainer, the March/January history and the `make deploy` aside, the duplicate "run check" and "use a dry run" lines, and the `--help` option dump (the skill now points to `--help`).
+- **Merged:** the scattered rules into one Rules section, and the options into one line.
+- **Kept:** the `check` quirk (it exits 0 with `no manifest` on stderr and must be treated as a failure) and the purge guardrail (only for a release the human names, `--yes` only after they confirm). Also kept the exact `--notes-json` shape, the check, staging, then prod order with a prod dry run, and the rollback steps.
+- **Tested:** I ran `check`, `status`, and `release --dry-run` with malformed notes and with `--retries`. I did not run a real rollback or purge. Two claims rest on the old text and my testing didn't contradict them: that `--retries 5` helps a failed rollback, and that dry runs ignore `--retries`.

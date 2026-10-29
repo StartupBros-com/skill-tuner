@@ -1,0 +1,9 @@
+I cut `SKILL.md` from 3,040 bytes to about 1,300 and kept the safety content. I checked the old text against `shipit --help`, each subcommand's help, and a live run of `check` and `status`. I didn't run the diet's before/after eval or `check`, and I didn't test `--retries 5` on `rollback` or the `--notes-json` rejection rules.
+- **Fixed:** the old skill said to release with `--env staging` and `--env prod`. The CLI only has `--target`, so I corrected both commands.
+- **Cut:** the copy of the global options list, the semver explanation, and the History section. I also cut the "dry runs ignore `--retries`" line and the claim that notes with the wrong shape are rejected, because I couldn't confirm either in the CLI. The skill now points to `--help` for the `--notes-json` format.
+- **Kept:**
+  - Run `shipit check` before every release, and treat the `no manifest` message as a failure even though the exit code is 0.
+  - Release to staging before prod, and use `--dry-run` first for prod.
+  - Run `shipit purge` only when the human names the release, and pass `--yes` only after they confirm.
+  - The rollback steps, merged into five.
+  - The note to put the failed release id in the next release's notes. That is a team process I couldn't check against the CLI.

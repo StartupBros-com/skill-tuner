@@ -1,0 +1,11 @@
+I created `./biggest.sh` and ran it once. It prints the three largest files under `./data`, largest first, with sizes in bytes:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script uses `find` to list each file's size and path, sorts by size in descending order, and keeps the top three.
+
+I invoked the re0 skill, but this task was to write a new script, so there was no existing artifact to refresh.

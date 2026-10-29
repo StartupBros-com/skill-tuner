@@ -1,0 +1,10 @@
+I cut `skills/shipit/SKILL.md` from about 3,040 bytes to about 1,300 and fixed what it said about the CLI. I checked the claims against `shipit --help`, each command's help, and a few runs.
+
+- **Fixed:** the skill told agents to run `shipit release --env staging`. The CLI rejects `--env` (unknown flag, exit 2), so every example now uses `--target`. The dry run is now named as `--dry-run`.
+- **Kept after checking:** `shipit check` exits 0 and prints `no manifest` when the manifest is missing. Agents are still told to treat that as a failure, and to run `check` before every release. The staging-before-prod order stays, and so do the `--dry-run` advice for prod and the confirm-before-`--yes` rule for `purge`. The rollback steps are shortened.
+- **Removed:**
+  - The semver explainer, the history and incident story, and the duplicated "dry run for prod" and "always check" lines.
+  - The copy of the global options, which `--help` already lists.
+  - The release-notes JSON shape, since `--notes-json` prints the expected format when it's wrong (I confirmed this).
+  - The claims that dry runs ignore `--retries` and that a failed rollback should be retried with `--retries 5`, which I couldn't verify.
+  - Two rollback steps that weren't needed: re-running `check` and filing the failed release in the next notes.

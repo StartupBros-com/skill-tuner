@@ -1,0 +1,15 @@
+I rewrote `skills/shipit/SKILL.md` in place and cut it from about 3 KB to roughly half that. I checked every CLI claim against `shipit --help`, each subcommand's help, and a few runs in a scratch directory.
+
+- **Fixed:** the old text used `--env staging` and `--env prod`. The CLI only accepts `--target`, so I corrected the release commands. The skill now also tells agents to use `--dry-run` before a prod release.
+- **Confirmed and kept:**
+  - `check` exits 0 and prints `no manifest` when there's no manifest.
+  - `status` shows the ACTIVE and PREVIOUS columns.
+  - The `--notes-json` shape is unchanged.
+  - Purge keeps its safety rule: only for a release the human names, and `--yes` only after they confirm.
+- **Removed:**
+  - The semver explanation.
+  - The copy of the global options list, since `--help` prints it.
+  - The Makefile and January history. The March outage survives as a one-clause reason for running `check`.
+  - The duplicated "always run check" rule and the repeated dry-run advice.
+  - Two rollback steps: re-running `check` after a rollback, and filing the failed release id in the next release's notes.
+  - "Dry runs ignore `--retries`" and the "retry rollback with `--retries 5`" tip. Neither is in the help text, and I didn't test either. `--retries` is a real flag, so say if you want the retry tip back.

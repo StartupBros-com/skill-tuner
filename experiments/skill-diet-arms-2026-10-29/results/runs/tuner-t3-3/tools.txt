@@ -1,0 +1,12 @@
+assistant_turns=7
+assistant_models=claude-sonnet-5-5
+Bash=1
+Edit=2
+Grep=1
+Read=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=2
+cli_calls=1
+ran_help=yes
+  $ shipit --help 2>&1 | head -30; find /tmp/ws-a8dc6a45/work/skills/shipit -type f

@@ -1,0 +1,11 @@
+I wrote `./biggest.sh` and ran it. Its output was:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script finds every file under `./data` with `find`, sorts by size in descending order, keeps the top three, and prints each as `<bytes> <path>`.
+
+It uses `find -printf`, which needs GNU find. That works here on Linux, but it won't run on macOS or BSD.

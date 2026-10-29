@@ -1,0 +1,8 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 bytes to roughly half that, checking it against `shipit --help`, each subcommand's help, and live runs of `check` and `status`. The old skill told agents to run `shipit release --env staging` and `--env prod`. That flag doesn't exist, and the CLI takes `--target`, so I corrected it. I also added `--dry-run`, which the old text mentioned but never named. Live runs confirmed that `check` exits 0 and prints `no manifest` when the manifest is missing, and that `status` shows a PREVIOUS column, so I kept both. I cut:
+- the semver explainer
+- the March/January history
+- the duplicated options block, since `--help` covers it
+- the unverifiable claim that dry runs ignore `--retries`
+- the rollback steps that added little: re-running `check`, retrying with `--retries 5`, and filing the failed id in the next release's notes
+
+The safety content stays: always check before release, treat `no manifest` as a failure, do a dry run before prod, the exact `--notes-json` shape, and purge only on a human-named release after confirmation.

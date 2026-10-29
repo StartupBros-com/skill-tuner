@@ -1,0 +1,13 @@
+assistant_turns=8
+assistant_models=claude-sonnet-5-5
+Bash=4
+Write=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=1
+cli_calls=4
+ran_help=yes
+  $ cd /tmp/ws-9b800d21/work/skills/shipit && find . -type f | xargs wc -c && cat $(find . -type f -name '*.md') ; shipit --help
+  $ cd /tmp && mkdir -p sh_t && cd sh_t && for c in check release rollback status purge; do echo "== $c"; shipit $c --help; done; echo ==; shipit check; echo "exit $?"
+  $ cd /tmp/sh_t && shipit status; echo $?
+  $ cd /tmp/sh_t && shipit release --target prod --dry-run --retries 5; echo $?

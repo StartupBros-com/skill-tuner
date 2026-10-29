@@ -1,0 +1,1 @@
+The installed `shipit` CLI (on PATH) renamed its `status` subcommand to `info`. Update the skill at ./skills/shipit to match. Edit the files under ./skills/shipit in place; when you are done, reply with one paragraph on what you changed.

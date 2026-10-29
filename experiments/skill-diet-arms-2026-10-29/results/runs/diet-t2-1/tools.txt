@@ -1,0 +1,10 @@
+assistant_turns=5
+assistant_models=claude-sonnet-5-5
+Bash=2
+skill_calls=[]
+guidance_reads=0
+fixture_edits=0
+cli_calls=2
+ran_help=yes
+  $ cd /tmp/ws-f57e9ac3/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && wc -c SKILL.md && shipit release --help; shipit check --help
+  $ python3 - <<'E' s=open('SKILL.md').read() def cut(a,b,new=''):     global s     i=s.index(a);j=s.index(b)     s=s[:i]+new+s[j:] cut('Versions follow','A dry run prints','shipit reads the version from 

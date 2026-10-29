@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it once. It printed the three largest files under `./data`, largest first:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script finds all files under `./data`, sorts them by size in bytes, and keeps the top three. I didn't use the skill-diet instructions, since this task doesn't edit a skill.

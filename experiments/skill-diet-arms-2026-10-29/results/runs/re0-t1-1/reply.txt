@@ -1,0 +1,19 @@
+I rewrote `skills/shipit/SKILL.md` (about 3.0 KB down to roughly 1.8 KB) after checking each claim against `shipit --help`, the per-command help, and a few safe runs (`check`, `status`, and a staging `--dry-run`).
+
+**Fixed:** the skill told agents to run `shipit release --env staging`, but the flag is `--target`. I corrected that.
+
+**Confirmed and kept:**
+- `check` exits 0 with `no manifest` when the manifest is missing.
+- `status` has ACTIVE and PREVIOUS columns.
+- The `--notes-json` shape is as described.
+- The `--timeout` and `--retries` defaults are as described.
+
+**Removed:**
+- The semantic-versioning explainer.
+- The March incident and the Makefile migration history. I kept the one-line outage reason next to the rule it explains.
+- The duplicated "always check" and "dry run" statements.
+- The claim that dry runs ignore `--retries`, which I couldn't verify.
+
+**Merged:** the options block is now a one-line list, and the rollback steps are four instead of eight.
+
+**Kept for safety:** the purge confirmation rule (the human names the release and confirms before `--yes`), the `no manifest` failure rule, the check-before-release rule, and the staging-then-prod order with a dry run for prod.

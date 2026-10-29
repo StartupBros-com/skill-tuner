@@ -1,0 +1,8 @@
+assistant_turns=3
+assistant_models=claude-sonnet-5-5
+Bash=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=0
+cli_calls=0
+ran_help=no

@@ -1,0 +1,15 @@
+I cut `SKILL.md` from about 3,040 bytes to roughly 1,300. I checked the commands against `shipit --help`, each subcommand's help, and a few test runs.
+
+**Corrected**
+- The skill used `--env staging` and `--env prod`, which the CLI doesn't have. The flag is `--target`, so the release steps now use that.
+- The skill described a generic "dry run". The real flag is `--dry-run`, which is now named, and the skill suggests it before a prod release.
+
+**Kept**
+- `shipit check` exits 0 with `no manifest` on stderr when `shipit.yaml` is missing, and the skill says to treat that as a failure. I confirmed this.
+- The purge safeguards: only run it for a release the human names, and pass `--yes` only after they confirm.
+- The rollback sequence and the instruction to report the result to the human.
+
+**Removed**
+- The semantic-versioning explainer, the incident and Makefile history, and the copy of the global options list.
+- The rule that repeated "run check first", the "use a dry run" line that appeared twice, and the detailed `--notes-json` description. `shipit release --help` and the CLI's error message both give that shape.
+- Three rollback steps: the `--retries 5` retry, filing the failed release id in the next release's notes, and the extra `shipit check`. I couldn't confirm any of them from the CLI.

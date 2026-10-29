@@ -1,0 +1,15 @@
+assistant_turns=10
+assistant_models=claude-sonnet-5-5
+Bash=3
+Read=3
+Write=1
+skill_calls=[]
+guidance_reads=2
+  Read {"file_path": "/tmp/ws-ff8b4f17/cfg/skills/skill-diet/references/diet.md"}
+  Read {"file_path": "/tmp/ws-ff8b4f17/cfg/skills/skill-diet/references/tool-skills.md"}
+fixture_edits=1
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-ff8b4f17/work/skills/shipit && find . -type f | xargs wc -c; shipit --help 2>&1 | head -60
+  $ for c in check release rollback status purge; do echo "=== $c"; shipit $c --help 2>&1; done
+  $ cd /tmp && mkdir -p sx && cd sx && shipit check; echo "rc=$?"; shipit release --target prod --dry-run; echo rc=$?; shipit release --env staging; echo rc=$?; shipit release --target prod --notes-json '

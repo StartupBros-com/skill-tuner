@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it. Its output:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script finds every file under `./data` with `find`, sorts by size in descending order, and keeps the top three. Each line is the size in bytes followed by the path.

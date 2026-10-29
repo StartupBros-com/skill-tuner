@@ -1,0 +1,16 @@
+assistant_turns=12
+assistant_models=claude-sonnet-5-5
+Bash=4
+Read=2
+Skill=1
+Write=1
+skill_calls=["skill-diet"]
+guidance_reads=1
+  Read {"file_path": "/tmp/ws-abc5e50b/cfg/skills/skill-diet/references/diet.md"}
+fixture_edits=1
+cli_calls=4
+ran_help=yes
+  $ cd skills/shipit && find . -type f | xargs wc -c; shipit --help 2>&1 | head -80
+  $ cd /tmp; for c in check release rollback status purge; do echo "== $c"; shipit $c --help 2>&1; done; mkdir -p /tmp/emptyd && cd /tmp/emptyd && shipit check; echo "exit $?"
+  $ cd /tmp/emptyd && shipit status; echo "exit $?"; shipit release --target prod --dry-run; echo "exit $?"
+  $ wc -c /tmp/ws-abc5e50b/work/skills/shipit/SKILL.md

@@ -1,0 +1,17 @@
+I rewrote `skills/shipit/SKILL.md`, cutting it from about 3,000 bytes to roughly half that. I checked it against `shipit --help`, each subcommand's help, and live runs of `shipit check` and `shipit status`.
+
+- **Fixes:**
+  - The old skill said `shipit release --env …`, but the flag is `--target`, so I corrected it.
+  - It mentioned a dry run without naming the flag, so I added `--dry-run`.
+  - It claimed "Dry runs ignore `--retries`". I couldn't confirm that, so I removed it.
+- **Verified and kept:**
+  - `shipit check` exits 0 and prints `no manifest` when the manifest is missing, and the skill still says to treat that as a failure.
+  - The notes JSON shape and the ACTIVE and PREVIOUS columns in `shipit status` match what the CLI shows.
+  - The global option defaults (`--timeout` 60, `--retries` 2) match the help.
+  - The purge warning, including that `--yes` needs the human's confirmation, is intact. The skill now also shows the full `shipit purge <release-id> --yes` form.
+- **Removed:**
+  - The explanation of semantic versioning.
+  - The March 2026 outage and Makefile history.
+  - The duplicated "run check first" and "use a dry run for prod" lines.
+  - The rollback step about filing the failed release id in the next release's notes. It was a team convention that the CLI doesn't enforce, so say if you want it back.
+  - The options block, which I folded into one line.

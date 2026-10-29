@@ -1,0 +1,1 @@
+Write a bash script ./biggest.sh that prints the three largest files under ./data with their sizes in bytes, largest first. Run it once to show it works, then reply with its output.

@@ -1,0 +1,13 @@
+assistant_turns=9
+assistant_models=claude-sonnet-5-5
+Bash=3
+Skill=1
+Write=1
+skill_calls=["writing-for-agents"]
+guidance_reads=0
+fixture_edits=1
+cli_calls=3
+ran_help=yes
+  $ cd skills/shipit && find . -type f | xargs wc -c && cat SKILL.md && shipit --help
+  $ for c in check release rollback status purge; do echo "== $c"; shipit $c --help; done; ls -a; cat shipit.yaml 2>&1 | head
+  $ cd /tmp && mkdir -p ws-1d6913b5/empty && cd ws-1d6913b5/empty; shipit check; echo "rc=$?"; shipit status; echo "rc=$?"; shipit release --target prod --dry-run --notes-json '{"items":[{"id":"T-1","text

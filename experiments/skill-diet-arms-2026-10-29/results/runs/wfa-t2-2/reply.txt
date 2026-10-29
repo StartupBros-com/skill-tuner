@@ -1,0 +1,9 @@
+I edited `skills/shipit/SKILL.md` in place. I didn't run `shipit check` or `shipit release` to test the new steps.
+
+- **The gate:** The check is now a "gate" at the top of the Releasing section. Every release, prod included, has to pass it first. Step 1 says what passing means: `shipit check` exits 0 and prints no `no manifest` on stderr. Anything else is red, so the agent fixes `shipit.yaml` and reruns until green. Step 2 requires a rerun after any edit to the manifest.
+- **Wrong flag:** Releasing step 2 told agents to run `shipit release --env staging` and `--env prod`, but the CLI only accepts `--target`. I corrected both.
+- **Dry run:** The dry-run advice for prod used to sit in a separate section. It is now inline in step 3, right where the prod release happens.
+- **Duplicate rule:** I deleted the "always run check, never skip" bullet from Rules, since the gate now covers it.
+- **Sections removed:** I removed the stub Checking section, and the History section's incident story and Makefile aside. The incident is now one line saying prod releases have shipped broken manifests twice, the first causing a forty-minute outage.
+
+I didn't touch the Rollback section or the semver paragraph. The semver paragraph probably isn't doing anything for agents. Rollback step 7 (retry with `--retries 5`) should also be reviewed before agents rely on it.

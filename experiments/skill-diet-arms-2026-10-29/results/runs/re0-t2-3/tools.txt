@@ -1,0 +1,12 @@
+assistant_turns=7
+assistant_models=claude-sonnet-5-5
+Bash=3
+Read=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=0
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-c1f256a3/work/skills/shipit && find . -type f | head -50 && wc -l $(find . -type f) && shipit --help; shipit check --help
+  $ shipit release --help; shipit check; echo "exit $?"
+  $ PYTHONUTF8=1 python3 -I - <<'EOF' p='SKILL.md' s=open(p,encoding='utf-8').read() def r(a,b):     global s     assert s.count(a)==1,a     s=s.replace(a,b) r("""Versions follow semantic versioning: a ve

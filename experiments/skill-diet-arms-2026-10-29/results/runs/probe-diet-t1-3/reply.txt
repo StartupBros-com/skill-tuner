@@ -1,0 +1,22 @@
+I cut `skills/shipit/SKILL.md` from 3,040 to 1,278 bytes and checked each CLI claim against `shipit --help`, the per-command help, and a few runs.
+
+**Fixed:**
+- The old skill said `shipit release --env staging|prod`, but the flag is `--target`. Anyone following it would have failed.
+- It never named `--dry-run`, which is the real flag. It now says to use it before releasing to prod.
+
+**Confirmed and kept:**
+- `shipit check` exits 0 and prints `no manifest` when `shipit.yaml` is missing.
+- `shipit status` has ACTIVE and PREVIOUS columns.
+- The notes JSON shape matches the help text.
+- `purge` is irreversible and takes `--yes`.
+
+**Cut:**
+- The semver explainer, the incident and Makefile history, and the global-options list, which `--help` already prints.
+- The duplicate "run check" rule.
+- The "dry runs ignore `--retries`" claim, which I couldn't verify.
+- Rollback steps that were redundant: the post-rollback `check`, "retry with `--retries 5`", and "file the failed id in the next notes".
+- The claim that extra keys in release notes are rejected. I couldn't confirm it, so the skill now says only that any other shape is rejected.
+
+**Kept:** the check-before-release rule, the staging-then-prod order, the rollback procedure, and the purge safety rule (only for a release the human names, `--yes` only after they confirm).
+
+I didn't run the skill's `eval.mjs check` or any before/after eval runs.

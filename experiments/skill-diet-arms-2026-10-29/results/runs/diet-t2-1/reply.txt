@@ -1,0 +1,5 @@
+I edited `skills/shipit/SKILL.md` in place. The `Releasing` step now says to chain every release behind the check, so `shipit release` is never run alone. It gives the two commands in full, `shipit check && shipit release --target staging` and then the same for `prod`. It also says that a `no manifest` line on stderr counts as a failure even though `check` exits 0, so `&&` alone won't catch it. I did not test any of this in a fresh session.
+
+To keep the file from growing, I deleted the duplicate "always run check" bullet under `Rules`, the generic semver explainer, the `History` section with the incident story, and the separate `Checking` paragraph on the exit-0 quirk. The file went from 3040 to 2453 bytes. I also fixed `--env` to `--target` in the staging and prod commands, because the CLI's help only accepts `--target`.
+
+The lasting fix belongs in the tool: `shipit release` should refuse to run without a passing recent check, and `check` should exit non-zero on a missing manifest. I can't change the installed CLI from here, so I left that to you.

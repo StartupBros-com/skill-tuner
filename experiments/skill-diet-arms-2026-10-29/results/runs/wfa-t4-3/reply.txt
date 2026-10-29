@@ -1,0 +1,11 @@
+`./biggest.sh` is written and works. I ran it once, and this is its output (size in bytes, then path, largest first):
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script finds every file under `./data`, sorts by size, and keeps the top three.
+
+I didn't use the `writing-for-agents` skill's guidance, because the script isn't a document for an agent to read.

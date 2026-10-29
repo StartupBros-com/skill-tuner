@@ -1,0 +1,8 @@
+I edited `skills/shipit/SKILL.md`, the only file in the skill, so that a release can't proceed without a passing check.
+
+- **Release gate:** The "Releasing" section now opens by saying every `shipit release` needs a green `shipit check`. It explains why in one line, citing the March 2026 incident and last week's prod release. "Green" is now defined: the check exits 0 and prints no `no manifest` line. I tested this against the installed CLI, and a missing manifest does exit 0.
+- **Rewritten steps:** The steps now run check, then release to staging, then check again, then a `--dry-run` of prod, then the real prod release. If the check isn't green, the agent stops, fixes the manifest and re-checks.
+- **Flag fix:** The old step 2 told agents to use `--env`, but the CLI's flag is `--target`, so I corrected it.
+- **Cleanup:** The rule appeared three times (a step, a "Checking" section and a Rules bullet), and each copy was vaguer than the new gate. I removed the duplicates, along with the vague "use a dry run" line and the History section. I kept the purge rule and the "read each command's output" rule under Rules.
+
+I haven't run a skill-following agent against the new text, so I don't know that it stops the skip.

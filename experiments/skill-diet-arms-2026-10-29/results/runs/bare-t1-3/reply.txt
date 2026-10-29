@@ -1,0 +1,23 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 bytes to roughly half that. I checked it against `shipit --help` and each subcommand's help, and ran `shipit check` with no manifest.
+
+**Corrections**
+- The old text used `shipit release --env …`, but the flag is `--target <staging|prod>`. I fixed it.
+- It also said to "use a dry run" without naming the flag. It's `--dry-run`, so I named it.
+- I added the correct usage line for each command, including `purge <release-id> --yes`.
+
+**Confirmed and kept**
+- `shipit check` with no manifest prints `no manifest` on stderr and exits 0.
+- The notes JSON shape is `{"items":[{"id":…,"text":…}]}`.
+
+**Cut**
+- The semantic-versioning explainer.
+- The Makefile/January history.
+- The claim that the version comes from `shipit.yaml`.
+- The claim that "dry runs ignore `--retries`". I couldn't verify either claim against the CLI.
+- The options block, which I folded into one line.
+- The March incident, which I cut to a half-sentence of rationale.
+
+**Kept for safety**
+- Run `check` before every release, and treat `no manifest` as a failure.
+- `purge` is irreversible: only run it on a release the human names, and pass `--yes` only after they confirm.
+- The rollback steps, including confirming with `status` and reporting to the human.

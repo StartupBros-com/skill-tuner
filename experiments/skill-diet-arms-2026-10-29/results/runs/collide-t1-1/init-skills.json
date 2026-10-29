@@ -1,0 +1,27 @@
+{
+ "skills": [
+  "skill-diet",
+  "skill-tuner",
+  "writing-for-agents",
+  "deep-research",
+  "design",
+  "design-sync",
+  "dataviz",
+  "update-config",
+  "verify",
+  "debug",
+  "code-review",
+  "simplify",
+  "batch",
+  "fewer-permission-prompts",
+  "doctor",
+  "loop",
+  "claude-api",
+  "workflow-authoring",
+  "run",
+  "run-skill-generator",
+  "plugin-authoring"
+ ],
+ "model": "claude-sonnet-5-5",
+ "claude_code_version": "2.1.312"
+}
