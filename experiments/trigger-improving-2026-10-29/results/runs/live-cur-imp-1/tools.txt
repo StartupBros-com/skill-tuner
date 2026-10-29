@@ -1,0 +1,11 @@
+assistant_turns=5
+assistant_models=claude-sonnet-5-5
+Bash=2
+Write=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=1
+cli_calls=2
+ran_help=yes
+  $ cd /tmp/ws-0ffab209/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && shipit --help
+  $ for c in check release rollback status purge; do echo "=== $c"; shipit $c --help; done; cd /tmp; shipit check; echo "rc=$?"

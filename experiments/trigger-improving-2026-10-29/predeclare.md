@@ -81,3 +81,26 @@ anyway.
 ## Deviations
 
 Appended below with UTC timestamps as they happen.
+
+- **2026-10-29T17:56Z.** The live arm finished (12/12 ok, $0.70): the candidate
+  fired skill-tuner on 0/3 `imp` runs (current description also 0/3) and 1/3
+  `opt` runs; skill-creator fired on 0/12. Land condition 2 fails, so the
+  description does not land whatever the battery says. Two arms are added
+  beyond the predeclaration, `live-cur-solo` and `live-imp-solo`: the `imp`
+  brief, 3 reps each, skill-creator **not** installed. They separate "the
+  competitor's presence suppresses both skills" from "improve briefs route to
+  neither skill", a mechanism question, not a land condition; the verdict does
+  not depend on them. About $0.35 more, inside the $1.50 live cap.
+- **2026-10-29T18:02Z.** The control arms finished (6/6 ok, $0.36; live total
+  18 runs, $1.05). Without skill-creator the `imp` brief fires skill-tuner 2/3
+  under the current description and 3/3 under the candidate; with it, 0/3 under
+  both. The competitor's presence is the mechanism, not the missing word. The
+  one-run gap between 2/3 and 3/3 is inside run-to-run spread and is not read
+  as a gain. Refusal stands.
+- **2026-10-29T18:05Z (closeout).** The routing battery finished: 104 calls,
+  $0.58, verdict land, candidate 52/52 vs original 49/52, near-miss rejection
+  32/32 under both, discordant 3 gained / 0 lost (p = 0.25), all on
+  `skill-tuner__obvious__1`, which the original sent to skill-creator 3/4;
+  both planted negatives went to skill-creator 4/4 under both. Condition 1
+  held. Condition 2 failed (0/3). **Refused** per the predeclaration: the
+  description stays as main has it, not re-rolled, not re-weighted.

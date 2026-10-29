@@ -1,0 +1,17 @@
+I rewrote `skills/shipit/SKILL.md`. I checked it against `shipit --help`, each subcommand's help, and a few real runs (`check` with no manifest, a prod `release --dry-run`, `status`).
+
+- **Fixed a wrong command:** the old text said `shipit release --env staging` and `--env prod`. The flag is `--target`, so I corrected both.
+- **Made dry runs concrete:** the old text only mentioned them vaguely. It now says to use `--dry-run` on prod before the real release, and the prod step in "Releasing" shows both commands.
+- **Kept the safety content:**
+  - Always run `check` before `release`.
+  - A missing manifest prints `no manifest` but still exits 0 (confirmed by running it), so treat that as a failure.
+  - `purge` needs a human-named release and a confirmed `--yes`.
+  - The rollback steps are still there.
+- **Cut and reorganized:**
+  - Removed the semver explainer and the Makefile history.
+  - Shortened the March 2026 incident to one parenthetical on the check rule.
+  - Moved the rules to the top and merged the duplicate "Checking" content into them.
+  - Made the options block list each command's usage along with the global options.
+- **Rollback and notes:** I moved the `--retries 5` hint into the step where `rollback` fails, and I labeled `--notes-json` as optional.
+
+I didn't run `release`, `rollback`, or `purge` for real.

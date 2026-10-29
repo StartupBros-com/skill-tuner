@@ -32,7 +32,15 @@ receipt is cited where it was.
    cut only identity clauses pass (batch-3 battery: 6/6 land); candidates
    that drop trigger vocabulary fail (batch-2: 4/10 refused). A refuse at
    near-identical aggregate accuracy now carries the discordant-pair
-   annotation — read it before re-rolling.
+   annotation — read it before re-rolling. The battery is necessary, not
+   sufficient: it asks the model to pick one of six descriptions, while a
+   live session decides whether to open a skill at all with twenty listed.
+   Two rounds disagreed with it in opposite directions — swapgate8's battery
+   routed a slimming brief 4/4 under a description the live harness opened
+   1/3, and #74's battery routed an improve brief 52/52 with a new word the
+   live harness opened 0/3 beside skill-creator — so a description change
+   also runs a live arm with the competing skills installed, and lands only
+   when both agree (`reports/trigger-improving-summary.md`).
 5. **Re-probe to the instrument's floor, then stop.** The probe finds ~2
    genuine defects per pass on almost any document — that is its value on
    fresh corpora and its stopping problem on tuned ones. Stop on a clean

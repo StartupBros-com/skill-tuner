@@ -1,0 +1,13 @@
+assistant_turns=8
+assistant_models=claude-sonnet-5-5
+Bash=3
+Skill=1
+Write=1
+skill_calls=["skill-tuner"]
+guidance_reads=0
+fixture_edits=1
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-1687c6d7/work/skills/shipit; find . -type f | head -50; cat SKILL.md; shipit --help
+  $ cd /tmp/ws-1687c6d7/work/skills/shipit; for c in check release rollback status purge; do echo "== $c"; shipit $c --help; done; echo; shipit check; echo "rc=$?"
+  $ cd /tmp/ws-1687c6d7/work/skills/shipit; shipit status; echo rc=$?; shipit release --target prod --dry-run; echo rc=$?

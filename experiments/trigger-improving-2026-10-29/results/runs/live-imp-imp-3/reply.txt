@@ -1,0 +1,9 @@
+I rewrote `skills/shipit/SKILL.md` to match what the CLI actually does. I checked each claim by running `shipit`.
+
+- **Fixed:** the old skill told agents to use `shipit release --env staging`, but that flag doesn't exist (`unknown flag: --env`, exit 2). The flag is `--target`, and the skill now says so.
+- **Confirmed and kept:** `shipit check` exits 0 and prints `no manifest` when the manifest is missing. I kept that warning.
+- **Added:** `-h/--help` to the options list, `shipit status` and its output columns, and the dry-run-first step for staging and prod. The old text only asked for a dry run on prod.
+- **Removed:** the semver explainer, the vague "a dry run prints the plan" sentence, and the unverifiable claim that dry runs ignore `--retries`. I shortened the incident history to one clause as the reason for the check rule.
+- **Kept:** the purge safeguards (human names the release, `--yes` only after confirmation), the release-notes JSON shape, and the rollback steps.
+
+While testing I ran `shipit rollback --target staging --retries 5`. It reported "rolled back staging to previous release r-2041 (simulated)". It said simulated, but you may want to check that staging is as you expect.

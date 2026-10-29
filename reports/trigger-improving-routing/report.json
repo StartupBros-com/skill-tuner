@@ -1,0 +1,144 @@
+{
+  "conditions": {
+    "original": {
+      "trials": 52,
+      "total_cost_usd": 0.2920855
+    },
+    "pruned": {
+      "trials": 52,
+      "total_cost_usd": 0.2889694
+    }
+  },
+  "total_trials": 104,
+  "manifest": {
+    "run_id": "trigger-improving-routing",
+    "started_at": "2026-10-29T17:51:26Z",
+    "finished_at": "2026-10-29T17:58:05Z",
+    "cli_version": "2.1.312",
+    "tool_version": "0.10.0",
+    "model_pin": "claude-sonnet-5-5",
+    "resolved_models": [],
+    "adapter_shape": "claude-p-user-message-isolated",
+    "inputs": [
+      {
+        "role": "target",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/trigger-improving/configs/../skills/skill-tuner/SKILL.md",
+        "sha256": "sha256:62f3338b891464aa1abf49fe9fb17598b76acb33b4a6aeec173e43ab00195228",
+        "source": "worktree",
+        "git_commit": "6b001fb97404c0532fdc3fb36c4c6bedaba5af08",
+        "git_path": "skills/skill-tuner/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/de-slopify/SKILL.md",
+        "sha256": "sha256:4012476af8a4c1a550f0931c308ed893b66e63a16051f7793ba1d18ca5317073",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/readme-writing/SKILL.md",
+        "sha256": "sha256:3099296a8c7f93fc67726827ca42bf5ca00fbf55a1b1b1be5ae9ae2072684adb",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/repo-junk-triage/SKILL.md",
+        "sha256": "sha256:339fe7f6d2aa3edae58bac803ba588716a9689e77ac316fd9aa47f714b1d9394",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/repo-junk-triage/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/dotfiles/claude/skills-local/cli-doctor-mode/SKILL.md",
+        "sha256": "sha256:e3eb80072a3c44b5eefd4dfdcfef3dfc15706226a124ddfc23d07a99c01998d9",
+        "source": "worktree",
+        "git_commit": "46f806da768baec27ee7f6670ef42b1d15e28e98",
+        "git_path": "claude/skills-local/cli-doctor-mode/SKILL.md",
+        "dirty": false,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/skills/tdd/SKILL.md",
+        "sha256": "sha256:5505d25bbaa8fc14a79e4d20163936958992a2995b7f1dd1d6197edc9ed722e0",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "distractor",
+        "path": "/home/will/.claude/plugins/cache/claude-plugins-official/skill-creator/f8c5e7a1dcb7/skills/skill-creator/SKILL.md",
+        "sha256": "sha256:dcd4803e61e913e6fc27294184cd3a71f09f5e924ff20c8a9a20173e7b3c2bcf",
+        "source": "worktree",
+        "git_commit": null,
+        "git_path": null,
+        "dirty": null,
+        "differs_from_worktree": null
+      },
+      {
+        "role": "battery",
+        "path": "/home/will/SITES/skill-tuner/.claude/worktrees/trigger-improving/configs/trigger-improving-routing-battery.json",
+        "sha256": "sha256:8f379de06688f61acaa75b9c77185bbd38f61d7c15b7e0e1ad87efd8478d6cd9",
+        "source": "worktree",
+        "git_commit": "6b001fb97404c0532fdc3fb36c4c6bedaba5af08",
+        "git_path": "configs/trigger-improving-routing-battery.json",
+        "dirty": false,
+        "differs_from_worktree": null
+      }
+    ],
+    "eval": "routing-parity",
+    "pin": null,
+    "neutral_ids": {
+      "skill-tuner": "skill-1",
+      "de-slopify": "skill-2",
+      "readme-writing": "skill-3",
+      "repo-junk-triage": "skill-4",
+      "cli-doctor-mode": "skill-5",
+      "tdd": "skill-6",
+      "skill-creator": "skill-7"
+    }
+  },
+  "routing_parity": {
+    "verdict": "land",
+    "failing_case_ids": [],
+    "scores": {
+      "original": {
+        "condition": "original",
+        "total": 52,
+        "correct": 49,
+        "accuracy": 0.9423076923076923,
+        "near_miss_total": 32,
+        "near_miss_correct": 32,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": [
+          "skill-tuner__obvious__1"
+        ]
+      },
+      "pruned": {
+        "condition": "pruned",
+        "total": 52,
+        "correct": 52,
+        "accuracy": 1.0,
+        "near_miss_total": 32,
+        "near_miss_correct": 32,
+        "near_miss_accuracy": 1.0,
+        "failing_case_ids": []
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+assistant_turns=9
+assistant_models=claude-sonnet-5-5
+Bash=4
+Write=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=1
+cli_calls=4
+ran_help=yes
+  $ cd /tmp/ws-2417c7a1/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && shipit --help
+  $ for c in check release rollback status purge; do echo "=== $c"; shipit $c --help; done; cat shipit.yaml 2>/dev/null
+  $ d=$(mktemp -d); cd $d; shipit check; echo "rc=$?"; shipit status; echo rc=$?; shipit release --target prod --dry-run; echo rc=$?; shipit release --target prod --dry-run --retries 5; echo rc=$?
+  $ cd $(mktemp -d); shipit check 2>/dev/null | wc -c; shipit check 2>&1 >/dev/null | wc -c

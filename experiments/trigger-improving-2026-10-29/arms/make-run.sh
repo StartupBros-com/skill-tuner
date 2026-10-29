@@ -21,13 +21,18 @@ cp "$vet/fixture/shipit.v1" "$R/bin/shipit"; chmod +x "$R/bin/shipit"
 cp -r "$vet/fixture/skill" "$R/work/skills/shipit"
 
 case "$arm" in
-  live-cur) doc="$repo/skills/skill-tuner/SKILL.md" ;;
-  live-imp) doc="$base/candidates/improving.SKILL.md" ;;
+  live-cur|live-cur-solo) doc="$repo/skills/skill-tuner/SKILL.md" ;;
+  live-imp|live-imp-solo) doc="$base/candidates/improving.SKILL.md" ;;
   *) echo "unknown arm $arm" >&2; exit 2 ;;
 esac
 cp "$doc" "$R/cfg/skills/skill-tuner/SKILL.md"
 cp "$repo/skills/skill-tuner/FALSIFIERS.md" "$R/cfg/skills/skill-tuner/FALSIFIERS.md"
-cp -r "$SC" "$R/cfg/skills/skill-creator"
+# *-solo arms (added 2026-10-29T17:56Z, predeclare.md deviations): no skill-creator, the control
+# that separates "the competitor suppresses both" from "improve briefs route to neither".
+case "$arm" in
+  *-solo) scsha_note="absent" ;;
+  *) cp -r "$SC" "$R/cfg/skills/skill-creator"; scsha_note="installed" ;;
+esac
 
 brief=$(cat "$base/briefs/$task.txt")
 printf '%s\n' "$brief" > "$R/prompt.txt"
@@ -39,5 +44,5 @@ scsha=$(sha256sum "$SC/SKILL.md" | cut -c1-12)
 hits=$( { cat "$R/prompt.txt"; echo "$R"; find "$R" -maxdepth 2 -printf '%f\n'; } \
   | grep -o -i -w -E 'eval|evals|test|tests|judge|rubric|score|compare|benchmark|candidate|arena' | sort -u | tr '\n' ' ' || true)
 mkdir -p "$base/results"
-printf '%s\t%s\t%s\t%s\tdoctrine=%s\tskill-creator=%s\tblind_hits=[%s]\n' "$arm" "$task" "$rep" "$R" "$sha" "$scsha" "$hits" >> "$base/results/index.tsv"
+printf '%s\t%s\t%s\t%s\tdoctrine=%s\tskill-creator=%s:%s\tblind_hits=[%s]\n' "$arm" "$task" "$rep" "$R" "$sha" "$scsha_note" "$scsha" "$hits" >> "$base/results/index.tsv"
 echo "$R"

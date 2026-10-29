@@ -1,0 +1,11 @@
+I rewrote `skills/shipit/SKILL.md` and checked each claim against `shipit --help`, the per-command help, and a few runs.
+
+- **Wrong flag fixed:** the old release steps used `--env`, but the CLI only accepts `--target`.
+- **Confirmed and kept:**
+  - `check` exits 0 with `no manifest` on stderr when the manifest is missing, and the skill still says to treat that as a failure.
+  - Dry runs ignore `--retries`.
+  - The `--notes-json` shape is as documented, from the help text.
+- **Safety rules:** these now come first. They are the check-before-release rule, the dry run before any prod release, the `purge` restrictions (named release, `--yes` only after confirmation), and reading output before the next command.
+- **Cut:** the semver explainer, the January Makefile aside, and the vague "use a dry run" lines. The March outage is now a single sentence at the end.
+- **Added:** a short command list and the `--dry-run` flag in the release steps. `--target` is now required in the examples. The rollback steps and the global options list are tighter, and the `--retries 5` advice now applies only to remote errors.
+- **Not tested:** I didn't run a real release, rollback or purge, so those behaviours rest on the help text.
