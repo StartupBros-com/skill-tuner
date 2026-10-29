@@ -1,0 +1,74 @@
+[
+  {
+    "case_id": "skill-tuner__obvious__1",
+    "kind": "obvious",
+    "target_id": "skill-tuner",
+    "prompt": "The skill at ./skills/shipit teaches the `shipit` CLI, which is installed on PATH. It has grown over time. Shorten it so it costs less to load, and make sure everything it says about the CLI is still true. Keep whatever an agent needs to use the tool safely."
+  },
+  {
+    "case_id": "skill-tuner__obvious__2",
+    "kind": "obvious",
+    "target_id": "skill-tuner",
+    "prompt": "Our AGENTS.md is 400 lines and the agent ignores half of it. Cut it down to what the agent actually needs in order to follow it."
+  },
+  {
+    "case_id": "skill-tuner__obvious__3",
+    "kind": "obvious",
+    "target_id": "skill-tuner",
+    "prompt": "Write a new SKILL.md for our deploy tool so an agent knows when to reach for it and how to use it."
+  },
+  {
+    "case_id": "skill-tuner__paraphrase__1",
+    "kind": "paraphrase",
+    "target_id": "skill-tuner",
+    "prompt": "This CLAUDE.md burns tokens every session. Make it leaner without dropping anything the agent relies on."
+  },
+  {
+    "case_id": "skill-tuner__paraphrase__2",
+    "kind": "paraphrase",
+    "target_id": "skill-tuner",
+    "prompt": "Tighten the wording in this skill file so an agent follows it more reliably."
+  },
+  {
+    "case_id": "shared__near_miss__1",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Shorten this blog post about our launch to about 600 words."
+  },
+  {
+    "case_id": "shared__near_miss__2",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Cut this function down; it is 300 lines and does too much."
+  },
+  {
+    "case_id": "shared__near_miss__3",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Trim the v2.3 release notes to the five changes users will notice."
+  },
+  {
+    "case_id": "shared__near_miss__4",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Shorten the onboarding email we send new customers; it reads like a manual."
+  },
+  {
+    "case_id": "shared__near_miss__5",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Can you just read through this file and tell me what it does? No edits needed."
+  },
+  {
+    "case_id": "shared__none__1",
+    "kind": "none_of_the_above",
+    "target_id": null,
+    "prompt": "Can you help me debug why this SQL query is returning duplicate rows?"
+  },
+  {
+    "case_id": "shared__none__2",
+    "kind": "none_of_the_above",
+    "target_id": null,
+    "prompt": "Set up a GitHub Actions workflow that runs our test suite on every pull request."
+  }
+]
