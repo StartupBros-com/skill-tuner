@@ -1,0 +1,7 @@
+I wrote `./biggest.sh` and ran it once. It prints the three largest files under `./data` with their sizes in bytes, largest first:
+
+```
+./data/b.txt: 12000
+./data/d.dat: 8000
+./data/a.bin: 5000
+```

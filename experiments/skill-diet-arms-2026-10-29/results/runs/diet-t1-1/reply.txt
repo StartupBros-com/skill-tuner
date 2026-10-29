@@ -1,0 +1,12 @@
+I cut `skills/shipit/SKILL.md` from 3,040 bytes to about 1,300, and it is the only file in the skill. I ran the CLI to check each claim in the old text.
+
+- **Wrong flag fixed:** the old text told agents to run `shipit release --env staging`. That flag doesn't exist and the CLI rejects it, so the skill now uses `--target`.
+- **Kept after checking:** `shipit check` still exits 0 and prints `no manifest` when the manifest is missing. The rejection of malformed `--notes-json` also still holds.
+- **Cut:**
+  - the semver explainer, the incident and Makefile history, and the global options dump, which `--help` already prints;
+  - the "dry runs ignore `--retries`" line, which I couldn't verify;
+  - three of the eight rollback steps: retrying with `--retries 5`, re-running `check`, and filing the failed id in the next release's notes. The first is unverified, and I judged the other two unneeded.
+- **Merged:** the duplicate "always run check" rule and the duplicate dry-run advice, which now each appear once.
+- **Kept as safety rules:** the `purge` rule (only for a release the human names, `--yes` only after they confirm), reading each command's output before the next one, and telling the human which release is now active after a rollback.
+
+I didn't run the skill's `check` script or a fresh-session eval.

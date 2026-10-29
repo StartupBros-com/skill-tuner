@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it once. It works and printed the three largest files under `./data`, largest first:
+
+```
+./data/b.txt: 12000
+./data/d.dat: 8000
+./data/a.bin: 5000
+```
+
+The script uses `find` to list file sizes in bytes, sorts them in descending order and keeps the top three.

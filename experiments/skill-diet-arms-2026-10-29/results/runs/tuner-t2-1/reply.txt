@@ -1,0 +1,8 @@
+I changed only `skills/shipit/SKILL.md`. The skill already told agents to run `shipit check` in two places, and an agent skipped it anyway. So I made the instruction checkable instead of adding a third copy.
+
+- **Releasing step 1:** It now says to run `shipit check` immediately before each release, staging and prod alike. An agent may proceed only if that run exited 0 and printed no `no manifest` line on stderr. A check from earlier in the session doesn't count.
+- **Duplicate rule removed:** The "Always run check… never skip it" bullet under Rules is gone. The Checking section now points to step 1 instead of restating the `no manifest` caveat.
+- **Wrong flag fixed:** Step 2 used `--env`, but `shipit release --help` shows `--target`. I corrected both commands in step 2.
+- **History:** The section now records the October incident next to the March one, and says step 1 comes from both.
+
+I didn't run the skill-tuner probe or routing checks, and I didn't change the frontmatter `description`.

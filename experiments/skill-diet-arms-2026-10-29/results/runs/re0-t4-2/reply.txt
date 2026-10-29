@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it once. It works. The script is two lines. It runs `find ./data -type f -printf '%s %p\n'`, sorts the result numerically in descending order, and keeps the top three.
+
+Output:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```

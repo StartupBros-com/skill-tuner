@@ -1,0 +1,13 @@
+assistant_turns=7
+assistant_models=claude-sonnet-5-5
+Bash=3
+Read=1
+skill_calls=[]
+guidance_reads=1
+  Read {"file_path": "/tmp/ws-e8a1302d/cfg/skills/writing-for-agents/SKILL-MECHANICS.md"}
+fixture_edits=0
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-e8a1302d/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && shipit --help; shipit check --help; shipit release --help
+  $ python3 - <<'EOF' s=open('SKILL.md').read() a=s.index('## Releasing') b=s.index('## Rules') new='''## Releasing  Every release passes the **gate** first: a release to any target, prod included, starts
+  $ python3 - <<'EOF' s=open('SKILL.md').read() s=s.replace("\nThe gate exists because a prod release once shipped a manifest that failed validation and caused a forty-minute outage; in a later incident a

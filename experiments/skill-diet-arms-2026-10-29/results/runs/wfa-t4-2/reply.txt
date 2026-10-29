@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it once. It prints the three largest files under `./data`, largest first, with sizes in bytes:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script is one line: `find ./data -type f -printf '%s %p\n' | sort -rn | head -n 3`. The `-printf` option is GNU `find` only, so it won't work with the BSD `find` on macOS.

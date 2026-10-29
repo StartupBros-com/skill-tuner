@@ -1,0 +1,14 @@
+I rewrote `skills/shipit/SKILL.md`, cutting it from about 3.0 KB to about 1.9 KB, and checked each command against `shipit --help` and a live run. Two claims were wrong, and I fixed them. The release commands used `--env`, but the real flag is `--target`. The skill also never named the dry-run flag, which is `--dry-run`. I confirmed these still hold:
+- `shipit check` exits 0 and prints `no manifest` when the manifest is missing.
+- The `--notes-json` shape is correct.
+- `shipit status` has a PREVIOUS column.
+- `purge` takes a release id and `--yes`.
+
+I cut:
+- the semver explainer
+- the March incident and Makefile history
+- the repeated "always run check" and "use a dry run for prod" lines
+- the duplicated option block, now one line
+- the "dry runs ignore `--retries`" claim, which I couldn't verify
+
+The rollback steps are merged from eight to four, and the purge warning and check-before-release rule are kept.

@@ -1,0 +1,13 @@
+assistant_turns=8
+assistant_models=claude-sonnet-5-5
+Bash=3
+Read=1
+Write=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=1
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-4b261e46/work/skills/shipit && find . -type f | xargs wc -c; shipit --help
+  $ for c in check release rollback status purge; do echo "=== $c"; shipit $c --help; done
+  $ cd /tmp && mkdir -p emp && cd emp && shipit check; echo "exit=$?"; shipit release --target staging --dry-run --retries 5; echo "exit=$?"

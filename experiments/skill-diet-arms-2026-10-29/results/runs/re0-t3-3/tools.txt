@@ -1,0 +1,10 @@
+assistant_turns=3
+assistant_models=claude-sonnet-5-5
+Bash=2
+skill_calls=[]
+guidance_reads=0
+fixture_edits=0
+cli_calls=2
+ran_help=yes
+  $ cd /tmp/ws-f3cf95ef/work/skills/shipit && find . -type f | head -50 && grep -rn -i "status" . ; shipit --help 2>&1 | head -30
+  $ sed -i 's/`shipit status`/`shipit info`/g' SKILL.md && cat SKILL.md

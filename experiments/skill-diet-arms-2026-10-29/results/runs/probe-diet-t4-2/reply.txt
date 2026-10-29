@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it. It prints each file's size in bytes, then its path, largest first:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script runs `find ./data -type f -printf '%s %p\n'`, sorts the results numerically in descending order, and keeps the top three. It searches subdirectories too, not just the top level of `./data`.

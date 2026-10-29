@@ -1,0 +1,14 @@
+I cut `skills/shipit/SKILL.md` from about 3,040 bytes to about 1,100, and I didn't run the skill-diet `check` script or any agent evals on the new version. The old text used `--env staging` and `--env prod` for releases. The CLI rejects that flag (`unknown flag: --env`, exit 2), and the real flag is `--target`, so I fixed it. I kept these because an agent needs them to use the tool safely:
+- Run `shipit check` before every release, and treat `no manifest` as a failure. I confirmed that `check` exits 0 in that case.
+- Release to staging first, then prod, with a dry run before prod.
+- Only purge a release the human names, and pass `--yes` only after they confirm.
+- The rollback sequence: `status`, then `rollback --target`, then `status` again, then tell the human what is now active.
+
+I dropped these:
+- The semantic-versioning explainer, which the model already knows.
+- The March/January history.
+- The duplicated global options list, which `--help` already prints.
+- The notes JSON shape, which is now only in `shipit release --help`, so `SKILL.md` points there instead of repeating it.
+- The vague "read output" rule.
+- Rollback steps I couldn't verify against the CLI: retrying with `--retries 5`, filing the failed id in the next release's notes, and re-running `check` after a rollback.
+- The claim that dry runs ignore `--retries`.

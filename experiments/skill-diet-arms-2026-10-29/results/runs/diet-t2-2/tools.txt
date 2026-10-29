@@ -1,0 +1,12 @@
+assistant_turns=4
+assistant_models=claude-sonnet-5-5
+Bash=2
+skill_calls=[]
+guidance_reads=2
+  Bash {"command": "cd /tmp/ws-84645fd7/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && shipit --help && shipit release --help; node /tmp/ws-84645fd
+  Bash {"command": "cat > SKILL.md <<'EOF'\n---\nname: shipit\ndescription: Release builds with the shipit CLI. Use when releasing or promoting a build to staging or p
+fixture_edits=0
+cli_calls=2
+ran_help=yes
+  $ cd /tmp/ws-84645fd7/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && shipit --help && shipit release --help; node /tmp/ws-84645fd7/cfg/skills/skill-diet/scripts/eval.mjs check . 
+  $ cat > SKILL.md <<'EOF' --- name: shipit description: Release builds with the shipit CLI. Use when releasing or promoting a build to staging or prod, checking a release manifest, or rolling back a ship

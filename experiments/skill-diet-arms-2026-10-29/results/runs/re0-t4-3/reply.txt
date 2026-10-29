@@ -1,0 +1,11 @@
+I created `./biggest.sh` and ran it once. It printed:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script uses `find` to list every file under `./data` with its size in bytes, sorts those sizes from largest to smallest, and keeps the top three. Filenames with spaces work, because the size is the first field on each line.
+
+The `re0` skill had nothing to refresh, since this was a new file. I applied it only by keeping the script to the one pipeline.

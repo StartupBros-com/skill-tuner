@@ -1,0 +1,21 @@
+I rewrote `skills/shipit/SKILL.md` from about 3 KB to roughly half that. The skill is a single file, so nothing else changed.
+
+**Corrected:**
+- It told agents to use `--env staging` and `--env prod`. The CLI only has `--target`, so I changed every release example to `--target`.
+- The old text only said "a dry run" without naming the flag. It's now `--dry-run`, which I ran against an empty directory to confirm.
+- The `no manifest` claim holds: `check` exits 0 and prints that line when `shipit.yaml` is missing. I kept the claim and the warning to treat it as a failure.
+
+**Cut:**
+- The semver explanation.
+- The global-options block, which `--help` already prints.
+- The duplicated "always run check" rule and the "use a dry run for prod" line, now merged into the release steps.
+- The January Makefile history.
+- The "Dry runs ignore `--retries`" line. In my test the dry run ran fine with `--retries 5`, but that run can't show whether the flag is ignored, so I couldn't confirm it.
+- The post-rollback `shipit check` step, which didn't follow from anything in the CLI.
+
+**Kept:**
+- The check-before-release rule, with the March outage as a one-line reason.
+- Staging before prod.
+- The exact notes JSON shape and what gets rejected.
+- The rollback steps.
+- The purge guardrail: only for a release the human names, and `--yes` only after they confirm.

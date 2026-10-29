@@ -1,0 +1,18 @@
+{
+ "task": "t4",
+ "items": {
+  "T4-A": true,
+  "T4-B": true
+ },
+ "observed": {
+  "bytes": null,
+  "cli_calls": 0,
+  "ran_help": false,
+  "skill_calls": "[]",
+  "guidance_reads": 0,
+  "fixture_edits": 0,
+  "t4_output": "12000 ./data/b.txt\n8000 ./data/d.dat\n5000 ./data/a.bin\n"
+ },
+ "passed": 2,
+ "total": 2
+}

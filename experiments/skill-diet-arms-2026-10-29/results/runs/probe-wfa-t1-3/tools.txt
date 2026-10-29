@@ -1,0 +1,14 @@
+assistant_turns=10
+assistant_models=claude-sonnet-5-5
+Bash=4
+Skill=1
+Write=1
+skill_calls=["writing-for-agents"]
+guidance_reads=0
+fixture_edits=1
+cli_calls=4
+ran_help=yes
+  $ cd skills/shipit; find . -type f | xargs wc -c; shipit --help 2>&1 | head -50
+  $ cd /tmp/ws-9e2d97b4/work/skills/shipit; cat SKILL.md; for c in check release rollback status purge; do echo "=== $c"; shipit $c --help 2>&1; done
+  $ cd $(mktemp -d); shipit check; echo "rc=$?"; shipit status; echo rc=$?; shipit release --target prod --dry-run --notes-json '[1]'; echo rc=$?; shipit release --target prod --dry-run --notes-json '{"it
+  $ cd $(mktemp -d); shipit release --target prod --dry-run --retries 5; echo rc=$?; shipit rollback --help; shipit release --target prod --dry-run --notes-json '{"items":[{"id":"a","text":"b","x":1}]}'; 

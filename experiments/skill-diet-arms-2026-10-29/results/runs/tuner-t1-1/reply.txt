@@ -1,0 +1,7 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,040 bytes to roughly half that, and checked every CLI claim against `shipit --help` and each subcommand's help. Two claims were wrong, and I fixed both. The release flag is `--target`, not `--env`, and the dry run is the `--dry-run` flag on `release`. The old text never named it. I removed the semver explainer, the incident and Makefile history, and the repeated "run check first" and "dry run for prod" lines, and I merged the duplicated "Before you start" and "Checking" sections into the release steps. I dropped "Dry runs ignore `--retries`" because I couldn't verify it. I kept the safety content:
+- `check` exits 0 on `no manifest`, so that line has to be treated as a failure.
+- `purge` is irreversible and needs the human to name the release and confirm before `--yes`.
+- The exact `--notes-json` shape.
+- The rollback steps, including confirming with `status` and reporting to the human.
+
+I did not run `release`, `rollback` or `purge`. The `--retries 5` rollback advice and the "put the failed release id in the next notes" step are kept from the original and unverified. I also did not run the routing-parity check on the description, which I left unchanged.

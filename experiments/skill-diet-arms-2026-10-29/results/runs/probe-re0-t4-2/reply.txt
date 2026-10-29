@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it once. Its output was:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script uses `find ./data -type f -printf '%s %p\n' | sort -rn | head -n 3`. It prints each file's size in bytes and its path, sorted largest first. The `-printf` option is specific to GNU `find`, so it won't work on macOS or BSD without changes.

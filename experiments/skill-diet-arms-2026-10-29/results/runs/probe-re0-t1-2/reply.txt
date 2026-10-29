@@ -1,0 +1,7 @@
+I rewrote `skills/shipit/SKILL.md` to about half its original size (it was about 3 KB). I cut the semver explainer, the March/January history, the duplicated "check before release" and "dry run for prod" lines, and the options block that repeated `--help`. I replaced them with a compact command synopsis taken from the CLI's own help.
+
+I also fixed two things that were wrong against the real CLI:
+- **Release flag:** the skill used `--env staging` and `--env prod` in one place. The real flag is `--target`, so every example now uses `--target`.
+- **Dry run:** the skill mentioned dry runs but never said how to do one. It now names the `--dry-run` flag on `release`.
+
+I confirmed that `shipit check` exits 0 with `no manifest` on stderr when no manifest exists, so that warning stays. I kept the purge confirmation rule, the check-before-release rule, the exact notes-JSON shape and the rollback steps. I couldn't test the claim that dry runs ignore `--retries`, so I removed it. I also removed the rollback step that re-ran `shipit check` as a separate item; it is now merged into the status-confirmation step.

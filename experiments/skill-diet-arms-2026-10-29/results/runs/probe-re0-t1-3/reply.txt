@@ -1,0 +1,8 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 bytes to roughly half that, and checked it against `shipit --help` and each subcommand's help. The old text said `shipit release --env …`, but the flag is `--target`, so I fixed that. It also said "a dry run" without naming the flag, so it now says `--dry-run`. I removed the semver explanation, the March and January history, the duplicated "check before release" and "dry run" lines, and the options block, which I folded into one line. I also removed "Dry runs ignore `--retries`", because I couldn't verify it. I kept the safety content:
+- Run `check` before every release.
+- `check` exits 0 on a missing manifest and prints `no manifest`, so treat that as a failure. I confirmed this behavior.
+- `purge` is irreversible, so only run it on a release the human names, and only pass `--yes` after they confirm.
+- The exact `--notes-json` shape.
+- The rollback steps.
+
+I did not run `release`, `rollback` or `purge`, so their behavior beyond what the help text says is untested.

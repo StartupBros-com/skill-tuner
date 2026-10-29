@@ -1,0 +1,16 @@
+I wrote `./biggest.sh` and ran it once. Its output was:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+Each line is the size in bytes followed by the path, largest first. The script is:
+
+```bash
+#!/usr/bin/env bash
+find ./data -type f -printf '%s %p\n' | sort -rn | head -n 3
+```
+
+It uses `-printf`, which is GNU `find`, so it won't work as written on macOS or BSD.

@@ -1,0 +1,19 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 bytes to roughly 1,900, and it is the only file in the skill. I checked each claim against the CLI's `--help` output and a few harmless runs.
+
+- **Corrections:**
+  - The old text used `shipit release --env …`, but the flag is `--target`. I fixed it.
+  - The old text said "use a dry run" without naming the flag. It is `--dry-run`, and I added it.
+  - I dropped the claim that dry runs ignore `--retries`, because I couldn't verify it.
+- **Safety content kept:**
+  - Run `check` before every release.
+  - `no manifest` counts as a failure, since `check` exits 0 in that case.
+  - Purge needs a named release and human confirmation before `--yes`.
+  - The exact release-notes JSON shape.
+  - The rollback steps.
+- **Cut:**
+  - The semver explainer.
+  - The March 2026 incident and the Makefile history.
+  - The duplicated dry-run advice.
+  - The separate options block, folded into one short command list.
+
+I couldn't check whether a failed `release` (rather than `rollback`) is safe to retry, or whether the notes-shape rejections behave as described. I left both as written.

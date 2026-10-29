@@ -1,0 +1,27 @@
+{
+ "task": "t2",
+ "items": {
+  "D1": true,
+  "D9": false,
+  "K1": true,
+  "K2": true,
+  "K3": true,
+  "K4": true,
+  "K5": true
+ },
+ "observed": {
+  "bytes": 3227,
+  "lines": 61,
+  "rule_lines": 1,
+  "dry_run_lines": 3,
+  "env_flag_present": false,
+  "tokens_o200k": null,
+  "cli_calls": 3,
+  "ran_help": true,
+  "skill_calls": "[]",
+  "guidance_reads": 0,
+  "fixture_edits": 0
+ },
+ "passed": 6,
+ "total": 7
+}

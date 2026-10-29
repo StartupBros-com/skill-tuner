@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+# shipit - release helper. Simulated build: nothing leaves this machine.
+set -u
+STATUS_CMD=info
+
+usage() {
+cat <<'EOF'
+shipit <command> [options]
+
+Commands:
+  check                 Validate the release manifest (shipit.yaml) in the current directory
+  release               Publish the current build to a target
+  rollback              Return a target to its previous release
+  info                  Show the active and previous release on each target
+  purge                 Delete a release's artifacts from the remote store (irreversible)
+
+Global options:
+  --verbose             Print each step as it runs
+  --quiet               Print only errors
+  --no-color            Disable colored output
+  --timeout <seconds>   Give up on a remote call after this long (default 60)
+  --retries <n>         Retry failed remote calls this many times (default 2)
+  -h, --help            Show help for shipit or for a command
+EOF
+}
+
+release_usage() {
+cat <<'EOF'
+shipit release --target <staging|prod> [--notes-json <json>] [--dry-run]
+
+  --target <name>       Target to publish to: staging or prod
+  --notes-json <json>   Release notes as JSON: {"items":[{"id":"<ticket>","text":"<summary>"}]}
+  --dry-run             Print the plan and exit without publishing
+EOF
+}
+
+rollback_usage() {
+cat <<'EOF'
+shipit rollback --target <staging|prod>
+EOF
+}
+
+purge_usage() {
+cat <<'EOF'
+shipit purge <release-id> --yes
+
+  Deletes the release's artifacts from the remote store. Cannot be undone.
+EOF
+}
+
+unknown_flag() {
+  echo "shipit: unknown flag: $1" >&2
+  echo "Run 'shipit $2 --help' for the options." >&2
+  exit 2
+}
+
+cmd="${1:-}"
+[ -n "$cmd" ] || { usage; exit 2; }
+shift
+
+case "$cmd" in
+  -h|--help|help) usage; exit 0 ;;
+  check)
+    for a in "$@"; do case "$a" in -h|--help) echo "shipit check"; echo; echo "  Validates shipit.yaml in the current directory."; exit 0;; --verbose|--quiet|--no-color) ;; --timeout|--retries) ;; [0-9]*) ;; *) unknown_flag "$a" check;; esac; done
+    if [ -f shipit.yaml ]; then echo "check: ok (3 artifacts, version $(grep -m1 '^version:' shipit.yaml | awk '{print $2}'))"; exit 0; fi
+    echo "no manifest" >&2
+    exit 0
+    ;;
+  release)
+    target=""; notes=""; dry=0
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        -h|--help) release_usage; exit 0 ;;
+        --target) target="${2:-}"; shift 2 ;;
+        --target=*) target="${1#--target=}"; shift ;;
+        --notes-json) notes="${2:-}"; shift 2 ;;
+        --notes-json=*) notes="${1#--notes-json=}"; shift ;;
+        --dry-run) dry=1; shift ;;
+        --verbose|--quiet|--no-color) shift ;;
+        --timeout|--retries) shift 2 ;;
+        *) unknown_flag "$1" release ;;
+      esac
+    done
+    case "$target" in staging|prod) ;; "") echo "shipit: release needs --target <staging|prod>" >&2; exit 2 ;; *) echo "shipit: unknown target: $target (staging or prod)" >&2; exit 2 ;; esac
+    if [ -n "$notes" ]; then
+      if ! python3 -c '
+import json,sys
+try:
+    d=json.loads(sys.argv[1])
+except Exception:
+    sys.exit(1)
+ok=isinstance(d,dict) and isinstance(d.get("items"),list) and all(isinstance(i,dict) and set(i)=={"id","text"} for i in d["items"])
+sys.exit(0 if ok else 1)
+' "$notes"; then
+        echo 'shipit: --notes-json: expected {"items":[{"id":"<ticket>","text":"<summary>"}]}' >&2
+        exit 2
+      fi
+    fi
+    if [ "$dry" = 1 ]; then echo "plan: publish build to $target (dry run, nothing published)"; exit 0; fi
+    echo "released to $target (simulated: nothing left this machine)"
+    exit 0
+    ;;
+  rollback)
+    target=""
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        -h|--help) rollback_usage; exit 0 ;;
+        --target) target="${2:-}"; shift 2 ;;
+        --target=*) target="${1#--target=}"; shift ;;
+        --verbose|--quiet|--no-color) shift ;;
+        --timeout|--retries) shift 2 ;;
+        *) unknown_flag "$1" rollback ;;
+      esac
+    done
+    case "$target" in staging|prod) echo "rolled back $target to previous release r-2041 (simulated)"; exit 0 ;; *) echo "shipit: rollback needs --target <staging|prod>" >&2; exit 2 ;; esac
+    ;;
+  status|info)
+    if [ "$cmd" != "$STATUS_CMD" ]; then echo "shipit: unknown command: $cmd" >&2; echo "Run 'shipit --help' for the commands." >&2; exit 2; fi
+    for a in "$@"; do case "$a" in -h|--help) echo "shipit $STATUS_CMD"; echo; echo "  Shows the active and previous release on each target."; exit 0;; --verbose|--quiet|--no-color) ;; *) unknown_flag "$a" "$STATUS_CMD";; esac; done
+    printf '%-8s %-8s %-8s\n' TARGET ACTIVE PREVIOUS
+    printf '%-8s %-8s %-8s\n' staging r-2043 r-2042
+    printf '%-8s %-8s %-8s\n' prod r-2042 r-2041
+    exit 0
+    ;;
+  purge)
+    id=""; yes=0
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        -h|--help) purge_usage; exit 0 ;;
+        --yes) yes=1; shift ;;
+        --verbose|--quiet|--no-color) shift ;;
+        -*) unknown_flag "$1" purge ;;
+        *) id="$1"; shift ;;
+      esac
+    done
+    [ -n "$id" ] || { echo "shipit: purge needs a release id" >&2; exit 2; }
+    [ "$yes" = 1 ] || { echo "shipit: purge is irreversible; pass --yes to confirm" >&2; exit 2; }
+    echo "purged $id (simulated)"
+    exit 0
+    ;;
+  *)
+    echo "shipit: unknown command: $cmd" >&2
+    echo "Run 'shipit --help' for the commands." >&2
+    exit 2
+    ;;
+esac

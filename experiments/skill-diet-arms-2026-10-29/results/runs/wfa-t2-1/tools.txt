@@ -1,0 +1,14 @@
+assistant_turns=9
+assistant_models=claude-sonnet-5-5
+Bash=4
+Read=1
+skill_calls=[]
+guidance_reads=1
+  Read {"file_path": "/tmp/ws-f820750e/cfg/skills/writing-for-agents/SKILL-MECHANICS.md"}
+fixture_edits=0
+cli_calls=4
+ran_help=yes
+  $ cd /tmp/ws-f820750e/work/skills/shipit && find . -type f | head -50 && cat SKILL.md && shipit --help 2>&1 | head -30
+  $ shipit release --help 2>&1; shipit check; echo "exit $?"
+  $ python3 -I - <<'EOF' s=open('SKILL.md').read() a=s.index('## Releasing'); b=s.index('## Rollback') new='''## Releasing  Every `shipit release` is gated by a green `shipit check`, run in the same sessi
+  $ python3 -I - <<'EOF' s=open('SKILL.md').read() r='''## Rules  - `shipit purge` deletes a release's artifacts from the remote store and cannot be undone. Run it only when the human names the release to

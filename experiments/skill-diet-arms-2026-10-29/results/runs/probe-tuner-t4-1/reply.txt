@@ -1,0 +1,9 @@
+I wrote `./biggest.sh` and ran it once. It printed the three largest files under `./data`, largest first, with sizes in bytes:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script finds every file under `./data` with `find`, sorts by size in descending order, and keeps the top three. It prints size then path, one file per line. It relies on GNU `find` (`-printf`), which is what this Linux environment has.

@@ -1,0 +1,11 @@
+I wrote `./biggest.sh` and ran it once. It prints the three largest files under `./data`, largest first, as size in bytes followed by path:
+
+```
+12000 ./data/b.txt
+8000 ./data/d.dat
+5000 ./data/a.bin
+```
+
+The script is a single `find ./data -type f -printf '%s %p\n' | sort -nr | head -n 3`, so it searches subdirectories too.
+
+The `/skill-diet` skill is for editing other skills, so it didn't apply to this task. I ignored it.

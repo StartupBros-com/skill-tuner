@@ -1,0 +1,1 @@
+ok subtype=success turns=10 cost=0.057893599999999996 (exit 0)

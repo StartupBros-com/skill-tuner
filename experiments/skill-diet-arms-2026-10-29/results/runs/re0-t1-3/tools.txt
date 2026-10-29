@@ -1,0 +1,12 @@
+assistant_turns=8
+assistant_models=claude-sonnet-5-5
+Bash=3
+Write=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=1
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-5ffd55cf/work/skills/shipit && find . -type f | xargs wc -c && cat SKILL.md; shipit --help
+  $ for c in check release rollback status purge; do echo "== $c"; shipit $c --help; done 2>&1
+  $ cd /tmp && mkdir -p e && cd e && shipit check; echo "rc=$?"; shipit status; echo rc=$?; shipit release --target prod --dry-run --retries 3; echo rc=$?
