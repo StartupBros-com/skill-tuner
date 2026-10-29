@@ -1,0 +1,8 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 bytes to about 1,700. I checked the commands against `shipit --help`, each subcommand's help, and a run of `shipit check` in an empty directory.
+
+- **Corrected:** The old file used `--env staging|prod`, but the CLI only accepts `--target`. I also folded in the `release` options from the real help: `--dry-run` and the exact `--notes-json` shape.
+- **Verified:** `shipit check` with no manifest prints `no manifest` and exits 0, so I kept that warning. I also kept the `purge <release-id> --yes` safety rule, the always-check-before-release rule and the dry-run-prod advice.
+- **Cut:** The semver explanation, the March and January history, duplicated rules, the repeated dry-run advice, and the help text duplicated in the options section.
+- **Not checked:** The old file said `shipit.yaml` supplies the version, and that status has a PREVIOUS column. I couldn't confirm either from the help, so I dropped both. It also said dry runs ignore `--retries`, which I couldn't confirm and dropped as irrelevant.
+
+I kept the rollback flow (status, rollback, `--retries 5` on failure, re-check, report to the human).

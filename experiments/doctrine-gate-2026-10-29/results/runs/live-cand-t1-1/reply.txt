@@ -1,0 +1,23 @@
+I'm finishing up. The rewrite is written, and I'm about to give you the summary.
+
+I cut `skills/shipit/SKILL.md` from about 3.0 KB to about 1.4 KB and checked each remaining claim against the CLI itself.
+
+**Fixed:**
+- The old text told agents to use `shipit release --env staging|prod`. That flag doesn't exist: the CLI exits 2 with "unknown flag: --env". The file now uses `--target`.
+- Dry runs are now described through the real `--dry-run` flag. The old text only said "a dry run" without naming it.
+
+**Verified and kept:**
+- `shipit check` with no manifest prints `no manifest` on stderr and exits 0.
+- `--notes-json` rejects a bare array, a `notes` key and extra keys in an item.
+- The ACTIVE and PREVIOUS columns in `shipit status`.
+- The purge safeguards: only for a release the human names, and `--yes` only after they confirm.
+
+**Removed:**
+- The semver explainer.
+- The March incident and Makefile history.
+- The duplicated "always run check" rule.
+- The options block, which `--help` already prints.
+- The rollback steps for retrying with `--retries 5`, re-running check and filing the failed release id in the next release's notes. The first of these is untested. I'd also guess the other two were habit rather than requirements, but I didn't test that.
+- "Dry runs ignore `--retries`". I couldn't observe it, so I dropped the claim.
+
+I didn't run a routing check on the description, and I left it unchanged.

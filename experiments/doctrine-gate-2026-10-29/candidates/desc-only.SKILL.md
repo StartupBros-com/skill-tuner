@@ -1,6 +1,6 @@
 ---
 name: skill-tuner
-description: Evidence-tagged rules for writing documents agents consume. Use when creating or editing skills, AGENTS.md, or CLAUDE.md.
+description: Evidence-tagged rules for writing documents agents consume. Use when creating, editing, or shortening skills, AGENTS.md, or CLAUDE.md.
 ---
 
 A reference for writing any document an agent consumes — a skill, an `AGENTS.md`, a `CLAUDE.md`, or a doc reached by a pointer from one of those. It descends from the `writing-for-agents` doctrine and keeps its shape.

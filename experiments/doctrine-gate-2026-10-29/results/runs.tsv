@@ -1,0 +1,6 @@
+live-orig	t1	2	/tmp/ws-3121cb93	ok subtype=success turns=4 cost=0.0730817 (exit 0)	-
+live-orig	t1	1	/tmp/ws-ebcc1df3	ok subtype=success turns=6 cost=0.0797225 (exit 0)	-
+live-cand	t1	1	/tmp/ws-d7d2a4d8	ok subtype=success turns=9 cost=0.09804670000000001 (exit 0)	-
+live-cand	t1	2	/tmp/ws-1a1fd5e4	ok subtype=success turns=7 cost=0.0608265 (exit 0)	-
+live-orig	t1	3	/tmp/ws-8565e5a3	ok subtype=success turns=7 cost=0.060272099999999995 (exit 0)	-
+live-cand	t1	3	/tmp/ws-81a789bf	ok subtype=success turns=7 cost=0.06276810000000001 (exit 0)	-
