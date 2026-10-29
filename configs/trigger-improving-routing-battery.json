@@ -1,0 +1,80 @@
+[
+  {
+    "case_id": "skill-tuner__obvious__1",
+    "kind": "obvious",
+    "target_id": "skill-tuner",
+    "prompt": "The skill at ./skills/shipit teaches the `shipit` CLI, which is installed on PATH. Improve it: make it a better skill for an agent to work from, and make sure everything it says about the CLI is still true. Keep whatever an agent needs to use the tool safely."
+  },
+  {
+    "case_id": "skill-tuner__obvious__2",
+    "kind": "obvious",
+    "target_id": "skill-tuner",
+    "prompt": "Our CLAUDE.md has grown by accretion. Make it better: tighter rules, fewer stale lines, nothing the agent does not need on every turn."
+  },
+  {
+    "case_id": "skill-tuner__obvious__3",
+    "kind": "obvious",
+    "target_id": "skill-tuner",
+    "prompt": "Enhance the AGENTS.md in this repo so agents stop re-deriving the build commands and conventions it already covers."
+  },
+  {
+    "case_id": "skill-tuner__paraphrase__1",
+    "kind": "paraphrase",
+    "target_id": "skill-tuner",
+    "prompt": "This SKILL.md reads like a blog post. Rework its rules so an agent follows them instead of reading a story about the time something went wrong."
+  },
+  {
+    "case_id": "skill-tuner__paraphrase__2",
+    "kind": "paraphrase",
+    "target_id": "skill-tuner",
+    "prompt": "Go through the three skills under .claude/skills and improve the ones that waste context on every turn."
+  },
+  {
+    "case_id": "shared__near_miss__1",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Optimize this skill's description so it triggers more reliably when users ask for it."
+  },
+  {
+    "case_id": "shared__near_miss__2",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Run evals on this skill and benchmark its performance across a few trials so we can see the variance."
+  },
+  {
+    "case_id": "shared__near_miss__3",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Improve this README so a new contributor can get the dev server running in under five minutes."
+  },
+  {
+    "case_id": "shared__near_miss__4",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Optimize this SQL query; it scans the whole orders table on every page load."
+  },
+  {
+    "case_id": "shared__near_miss__5",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Improve the error messages this CLI prints when a required flag is missing."
+  },
+  {
+    "case_id": "shared__near_miss__6",
+    "kind": "near_miss",
+    "target_id": null,
+    "prompt": "Enhance our test suite so flaky tests get retried and reported instead of failing the build."
+  },
+  {
+    "case_id": "shared__none__1",
+    "kind": "none_of_the_above",
+    "target_id": null,
+    "prompt": "Set up a GitHub Actions workflow that runs our test suite on every pull request."
+  },
+  {
+    "case_id": "shared__none__2",
+    "kind": "none_of_the_above",
+    "target_id": null,
+    "prompt": "Write the release announcement for version 2 of our mobile app."
+  }
+]

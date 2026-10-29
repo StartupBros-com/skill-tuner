@@ -1,0 +1,1 @@
+The skill at ./skills/shipit teaches the `shipit` CLI, which is installed on PATH. Improve it: make it a better skill for an agent to work from, and make sure everything it says about the CLI is still true. Keep whatever an agent needs to use the tool safely. Edit the files under ./skills/shipit in place; when you are done, reply with one paragraph on what you changed.

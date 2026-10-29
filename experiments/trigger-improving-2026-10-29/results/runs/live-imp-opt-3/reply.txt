@@ -1,0 +1,8 @@
+I rewrote `skills/shipit/SKILL.md`, and I didn't run any release, rollback or purge commands.
+
+- **Fixed a wrong flag:** the old skill told agents to run `shipit release --env staging`. The real flag is `--target`, so I corrected that and checked every other command against `--help`.
+- **Dry-run step:** the skill said "a dry run" without naming the flag. It now gives `--dry-run` and makes a dry run a numbered step before the staging and prod releases.
+- **Missing-manifest check:** `shipit check` really does exit 0 and print `no manifest` when `shipit.yaml` is missing. I kept that warning, since it's the one thing an agent could easily get wrong.
+- **Purge:** I kept the warning that purge is irreversible, the `<release-id> --yes` syntax, and the rule to ask the human first.
+- **Cuts:** I removed the semantic-versioning explainer, the March 2026 outage story and the Makefile history. None of them changes what an agent should do. I replaced the outage story with a one-clause reason for running `check`.
+- **Merged and tidied:** I combined the duplicated "run check" rules and the repeated dry-run advice into the releasing steps. I also split the content into Releasing, Rollback, Purge and Global options sections.

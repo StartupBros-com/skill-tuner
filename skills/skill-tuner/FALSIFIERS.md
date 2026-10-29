@@ -18,6 +18,10 @@ the agent's context to shape an edit.
   the end routes as well as one that front-loads it.
 - **One trigger per branch** — a pointer listing synonym triggers routes
   better than one that collapses them, on a blind battery with distractors.
+  Closest brush so far: #74 (2026-10-29) added "improving" beside "editing"
+  and gained 3 of 52 trials on a blind battery with skill-creator among the
+  distractors, 0 lost, p = 0.25, all on one case; not significant at 4 trials
+  per case, and the live arm showed no difference. Not met, recorded.
 - **Cut identity the body states** — restating the body's identity in the
   pointer measurably improves routing.
 - **Description pruning lands only at routing parity** — a parity-checked
@@ -200,6 +204,17 @@ applied):
   routing parity (48/48 both conditions, ids hidden) plus a live routing
   probe (3/3 vs the current description's 1/3)
   (`reports/swapgate8-summary.md`).
+- **#74 description round** (2026-10-29, `claude-sonnet-5-5`): one word,
+  "improving", added to the description and refused. Routing battery with
+  skill-creator among six distractors: 52/52 vs 49/52, near-miss rejection
+  32/32 under both, 3 discordant pairs gained and 0 lost (p = 0.25), all on
+  the improve brief, which the shipped description loses to skill-creator 3/4
+  in the pick-one setting. Live arm with skill-creator installed: skill-tuner
+  opened 0/3 under either description on the same brief; without
+  skill-creator, 2/3 under the shipped description and 3/3 under the
+  candidate. The predeclared rule required both instruments; the live one
+  refused, and the mechanism is the competitor's presence, not the missing
+  word (`reports/trigger-improving-summary.md`).
 
 The incumbent in these gates was frozen from upstream on 2026-08-05 and
 includes upstream's 2026-07-23 rename/restructure and its last content

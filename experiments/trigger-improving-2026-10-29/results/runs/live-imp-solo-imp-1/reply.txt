@@ -1,0 +1,16 @@
+I rewrote `skills/shipit/SKILL.md`. I ran each command to check what it says against the CLI.
+
+- **Fixed a wrong flag:** the old skill told agents to run `shipit release --env staging`. The real flag is `--target`, so I corrected that.
+- **Added the dry run:** the old text mentioned dry runs but never gave the flag. The release steps now use `--dry-run`, and prod is always dry-run first.
+- **Confirmed and kept:**
+  - `shipit check` exits 0 with `no manifest` on stderr when `shipit.yaml` is missing, and the skill still tells agents to treat that as a failure.
+  - The `status` output has ACTIVE and PREVIOUS columns, as the rollback steps assume.
+- **Safety:** the `purge` rule is unchanged. It needs a release the human named, and `--yes` only after they confirm. The notes JSON shape is also unchanged.
+- **Cut:**
+  - the semver explanation;
+  - the claim that the version comes from `shipit.yaml`, which I couldn't verify;
+  - the incident history and the stale `make deploy` mention;
+  - the duplicated check rule.
+- **Structure:** the skill is now organized as Release, Rollback, Purge and Global options. It points agents to `--help` for per-command options.
+
+I couldn't verify two things, so I kept both as written: dry runs ignoring `--retries`, and `--retries 5` rescuing a failed rollback.

@@ -1,0 +1,14 @@
+I rewrote `skills/shipit/SKILL.md` to be shorter, and I checked its claims against the installed CLI.
+
+- **Fixed a wrong flag:** the old skill told agents to run `shipit release --env staging`. The CLI only accepts `--target`, so I corrected it and added a note about it.
+- **Removed filler:** the semver explanation, the March and January history, and the duplicated "always check" lines.
+- **Added what was missing:** `--dry-run` is now named as the flag, with a step to dry-run before prod. The rule is stated once that `shipit check` exits 0 on a missing manifest and prints `no manifest`.
+- **Kept and verified:**
+  - The notes-JSON shape; bad input exits 2.
+  - The rollback steps.
+  - The purge safeguards: the human must name the release and confirm before `--yes`.
+  - The global options.
+  - The `--retries` fallback for a failed rollback.
+  - The note that dry runs ignore `--retries`. I didn't test that one.
+
+I did not run `release` (without `--dry-run`), `rollback` or `purge`.
