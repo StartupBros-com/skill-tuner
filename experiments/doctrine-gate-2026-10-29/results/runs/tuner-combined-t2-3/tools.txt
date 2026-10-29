@@ -1,0 +1,13 @@
+assistant_turns=10
+assistant_models=claude-sonnet-5-5
+Bash=2
+Edit=3
+Glob=1
+Read=1
+skill_calls=[]
+guidance_reads=0
+fixture_edits=3
+cli_calls=2
+ran_help=yes
+  $ shipit check --help; shipit release --help
+  $ cd /tmp && shipit check; echo "exit $?"

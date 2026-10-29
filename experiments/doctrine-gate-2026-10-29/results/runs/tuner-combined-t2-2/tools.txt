@@ -1,0 +1,11 @@
+assistant_turns=6
+assistant_models=claude-sonnet-5-5
+Bash=3
+skill_calls=[]
+guidance_reads=0
+fixture_edits=0
+cli_calls=3
+ran_help=yes
+  $ cd /tmp/ws-f4c19385/work/skills/shipit && find . -type f | head -50 && cat SKILL.md
+  $ shipit --help 2>&1 | head -30; shipit release --help 2>&1 | head -20; shipit check --help 2>&1 | head
+  $ python3 -I - <<'EOF' s=open('SKILL.md').read() s=s.replace("""1. Run `shipit check` before every `shipit release`. 2. Release to staging first, then to prod: `shipit release --env staging`, then `ship

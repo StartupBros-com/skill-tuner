@@ -94,3 +94,17 @@ leg stops early.
 ## Deviations logged after the first paid call
 
 (none yet)
+
+- 2026-10-29 09:50Z, ordering: the mechanism check (item 5) ran on
+  `tuner-combined` while leg 0 was still running, before any gate verdict,
+  instead of after the gate on "the landing candidate". Rule applied: if
+  `combined` lands, these six runs are the mechanism check; if it is
+  refused, the check is re-run on whichever candidate lands and the
+  `tuner-combined` runs are reported as spent but superseded. Costs of the
+  six runs count against the $1 cap either way. The control is the vet's
+  same-day `tuner` arm (current doctrine, 3 reps per task,
+  `experiments/skill-diet-arms-2026-10-29/results/runs.tsv`), not a fresh
+  re-run.
+- 2026-10-29 09:50Z, estimate: routing-parity pre-flight estimated $4.80 at
+  the $0.05/call default and spent $0.57 (96 calls); the cap held, the
+  estimate overstates routing calls by about 8x.
