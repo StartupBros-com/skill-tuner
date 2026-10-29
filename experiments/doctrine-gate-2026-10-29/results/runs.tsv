@@ -1,0 +1,12 @@
+live-orig	t1	2	/tmp/ws-3121cb93	ok subtype=success turns=4 cost=0.0730817 (exit 0)	-
+live-orig	t1	1	/tmp/ws-ebcc1df3	ok subtype=success turns=6 cost=0.0797225 (exit 0)	-
+live-cand	t1	1	/tmp/ws-d7d2a4d8	ok subtype=success turns=9 cost=0.09804670000000001 (exit 0)	-
+live-cand	t1	2	/tmp/ws-1a1fd5e4	ok subtype=success turns=7 cost=0.0608265 (exit 0)	-
+live-orig	t1	3	/tmp/ws-8565e5a3	ok subtype=success turns=7 cost=0.060272099999999995 (exit 0)	-
+live-cand	t1	3	/tmp/ws-81a789bf	ok subtype=success turns=7 cost=0.06276810000000001 (exit 0)	-
+tuner-combined	t2	1	/tmp/ws-11de99a0	ok subtype=success turns=4 cost=0.0855861 (exit 0)	ws-11de99a0 t2 5/7 D1=0 D9=1 K1=1 K2=1 K3=1 K4=1 K5=0
+tuner-combined	t1	1	/tmp/ws-c91d3fb4	ok subtype=success turns=5 cost=0.0893186 (exit 0)	ws-c91d3fb4 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner-combined	t1	2	/tmp/ws-5ec04cb1	ok subtype=success turns=4 cost=0.058544200000000005 (exit 0)	ws-5ec04cb1 t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner-combined	t2	2	/tmp/ws-f4c19385	ok subtype=success turns=4 cost=0.0547459 (exit 0)	ws-f4c19385 t2 6/7 D1=0 D9=1 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner-combined	t1	3	/tmp/ws-e121920e	ok subtype=success turns=4 cost=0.055925 (exit 0)	ws-e121920e t1 10/12 D1=1 D2=1 D3=1 D4=1 D5=0 D6=1 D7=0 K1=1 K2=1 K3=1 K4=1 K5=1
+tuner-combined	t2	3	/tmp/ws-aed9b89d	ok subtype=success turns=8 cost=0.061795 (exit 0)	ws-aed9b89d t2 7/7 D1=1 D9=1 K1=1 K2=1 K3=1 K4=1 K5=1

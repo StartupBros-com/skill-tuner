@@ -50,12 +50,14 @@ receipt is cited where it was.
    live current) for the most invasively tuned skills. Graders are
    adversarially verified before their first paid run; that pass has
    caught a grader biased toward the current version.
-7. **Doctrine changes go through the gate. All of them.** The campaign is
-   two-for-two: every expert-endorsed doctrine addition ever gated —
-   v3.1's four review-recommended sentences, and a live hot-patched rule —
-   was refused with a confirmed regression. Expert consensus endorsed
-   every one of those sentences; only the measurement dissented. There are
-   no exceptions for "obviously good" edits, because both of those were.
+7. **Doctrine changes go through the gate. All of them.** The record is
+   two refusals in three gates: v3.1's four review-recommended sentences
+   and a live hot-patched rule were each refused with a confirmed
+   regression; the 2026-10-29 round (one new `[craft]` bullet, one bullet
+   moved out of a paragraph) passed as *not_worse* at δ = 1.0, never as
+   better (`reports/swapgate8-summary.md`). Expert consensus endorsed every
+   one of those sentences; the measurement dissented on two. There are no
+   exceptions for "obviously good" edits, because the refused ones were.
 
 ## Costs and envelopes (measured)
 

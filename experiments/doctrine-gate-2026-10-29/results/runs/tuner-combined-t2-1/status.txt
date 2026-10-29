@@ -1,0 +1,1 @@
+ok subtype=success turns=4 cost=0.0855861 (exit 0)

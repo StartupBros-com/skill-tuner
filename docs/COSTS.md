@@ -96,6 +96,9 @@ better at your margin (anytime-valid under the pre-registered sd bound
 Replayed over the five banked gates ($0, `scripts/replay_sequential.py`):
 the decisive one (v3) stops at n=7/15 and saves **$4.10 of $8.30 (49%)**;
 the four non-decisive gates never stop and cost exactly what fixed-n cost.
+A live gate run (`swapgate8-gate-combined`, 2026-10-29) was non-decisive
+too: undecided after 15/15, full price ($2.75 on `claude-sonnet-5-5`,
+against $3.07 for its baseline leg), fixed-n not_worse of record.
 The mode saves money when the answer is clear and never conjures an answer
 when it is not — and it never disagreed with a full leg on pass/fail.
 

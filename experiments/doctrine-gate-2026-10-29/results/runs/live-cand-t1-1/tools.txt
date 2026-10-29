@@ -1,0 +1,15 @@
+assistant_turns=11
+assistant_models=claude-sonnet-5-5
+Bash=4
+Read=1
+Skill=1
+Write=1
+skill_calls=["skill-tuner"]
+guidance_reads=0
+fixture_edits=1
+cli_calls=4
+ran_help=yes
+  $ cd /tmp/ws-d7d2a4d8/work/skills/shipit && find . -type f | xargs wc -c; shipit --help
+  $ for c in check release rollback status purge; do echo "=== $c"; shipit $c --help; done
+  $ d=$(mktemp -d); cd $d; shipit check; echo "exit=$?"; shipit release --target prod --dry-run; echo "exit=$?"; shipit release --env prod --dry-run; echo "exit=$?"; shipit release --target prod --dry-run
+  $ d=$(mktemp -d); cd $d; shipit check 2>/dev/null | wc -c; for j in '[{"id":"a","text":"b"}]' '{"notes":[]}' '{"items":[{"id":"a","text":"b","x":1}]}' '{"items":[{"id":"a","text":"b"}]}'; do shipit rele

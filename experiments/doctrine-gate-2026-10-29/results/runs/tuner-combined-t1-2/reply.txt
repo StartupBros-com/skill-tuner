@@ -1,0 +1,14 @@
+I rewrote `skills/shipit/SKILL.md`, cutting it from about 3,040 bytes to about 1,800. I checked its CLI claims against `shipit --help`, each subcommand's help, and a real `shipit check` run.
+
+- **Corrections:** The skill said `release --env`, but the flag is `--target`. It also never named the dry-run flag, which is `--dry-run`. `shipit check` does exit 0 and print `no manifest` when the manifest is missing, so I kept that warning.
+- **Cut:**
+  - The semantic-versioning explainer.
+  - The unverifiable claim that shipit reads the version from `shipit.yaml`.
+  - The unverifiable "dry runs ignore `--retries`" line.
+  - The March incident and Makefile history.
+  - The duplicated "run check first" and "dry run for prod" rules.
+  - The full options block, since `--help` covers it. I kept a one-line list of the global options.
+- **Kept:** The check-before-release rule and the `no manifest` caveat. The staging-then-prod order and the exact notes-JSON shape also stay, as does the confirm-before-`--yes` purge guardrail. The rollback steps are there too.
+- **Left in unverified:** The `--retries 5` retry advice and the "put the failed release id in the next release's notes" step. I couldn't confirm either against the CLI, so I kept them as procedure.
+
+I did not run the skill-tuner routing check. The `description` is unchanged.

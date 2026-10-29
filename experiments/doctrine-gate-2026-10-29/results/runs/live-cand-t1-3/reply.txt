@@ -1,0 +1,6 @@
+I rewrote `skills/shipit/SKILL.md` from about 3,000 characters to roughly half that, then ran the CLI to check what it says. The old text told agents to run `shipit release --env staging` and `--env prod`, but the CLI rejects `--env` and only accepts `--target`, so I fixed that. I also confirmed three other claims by running them:
+- `shipit check` exits 0 and prints `no manifest` when the manifest is missing.
+- The release-notes JSON shape is enforced.
+- `rollback --retries 5` is accepted.
+
+I wrote the dry-run advice using the real `--dry-run` flag, which the old text never named. I dropped the semver explainer, the March incident and Makefile history, the duplicated "always run check" rule, the redundant `check` after rollback, and the copied global-options block, which `shipit --help` already prints. I also dropped "Dry runs ignore `--retries`", because I couldn't confirm it. I kept the safety content: the `no manifest` trap, staging before prod, a prod dry run, the purge confirmation rule, and the rollback steps. I tested only in a scratch directory and ran only dry-run and simulated commands, so nothing was actually published or rolled back.

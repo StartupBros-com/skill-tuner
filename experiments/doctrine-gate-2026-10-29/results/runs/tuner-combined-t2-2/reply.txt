@@ -1,0 +1,8 @@
+In `skills/shipit/SKILL.md` I made the check a checkable gate on every release, and I also fixed the `--env` flags and removed the History section.
+
+- **Releasing step 1:** it now says to run `shipit check` immediately before every `shipit release`, whatever the target. You release only once the check exits 0 with no `no manifest` line on stderr. An earlier check, or one from before the manifest changed, doesn't count.
+- **Checking section:** it now adds that a failed check means fixing the manifest and re-running the check before any release.
+- **Flags:** step 2 used `--env staging` and `--env prod`. `shipit release --help` shows the flag is `--target`, so I corrected both.
+- **Removed:** the duplicate "Always run `shipit check`" bullet under Rules, so the requirement lives in one place. I also removed the History section, which told the March 2026 outage as a story and not as a rule. The rule itself stays, and the incident belongs in the commit message.
+
+I didn't touch the rest of the file, and I didn't run any `shipit` commands beyond `--help`.
