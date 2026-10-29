@@ -68,8 +68,18 @@ the agent's context to shape an edit.
 
 - **Single source of truth** — a duplicated rule that never drifts out of
   sync with its source across repeated edits.
+- **The environment is a source of truth too** — a document that restates
+  a one-command lookup (`--help` output, a config key) and stays correct,
+  unmaintained, across three releases of the tool it describes.
 - **Relevance and sediment** — a document left unpruned for a year with no
   accumulation of dead lines.
+- **Rule, not incident** — an agent given the dated account of what went
+  wrong beside the rule it taught that follows the rule as reliably as one
+  given the rule alone, across repeated trials on fresh briefs. The
+  2026-10-29 mechanism check (`reports/swapgate8-summary.md`) shows the
+  rule firing on the fixture it was drafted against (incident narrative
+  dropped 3/3 vs 0/3), which is not generalisation; the `[craft]` tag
+  stands until that A/B confirms or kills it.
 - **No-op verdicts are time-relative** — a no-op verdict from one model
   version that stays correct, unchecked, across three consecutive upgrades.
 
@@ -177,6 +187,19 @@ applied):
   (+0.200/doc, CI [−0.47, +0.87]). The recall direction found no family
   blind spot beyond the probe's own `max_findings` cap, which does
   truncate defect-dense docs (`experiments/cross-judge/README.md`).
+- **v3.2** (15 docs, 2026-10-29, `claude-sonnet-5-5`, isolated envelope):
+  a new comparability island, not a continuation of the rows above — the
+  series pinned `claude-sonnet-5` under the pre-v0.8.2 envelope and 13 of
+  the 15 documents had changed, so leg 0 re-banked the current doctrine as
+  the baseline (34 confirmed, $3.07). The candidate added the "Rule, not
+  incident" bullet and moved the environment-as-source-of-truth sentences
+  into their own bullet: 38 vs 34, mean +0.27/doc, 95% CI [−0.56, +1.09],
+  sequential undecided after 15/15, fixed-n **not_worse** at δ = 1.0 —
+  landed as not worse, never as better; the two edits' isolated effects are
+  unmeasured. The description's "shortening" trigger landed separately on
+  routing parity (48/48 both conditions, ids hidden) plus a live routing
+  probe (3/3 vs the current description's 1/3)
+  (`reports/swapgate8-summary.md`).
 
 The incumbent in these gates was frozen from upstream on 2026-08-05 and
 includes upstream's 2026-07-23 rename/restructure and its last content

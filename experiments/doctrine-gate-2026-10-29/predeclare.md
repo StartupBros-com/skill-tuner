@@ -108,3 +108,9 @@ leg stops early.
 - 2026-10-29 09:50Z, estimate: routing-parity pre-flight estimated $4.80 at
   the $0.05/call default and spent $0.57 (96 calls); the cap held, the
   estimate overstates routing calls by about 8x.
+- 2026-10-29 10:35Z, closeout: `combined` landed (gate exit 0: sequential
+  undecided after 15/15, fixed-n of record not_worse, 38 vs 34, 95% CI
+  [−0.56, +1.09]), so the `tuner-combined` mechanism-check runs stand as the
+  mechanism check and no c68 / c69a leg ran. `skills/skill-tuner/SKILL.md`
+  is byte-identical to `candidates/combined.SKILL.md` (sha256
+  `62f3338b8914…`, the gate manifest's doctrine input).
