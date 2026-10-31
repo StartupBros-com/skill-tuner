@@ -5,8 +5,9 @@ instruments and all three landed. The description's new trigger word landed
 on routing parity plus a live routing probe. The two body edits, gated
 together against a fresh baseline, came back **38 vs 34** confirmed
 findings, 95% CI **[−0.56, +1.09]**, **not_worse** at δ = 1.0 with the
-sequential test undecided after all 15 documents. That is the first body
-change to pass this project's gate, and it passed as *not worse*: the
+sequential test undecided after all 15 documents. That is the first addition
+to an already-gated doctrine to pass this project's gate, and it passed as
+*not worse*: the
 interval straddles zero, the sign test does not resolve (p = 0.77), and
 nothing here licenses "better".
 
